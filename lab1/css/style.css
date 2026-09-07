@@ -1,0 +1,4 @@
+/* 2. ГЛАВНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭКРАНОВ (SPA) */
+.hidden {
+    display: none !important;
+}
