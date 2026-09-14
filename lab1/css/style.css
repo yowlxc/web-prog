@@ -1,19 +1,35 @@
 /*Прописываем базовые стили */
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: aliceblue;
+    background-color: rgb(218, 218, 218);
     color: #333;
     padding: 20px;
-    max-width: fit-content;
+    max-width: 900px;
     margin: 0 auto;
 
 }
 
 h1, h2 {
+    box-sizing: border-box;
     color: rgb(18, 29, 50);
-    margin-top: 0;
     font-weight: 600;
     text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(16px, 4cqw, 26px);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: clamp(12px, 2.5cqw, 18px);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 16px;
 }
 
 /* ГЛАВНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭКРАНОВ */
@@ -37,7 +53,7 @@ th, td {
 
 th {
     background-color: #f8f9fa;
-    color: #2c3e50;
+    color: #414141;
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -48,27 +64,55 @@ tr:hover {
 }
 
 /* Стиль формы*/
-form {
-    background-color: #f1f5f9;
-    padding: 24px;
+form {    
+    container-type: inline-size;
+
+    background-color: #f8f8f8;
     border-radius: 8px;
-    max-width: 500px;
-    border: 2px solid #3498db;
+    max-width: 600px;
+    width: 100%;
+    min-width: 360px;
+    box-sizing: border-box;
+    border: 2px solid #ababab;
+    padding: 24px;
+    margin: 0 auto;
+
 }
 
 label {
     display: block;
-    color: #2c3e50;
-    margin-top: 14px;
+    color: #0f151b;
     font-weight: bold;
     margin-bottom: 6px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 input, textarea {
-
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #cacaca;
+    border-radius: 6px;
 }
 
 input[type=checkbox] {
+    width: auto;
+    cursor: pointer;
+    justify-content: left;
+}
 
+.form {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+@media (max-width: 600px) {
+    .form {
+        flex-direction: column;
+        display: flex;
+        gap: 10px;
+        margin-top: 7px;
+    }
 }
