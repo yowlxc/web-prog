@@ -2,11 +2,12 @@ const dosieSection = document.querySelector("#dosie-students");
 const dosie = document.querySelector("#dosie");
 const studentsList = document.querySelector("#list-students");
 const backButton = document.querySelector("#btn-back");
-
 const detailsButtons = document.querySelectorAll(".btn-details");
 
-detailsButtons.forEach(function(button) {
-    button.addEventListener("click", function() {
+const studentsTable = document.querySelector("#list-students tbody");
+
+studentsTable.addEventListener("click", function(event) {
+    if (event.target.classList.contains("btn-details")) {
         const studentId = button.dataset.id;
         const students = getStudents();
         const student = students.find(function(student) {
