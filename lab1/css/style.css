@@ -64,20 +64,27 @@ table {
     border-collapse: collapse;
 }
 
-thead th{
-    background-color: #e7e7e7;
-}
-
 th, td {
     padding: 12px 15px; 
     border: 1px solid #b4b4b4;
 }
 
 th {
+    background-color: #e7e7e7;
+    color: #414141;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+td {
     background-color: #f8f9fa;
     color: #414141;
     font-weight: 600;
     text-transform: uppercase;
+}
+
+.do {
+    max-width: 368px;
 }
 
 tr:hover {
