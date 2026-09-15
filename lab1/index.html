@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/style.css">
     
     <!-- Добавляем иконку вкладки в виде котика, как требует задание -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon/cats.png">
 </head>
 <body>
     <h1>Система заявок: Мониторинг студентов</h1>
@@ -19,14 +19,14 @@
         <div class="btn-add">
             <button id="btn-add">+ Добавить студента</button>
         </div>
-        
+
         <table>
             <thead>
                 <tr>
                     <th>ИСУ</th>
                     <th>ФИО</th>
                     <th>Группа</th>
-                    <th>Действия</th>
+                    <th class="do">Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +56,7 @@
             <div class="form-data">
                 <label>ИСУ</label>
                 <input type="number" id="isu" required>
+                <span id="isu-error"></span>
             </div>
             <div class="form-data">
                 <label>Номер общежития</label>
@@ -71,7 +72,7 @@
             </div>
             <div class="form-no-rus">
                 <label>Иностранец</label>
-                <input type="checkbox" id="no-rus" required>
+                <input type="checkbox" id="no-rus">
             </div>
             <div class="form-notes">
                 <label>Примечания</label>

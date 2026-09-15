@@ -1,28 +1,18 @@
-const listStudents = document.getElementById('list-students');
-const formStudents = document.getElementById('form-students');
-const dosieStudents = document.getElementById('dosie-students');
-const btnAdd = document.getElementById('btn-add');
-const btnCancel = document.getElementById('btn-cancel');
-const btnBack = document.getElementById('btn-back');
+const btnAdd = document.querySelector("#btn-add");
+const btnCancel = document.querySelector("#btn-cancel");
+const listStudents = document.querySelector("#list-students");
+const formStudents = document.querySelector("#form-students");
 
-function showSection(section) {
-    // скрывает все секции кроме переданной
-    listStudents.classList.add('hidden');
-    formStudents.classList.add('hidden');
-    dosieStudents.classList.add('hidden');
+renderStudents();
 
-    section.classList.remove('hidden');
-};
-
-
-btnAdd.addEventListener('click', function() {
-    showSection(formStudents);
+btnAdd.addEventListener("click", function() {
+    const form = formStudents.querySelector("form");
+    form.reset();
+    listStudents.classList.add("hidden");
+    formStudents.classList.remove("hidden");
 });
 
-btnCancel.addEventListener('click', function() {
-    showSection(listStudents);
-});
-
-btnBack.addEventListener('click', function() {
-    showSection(listStudents);
+btnCancel.addEventListener("click", function() {
+    formStudents.classList.add("hidden");
+    listStudents.classList.remove("hidden");
 });
