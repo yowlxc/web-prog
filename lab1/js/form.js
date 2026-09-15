@@ -48,4 +48,3 @@ form.addEventListener('submit', function(event) {
     document.querySelector("#list-students").classList.remove("hidden");
 });
 
-
