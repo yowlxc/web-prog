@@ -1,4 +1,3 @@
-/*Прописываем базовые стили */
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(218, 218, 218);
@@ -37,14 +36,30 @@ h2 {
     display: none !important;
 }
 
-/* Стиль таблицы*/
+/* КНОПКИ */
+button {
+    padding: 6px 8px;
+    background-color: #0066ff;
+    color:#f8f8f8;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid #0049b6;
+    margin: 0.5em;
+}
+
+.btn-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+/* ТАБЛИЦА */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
 th, td {
-    /* отступы */
     padding: 12px 15px; 
     border-bottom: 1px solid #cacaca;
     border-left: 1px solid #d8d8d8;
@@ -59,11 +74,10 @@ th {
 }
 
 tr:hover {
-    /* подсветка */
     background-color: #f1f5f9;
 }
 
-/* Стиль формы*/
+/* ФОРМА */
 form {    
     container-type: inline-size;
 
@@ -75,6 +89,7 @@ form {
     box-sizing: border-box;
     border: 2px solid #ababab;
     padding: 24px;
+    padding-top: 6px;
     margin: 0 auto;
 
 }
@@ -83,7 +98,6 @@ label {
     display: block;
     color: #0f151b;
     font-weight: bold;
-    margin-bottom: 6px;
     font-size: 16px;
 }
 
@@ -96,22 +110,39 @@ input, textarea {
 }
 
 input[type=checkbox] {
-    width: auto;
-    cursor: pointer;
-    justify-content: left;
+    width: 1.3em;
+    height: 1.3em;
+    margin-left: 0;
+    margin-top: 4px;
 }
 
-.form {
+.form-data, .form-no-rus {
     display: grid;
+    align-items: center;
+    grid-template-columns: 20% 80%;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.form-notes {
+    display: grid;
+    align-items: start;
     grid-template-columns: 20% 80%;
     gap: 10px;
     margin-top: 14px;
 }
 
 @media (max-width: 600px) {
-    .form {
-        flex-direction: column;
+    .form-data, .form-notes {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.2em;
+        margin-top: 0.7em;
+    }
+    
+    .form-no-rus {
+        display: block;
         gap: 10px;
         margin-top: 7px;
     }
