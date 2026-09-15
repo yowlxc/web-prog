@@ -8,8 +8,8 @@
     <!-- Подключаем стили (CSS) -->
     <link rel="stylesheet" href="css/style.css">
     
-    <!-- Добавляем иконку вкладки в виде котика, как требует задание -->
-    <link rel="icon" type="image/png" href="favicon/cats.png">
+    <!-- Добавляем иконку вкладки в виде котика -->
+    <link rel="icon" type="image/png" href="favicon/cat.png">
 </head>
 <body>
     <h1>Система заявок: Мониторинг студентов</h1>
@@ -26,7 +26,7 @@
                     <th>ИСУ</th>
                     <th>ФИО</th>
                     <th>Группа</th>
-                    <th>Действия</th>
+                    <th class="actions-col">Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,24 +47,26 @@
         <form>
             <div class="form-data">
                 <label>ФИО</label>
-                <input type="text" id="fio" required>
+                <input type="text" id="fio" required minlength="2" maxlength="50">
+                <span id="fio-error"></span>
             </div>
             <div class="form-data">
                 <label>Группа</label>
-                <input type="text" id="group" required>
+                <input type="text" id="group" required minlength="5" maxlength="5">
+                <span id="group-error"></span>
             </div>
             <div class="form-data">
                 <label>ИСУ</label>
-                <input type="number" id="isu" required>
+                <input type="number" id="isu" required min="100000" max="999999">
                 <span id="isu-error"></span>
             </div>
             <div class="form-data">
                 <label>Номер общежития</label>
-                <input type="number" id="num-dorm" required>
+                <input type="number" id="num-dorm" required min="1" max="100">
             </div>
             <div class="form-data">
                 <label>Номер комнаты</label>
-                <input type="number" id="num-room" required>
+                <input type="number" id="num-room" required min="1" max="99999">
             </div>
             <div class="form-data">
                 <label>Дата заселения</label>

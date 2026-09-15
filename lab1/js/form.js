@@ -6,7 +6,32 @@ form.addEventListener('submit', function(event) {
     event.preventDefault();
 
     const fio = document.getElementById('fio').value;
+
+    //валидация фио
+    const fioError = document.querySelector("#fio-error");
+    const fioPattern = /^[A-Za-zА-Яа-яЁё]+( +[A-Za-zА-Яа-яЁё]+)+$/;
+    if (!fioPattern.test(fio)) {
+        fioError.textContent = "ФИО должно содержать минимум 2 слова и только буквы";
+        return;
+    }
+    if (fio.length >= 40) {
+        fioError.textContent = "ФИО должно быть меньше 40 символов";
+        return;
+    }
+    fioError.textContent = "";
+
     const group = document.getElementById('group').value;
+    
+    // валидация группы
+    const groupError = document.querySelector("#group-error");
+    const groupPattern = /^[A-Z][0-9]{4}$/;
+    if (!groupPattern.test(group)) {
+        groupError.textContent = "Группа должна иметь формат: латинская буква и 4 цифры";
+        return;
+    }
+
+    groupError.textContent = "";
+
     const isu = document.getElementById('isu').value;
 
     // Проверяем, не существует ли уже такой ИСУ
@@ -36,6 +61,7 @@ form.addEventListener('submit', function(event) {
         isForeign: isForeign,
         notes: notes
     };
+
     if (editingIsu === null) {
         addStudent(student);
     } else {
@@ -43,6 +69,7 @@ form.addEventListener('submit', function(event) {
     }
 
     renderStudents();
+    console.log('aaaa');
 
     form.parentElement.classList.add("hidden");
     document.querySelector("#list-students").classList.remove("hidden");

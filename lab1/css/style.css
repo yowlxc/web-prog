@@ -47,6 +47,10 @@ button {
     margin: 0.5em;
 }
 
+button:hover {
+    background-color: #247bff;
+}
+
 .btn-add {
     display: flex;
     justify-content: flex-end;
@@ -58,14 +62,22 @@ button {
     margin-top: 1em;
 }
 
+.btn-group button {
+    background-color: #cacaca;
+    color: #4a4a4a;
+    border: 2px solid #858585;
+}
+
+.btn-group button:hover {
+    background-color: #ffffff;
+    color: #474747;
+
+}
+
 /* ТАБЛИЦА */
 table {
     width: 100%;
     border-collapse: collapse;
-}
-
-thead th{
-    background-color: #e7e7e7;
 }
 
 th, td {
@@ -74,15 +86,43 @@ th, td {
 }
 
 th {
-    background-color: #f8f9fa;
+    background-color: #e7e7e7;
     color: #414141;
     font-weight: 600;
     text-transform: uppercase;
 }
 
-tr:hover {
-    background-color: #ababab;
+td {
+    background-color: #f8f9fa;
+    color: #414141;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: auto;
 }
+
+tr:hover td {
+    background-color: #bbbbbb;
+}
+
+.actions-col {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+@media (max-width: 690px) {
+    .actions-col {
+        white-space: normal;
+    }
+    .btn-group {
+        flex-direction: column;
+    }
+}
+
 
 /* ФОРМА */
 form {    
@@ -140,7 +180,7 @@ input[type=checkbox] {
     margin-top: 14px;
 }
 
-#isu-error {
+#isu-error, #fio-error, #group-error {
     display: block;
     color: #d32f2f;
     font-size: 14px;

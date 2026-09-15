@@ -55,6 +55,7 @@ studsTable.addEventListener("click", function(event) {
         document.getElementById("fio").value = student.fio;
         document.getElementById("group").value = student.group;
         document.getElementById("isu").value = student.isu;
+        document.getElementById("isu").readOnly = true;
         document.getElementById("num-dorm").value = student.dormNumber;
         document.getElementById("num-room").value = student.roomNumber;
         document.getElementById("date-in-dorm").value = student.dateInDorm;
