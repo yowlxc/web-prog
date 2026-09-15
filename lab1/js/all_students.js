@@ -1,17 +1,30 @@
 const studentsTable = document.querySelector("#list-students tbody");
-const students = getStudents();
 
-students.forEach(function(student) {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${student.isu}</td>
-        <td>${student.fio}</td>
-        <td>${student.group}</td>
-        <td>
-            <button>Подробнее</button>
-            <button>Редактировать</button>
-            <button>Удалить</button>
-        </td>
-    `;
+function renderStudents() {
+
+    const students = getStudents();
+
+    studentsTable.innerHTML = "";
+    students.forEach(function(student) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${student.isu}</td>
+            <td>${student.fio}</td>
+            <td>${student.group}</td>
+            <td>
+                <button class="btn-details" data-id="${student.isu}">
+                    Подробнее
+                </button>
+
+                <button class="btn-edit" data-id="${student.isu}">
+                    Редактировать
+                </button>
+
+                <button class="btn-delete" data-id="${student.isu}">
+                    Удалить
+                </button>
+            </td>
+        `;
     studentsTable.appendChild(row);
-})
+    })
+}

@@ -29,7 +29,7 @@ function updateStudent(updatedStudent) {
     const students = getStudents();
 
     const index = students.findIndex(function(student) {
-        return student.id === updatedStudent.id;
+        return student.isu === updatedStudent.isu;
     });
 
     if (index !== -1) {
@@ -39,11 +39,11 @@ function updateStudent(updatedStudent) {
     saveStudents(students);
 }
 
-function deleteStudent(id) {
+function deleteStudent(isu) {
     const students = getStudents();
 
     const filteredStudents = students.filter(function(student) {
-        return student.id !== id;
+        return student.isu !== isu;
     });
 
     saveStudents(filteredStudents);
