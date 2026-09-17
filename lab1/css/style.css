@@ -47,10 +47,6 @@ button {
     margin: 0.5em;
 }
 
-button:hover {
-    background-color: #247bff;
-}
-
 .btn-add {
     display: flex;
     justify-content: flex-end;
@@ -60,18 +56,6 @@ button:hover {
     display: flex;
     justify-content: center;
     margin-top: 1em;
-}
-
-.btn-group button {
-    background-color: #cacaca;
-    color: #4a4a4a;
-    border: 2px solid #858585;
-}
-
-.btn-group button:hover {
-    background-color: #ffffff;
-    color: #474747;
-
 }
 
 /* ТАБЛИЦА */
@@ -97,32 +81,15 @@ td {
     color: #414141;
     font-weight: 600;
     text-transform: uppercase;
-    margin: auto;
 }
 
-tr:hover td {
-    background-color: #bbbbbb;
+.do {
+    max-width: 368px;
 }
 
-.actions-col {
-    width: 1%;
-    white-space: nowrap;
+tr:hover {
+    background-color: #ababab;
 }
-
-.btn-group {
-    display: flex;
-    gap: 8px;
-}
-
-@media (max-width: 690px) {
-    .actions-col {
-        white-space: normal;
-    }
-    .btn-group {
-        flex-direction: column;
-    }
-}
-
 
 /* ФОРМА */
 form {    
@@ -180,7 +147,7 @@ input[type=checkbox] {
     margin-top: 14px;
 }
 
-#isu-error, #fio-error, #group-error {
+#isu-error {
     display: block;
     color: #d32f2f;
     font-size: 14px;
