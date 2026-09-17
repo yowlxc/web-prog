@@ -32,6 +32,14 @@ h2 {
     margin-bottom: 1em;
 }
 
+p {
+    max-width: 100%;
+    width: auto;
+    padding: 0 15px;
+    word-break: break-word;
+    hyphens: manual;
+}
+
 /* ГЛАВНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭКРАНОВ */
 .hidden {
     display: none !important;
@@ -99,6 +107,17 @@ td {
     font-weight: 600;
     text-transform: uppercase;
     margin: auto;
+}
+
+#fio_tbl {
+    max-width: 13em;
+    min-width: 8em;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+#isu_tbl {
+    width: fit-content;
 }
 
 tr:hover td {
