@@ -1,7 +1,7 @@
 const dosieSection = document.querySelector("#dosie-students");
 const dosie = document.querySelector("#dosie");
-const studentsList = document.querySelector("#list-students");
 const backButton = document.querySelector("#btn-back");
+const studentsList = document.querySelector("#list-students");
 const detailsButtons = document.querySelectorAll(".btn-details");
 
 const studsTable = document.querySelector("#list-students tbody");
@@ -65,8 +65,10 @@ studsTable.addEventListener("click", function(event) {
         studentsList.classList.add("hidden");
         document.querySelector("#form-students").classList.remove("hidden");
     }
-    backButton.addEventListener("click", function() {
+
+});
+
+backButton.addEventListener("click", function() {
         dosieSection.classList.add("hidden");
         studentsList.classList.remove("hidden");
     });
-});
