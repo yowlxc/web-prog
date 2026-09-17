@@ -32,7 +32,6 @@ studsTable.addEventListener("click", function(event) {
     if (event.target.classList.contains("btn-delete")) {
 
         const studentIsu = event.target.dataset.id;
-        const students = getStudents();
         const confirmed = confirm("Удалить этого студента?");
         if (confirmed) {
             deleteStudent(studentIsu);
@@ -41,6 +40,8 @@ studsTable.addEventListener("click", function(event) {
     }
 
     if (event.target.classList.contains("btn-edit")) {
+        const h2 = formStudents.querySelector("h2");
+        h2.textContent = "Форма редактирования студента";
 
         const studentIsu = event.target.dataset.id;
         const students = getStudents();
@@ -71,4 +72,4 @@ studsTable.addEventListener("click", function(event) {
 backButton.addEventListener("click", function() {
         dosieSection.classList.add("hidden");
         studentsList.classList.remove("hidden");
-    });
+});

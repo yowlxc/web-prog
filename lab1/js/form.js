@@ -1,40 +1,42 @@
 const form = document.querySelector('form');
 const isuError = document.querySelector("#isu-error");
+const fioError = document.querySelector("#fio-error");
+const groupError = document.querySelector("#group-error");
 let editingIsu = null;
 
 form.addEventListener('submit', function(event) {
+    console.log("Кнопка нажата");
     event.preventDefault();
 
-    const fio = document.getElementById('fio').value;
-
     //валидация фио
-    const fioError = document.querySelector("#fio-error");
-    const fioPattern = /^[A-Za-zА-Яа-яЁё]+( +[A-Za-zА-Яа-яЁё]+)+$/;
-    if (!fioPattern.test(fio)) {
-        fioError.textContent = "ФИО должно содержать минимум 2 слова и только буквы";
-        return;
-    }
-    if (fio.length >= 40) {
-        fioError.textContent = "ФИО должно быть меньше 40 символов";
+    const fioInput = document.getElementById('fio');
+    const fio = fioInput.value;
+    if (!fioInput.checkValidity()) {
+        fioError.textContent = "ФИО должно быть полным и содержать только буквы";
         return;
     }
     fioError.textContent = "";
 
-    const group = document.getElementById('group').value;
-    
     // валидация группы
-    const groupError = document.querySelector("#group-error");
-    const groupPattern = /^[A-Z][0-9]{4}$/;
-    if (!groupPattern.test(group)) {
+    const groupInput = document.getElementById('group');
+    const group = groupInput.value;
+    if (!groupInput.checkValidity()) {
         groupError.textContent = "Группа должна иметь формат: латинская буква и 4 цифры";
         return;
     }
-
     groupError.textContent = "";
 
-    const isu = document.getElementById('isu').value;
+    //валидация ису-шника
+    const isuInput = document.getElementById('isu');
+    const isu = isuInput.value;
+    if (!isuInput.checkValidity()) {
+        isuError.textContent = "ИСУ должен иметь формат: шестизначное число";
+        return;
+    } 
+    isuError.textContent = "";
 
-    // Проверяем, не существует ли уже такой ИСУ
+
+    // проверяем, не существует ли уже такой ИСУ
     const students = getStudents();
     const isIsuExists = students.some(function(student) {
         return student.isu === isu && student.isu !== editingIsu;
