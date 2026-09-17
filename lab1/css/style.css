@@ -2,7 +2,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(235, 235, 235);
     color: #333;
-    padding: 20px;
+    padding: 1.25em;
     max-width: 960px;
     margin: 0 auto;
 
@@ -19,16 +19,16 @@ h1, h2 {
 }
 
 h1 {
-    font-size: clamp(16px, 4cqw, 26px);
+    font-size: clamp(1em, 4cqw, 1.75em);
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 0.75em;
 }
 
 h2 {
-    font-size: clamp(12px, 2.5cqw, 18px);
+    font-size: clamp(0.75em, 2.5cqw, 1.125em);
     width: 100%;
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 1em;
 }
 
 /* ГЛАВНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭКРАНОВ */
@@ -81,7 +81,7 @@ table {
 }
 
 th, td {
-    padding: 12px 15px; 
+    padding: 0.75em 1em; 
     border: 1px solid #b4b4b4;
 }
 
@@ -135,7 +135,7 @@ form {
     min-width: 360px;
     box-sizing: border-box;
     border: 2px solid #ababab;
-    padding: 24px;
+    padding: 1.5em;
     padding-top: 6px;
     margin: 0 auto;
 
@@ -145,13 +145,13 @@ label {
     display: block;
     color: #0f151b;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 1em;
 }
 
 input, textarea {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 12px;
+    padding: 0.625em 0.75em;
     border: 1px solid #cacaca;
     border-radius: 6px;
     max-width: 535px;
@@ -176,14 +176,14 @@ input[type=checkbox] {
     display: grid;
     align-items: start;
     grid-template-columns: 20% 80%;
-    gap: 10px;
-    margin-top: 14px;
+    gap: 0.625em;
+    margin-top: 0.875em;
 }
 
 #isu-error {
     display: block;
     color: #d32f2f;
-    font-size: 14px;
+    font-size: 0.875em;
     margin-top: 5px;
     white-space: nowrap;
 }
@@ -199,7 +199,7 @@ input[type=checkbox] {
     
     .form-no-rus {
         display: block;
-        gap: 10px;
+        gap: 0.875em;
         margin-top: 7px;
     }
 }
