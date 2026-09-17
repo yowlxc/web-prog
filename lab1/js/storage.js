@@ -25,18 +25,31 @@ function addStudent(student) {
     saveStudents(students);
 }
 
-function updateStudent(updatedStudent) {
+function updateStudent(oldIsu, updatedStudent) {
     const students = getStudents();
 
-    const index = students.findIndex(function(student) {
-        return student.isu === updatedStudent.isu;
-    });
+    // Проверяем, есть ли другой студент с новым ИСУ
+    const exists = students.some(student =>
+        student.isu === updatedStudent.isu &&
+        student.isu !== oldIsu
+    );
 
-    if (index !== -1) {
-        students[index] = updatedStudent;
+    if (exists) {
+        isuError.textContent = "Студент с таким ИСУ уже существует";
+        return;
     }
 
-    saveStudents(students);
+    const index = students.findIndex(student =>
+        student.isu === oldIsu
+    );
+
+    if (index === -1) {
+        return;
+    }
+
+    students[index] = updatedStudent;
+
+    localStorage.setItem("students", JSON.stringify(students));
 }
 
 function deleteStudent(isu) {

@@ -67,7 +67,7 @@ form.addEventListener('submit', function(event) {
     if (editingIsu === null) {
         addStudent(student);
     } else {
-        updateStudent(student);
+        updateStudent(editingIsu, student);
     }
 
     renderStudents();
