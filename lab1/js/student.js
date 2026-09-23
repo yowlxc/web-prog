@@ -22,7 +22,7 @@ studsTable.addEventListener("click", function(event) {
             <p><strong>ИСУ:</strong> ${student.isu}</p>
             <p><strong>Общежитие:</strong> ${student.dormNumber}</p>
             <p><strong>Комната:</strong> ${student.roomNumber}</p>
-            <p><strong>Дата заселения:</strong> ${student.dateInDorm}</p>
+            <p><strong>Дата заселения:</strong> ${student.dateInDorm.split("-").reverse().join(".")}</p>
             <p><strong>Иностранец:</strong> ${student.isForeign ? "Да" : "Нет"}</p>
             <p><strong>Примечания:</strong> ${student.notes}</p>
         `;
