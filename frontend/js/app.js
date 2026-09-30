@@ -24,8 +24,8 @@ btnAdd.addEventListener("click", function() {
     document.getElementById("isu-error").textContent = "";
 
     // меняем заголовок
-    const h2 = formStudents.querySelector("h2");
-    h2.textContent = "Форма добавления студента";
+    // const h2 = formStudents.querySelector("h2");
+    // h2.textContent = "Форма добавления студента";
 
     // переключаем отображение
     listStudents.classList.add("hidden");
