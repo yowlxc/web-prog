@@ -9,9 +9,6 @@ renderStudents();
 btnAdd.addEventListener("click", function() {
     editingIsu = null;
 
-    const h2 = formStudents.querySelector("h2");
-    h2.textContent = "Форма добавления студента";
-
     const form = formStudents.querySelector("form");
     form.reset();
 

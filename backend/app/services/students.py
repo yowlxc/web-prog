@@ -26,3 +26,14 @@ def get_student_by_isu(isu: str) -> Student | None:
             return student
 
     return None
+
+def del_student(isu: str) ->  None:
+    students = read_students()
+
+    for i, student in enumerate(students):
+        if student.isu == isu:
+            students.pop(i)
+            write_students(students)
+            return True
+
+    return False

@@ -41,3 +41,7 @@ class Student(BaseModel):
         return value
     
 
+# class StudentPatch(BaseModel):
+
+    
+

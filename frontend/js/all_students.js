@@ -8,9 +8,9 @@ function renderStudents() {
     students.forEach(function(student) {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${student.isu}</td>
-            <td>${student.fio}</td>
-            <td>${student.group}</td>
+            <td id="isu_tbl">${student.isu}</td>
+            <td id="fio_tbl">${student.fio}</td>
+            <td id="group_tbl">${student.group}</td>
             <td class="actions-col">
                 <div class="btn-group">
                     <button class="btn-details" data-id="${student.isu}">
