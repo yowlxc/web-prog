@@ -1,0 +1,2 @@
+class DuplicateIsuError(Exception):
+    pass
