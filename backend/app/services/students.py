@@ -1,7 +1,7 @@
 from app.models import Student
 from app.repositories.json_repository import read_students, write_students
 
-from app.error import (
+from backend.app.errors import (
     DuplicateIsuError,
     )
 
@@ -44,10 +44,10 @@ def upd_student(isu: str, patch: dict) -> Student:
     for i, student in enumerate(students):
         if student.isu == isu:
             upd_student = student.update_student(patch)
-            students[i] = upd_student
-            write_students(students)
             if any(other.isu == upd_student.isu for j, other in enumerate(students) if j != i):
                 raise DuplicateIsuError(upd_student.isu)
+            students[i] = upd_student
+            write_students(students)
             
             return upd_student
         

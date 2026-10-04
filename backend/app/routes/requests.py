@@ -1,4 +1,6 @@
 from fastapi import APIRouter, HTTPException, Path, Body
+from pydantic import ValidationError
+from app.errors import error_response, validation_details
 
 from app.models import Student
 from app.services.students import (
@@ -9,9 +11,7 @@ from app.services.students import (
     upd_student,
     filter_students,
 )
-from app.error import (
-    DuplicateIsuError
-)
+
 
 router =  APIRouter(prefix="/api/requests", tags=["requests"])
 
@@ -53,21 +53,17 @@ def get_filter_students(
 
 @router.post("", response_model=Student, status_code=201)
 def creat_student(student: Student) -> Student:
-    try:
-        return add_student(student)
-    except DuplicateIsuError as exc:
-        raise HTTPException(
-            status_code=409,
-            detail="Студент с таким ИСУ уже существует",
-        ) from exc
-
+    return add_student(student)
 
 @router.get("/{isu}", response_model=Student)
 def get_request(isu: str = Path(pattern=r"^[1-9][0-9]{5}$")) -> Student:
     student = get_student_by_isu(isu)
 
     if student is None:
-        raise HTTPException(status_code=404, detail="Студент не найден")
+        raise HTTPException(
+            status_code=404,
+            detail="Студент не найден"
+            )
     
     return student
 
@@ -76,7 +72,10 @@ def get_request(isu: str = Path(pattern=r"^[1-9][0-9]{5}$")) -> Student:
 def delete_student(isu: str = Path(pattern=r"^[1-9][0-9]{5}$")) -> None:
     fl = del_student(isu)
     if fl == False:
-        raise HTTPException(status_code=404, detail="Студент не найден")
+        raise HTTPException(
+            status_code=404,
+            detail="Студент не найден"
+            )
 
     return None
 
@@ -88,11 +87,13 @@ def patch_student(isu: str = Path(pattern=r"^[1-9][0-9]{5}$"),
 
     try: 
         return upd_student(isu, patch)
-    except DuplicateIsuError as exc:
-        raise HTTPException(
-            status_code=409,
-            detail="Студент с таким ИСУ уже существует",
-        ) from exc
+    except ValidationError as exc:
+        return error_response(
+        422, 
+        "VALIDATION_ERROR",
+        "Некорректные данные студента",
+        validation_details(exc.errors()),
+    )
     
 @router.api_route("", methods=["QUERY"], response_model=list[Student])
 def query__students(filters: dict = Body(...)) -> list[Student]:
