@@ -43,7 +43,8 @@ def reg_error_handlers(app: FastAPI):
 
         return error_response(
             exc.status_code,
-            codes.get(exc.status_code, f"HTTP_{exc.status_code}")
+            codes.get(exc.status_code, f"HTTP_{exc.status_code}"),
+            str(exc.detail)
         )
     
     @app.exception_handler(RequestValidationError)

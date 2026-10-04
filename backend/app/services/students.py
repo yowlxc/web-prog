@@ -1,9 +1,9 @@
 from app.models import Student
 from app.repositories.json_repository import read_students, write_students
 
-from backend.app.errors import (
-    DuplicateIsuError,
-    )
+from app.errors import DuplicateIsuError
+
+
 
 def get_students() -> list[Student]:
     return read_students()
@@ -21,7 +21,7 @@ def add_student(student: Student) -> Student:
     students = read_students()
 
     if any(old_student.isu == student.isu for old_student in students):
-        raise DuplicateIsuError()
+        raise DuplicateIsuError(student.isu)
 
     students.append(student)
     write_students(students)
