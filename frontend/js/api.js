@@ -6,8 +6,9 @@ async function request(url, options = {}) {
     return response.json();
 }
 
-async function getStudents() {
-    return request('/api/students');
+async function getStudents(params = {}) {
+    const query = new URLSearchParams(params);
+    return request(`/api/students?${query}`);
 }
 
 async function addStudent(student) {
@@ -22,7 +23,7 @@ async function addStudent(student) {
 
 async function updateStudent(oldIsu, updatedStudent) {
     return request(`/api/students/${oldIsu}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },

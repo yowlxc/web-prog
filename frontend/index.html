@@ -20,25 +20,80 @@
             <button id="btn-add">+ Добавить студента</button>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>ИСУ</th>
-                    <th>ФИО</th>
-                    <th>Группа</th>
-                    <th class="actions-col">Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>501606</th>
-                    <th>ПОтёмкин Платон</th>
-                    <th>P3224</th>
-                    <th>Действия</th>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+        <div class="students-content">
+
+            <aside class="filters">
+                <h2>Фильтры</h2>
+
+                <div class="filter-item">
+                    <label for="filter-fio">ФИО</label>
+                    <input type="text" id="filter-fio">
+                </div>
+
+                <div class="filter-item">
+                    <label for="filter-group">Группа</label>
+                    <input type="text" id="filter-group" required minlength="5" maxlength="5" pattern="^[A-Za-z][1-9][0-9]{3}$">
+                </div>
+
+                <div class="filter-item">
+                    <label for="filter-isu">ИСУ</label>
+                    <input type="text" id="filter-isu" required minlength="6" maxlength="6" pattern="[1-9]\d{5}">
+                </div>
+
+                <div class="filter-item">
+                    <label for="filter-dormitory">Общежитие</label>
+                    <input type="text" id="filter-dormitory" required min="1" max="100">
+                </div>
+
+                <div class="filter-item filter-checkbox">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-foreign">
+                        <span class="custom-checkbox"></span>
+                        <span>Иностранец</span>
+                    </label>
+                </div>
+
+                <div class="filter-item">
+                    <label>Номер комнаты</label>
+
+                    <div class="room-range">
+                        <input type="number" id="filter-room-min" required min="1" max="99999" placeholder="От">
+                        <input type="number" id="filter-room-max" required min="1" max="99999" placeholder="До">
+                    </div>
+                </div>
+
+                <button type="button" id="btn-filter">
+                    Применить
+                </button>
+
+                <button type="button" id="btn-reset-filter">
+                    Сбросить
+                </button>
+            </aside>
+
+            <div class="students-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ИСУ</th>
+                            <th>ФИО</th>
+                            <th>Группа</th>
+                            <th class="actions-col">Действия</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <th>501606</th>
+                            <th>ПОтёмкин Платон</th>
+                            <th>P3224</th>
+                            <th>Действия</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
 
     <!-- Форма добавления/редакции студента -->
     <section id="form-students" class="hidden">
