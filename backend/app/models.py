@@ -15,7 +15,7 @@ class Student(BaseModel):
         min_length=2,
         max_length=50,
         pattern=r"^[А-Яа-яЁё]+(?: [А-Яа-яЁё]+)+$")
-    group: StrictStr = Field(pattern=r"^[A-Za-z][1-9][0-9]{3}$")
+    group: StrictStr = Field(pattern=r"^[A-Z][1-9][0-9]{3}$")
 
     dormNumber : StrictInt = Field(ge=1, le=100)
     roomNumber: StrictInt = Field(ge=1, le=99999)
@@ -40,4 +40,9 @@ class Student(BaseModel):
         
         return value
     
+    def update_student(self, upd: dict) -> Student:
+        data = self.model_dump()
+        data.update(upd)
 
+        return Student.model_validate(data)
+    
