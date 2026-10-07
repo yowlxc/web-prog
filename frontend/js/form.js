@@ -3,6 +3,10 @@ form.noValidate = true;
 const isuError = document.querySelector("#isu-error");
 const fioError = document.querySelector("#fio-error");
 const groupError = document.querySelector("#group-error");
+const dormError = document.querySelector("#dorm-error");
+const roomError = document.querySelector("#room-error");
+const dateError = document.querySelector("#date-error");
+
 let editingIsu = null;
 
 form.addEventListener('submit', async function(event) {
@@ -12,6 +16,9 @@ form.addEventListener('submit', async function(event) {
     isuError.textContent = "";
     fioError.textContent = "";
     groupError.textContent = "";
+    dormError.textContent = "";
+    roomError.textContent = "";
+    dateError.textContent = "";
 
     //валидация фио
     const fioInput = document.getElementById('fio');
@@ -41,8 +48,32 @@ form.addEventListener('submit', async function(event) {
     isuError.textContent = "";
 
     const dormNumber = Number(document.getElementById('num-dorm').value);
+
+    const dormInput = document.getElementById('num-dorm');
+
+    if (!dormInput.checkValidity()) {
+        dormError.textContent = "Номер общежития должен быть от 1 до 100";
+        return;
+    }
+
+    const roomInput = document.getElementById('num-room');
+
     const roomNumber = Number(document.getElementById('num-room').value);
+
+    if (!roomInput.checkValidity()) {
+        roomError.textContent = "Номер общежития должен быть от 1 до 100";
+        return;
+    }
+
     const dateInDorm = document.getElementById('date-in-dorm').value;
+
+    const dateInput = document.getElementById('date-in-dorm');
+
+    if (!dateInput.checkValidity()) {
+        dateError.textContent = "Дата заселения должна быть от 01.01.1999 до сегодняшнего дня";
+        return;
+    }
+
     const isForeign = document.getElementById('no-rus').checked;
     const notes = document.getElementById('notes').value;
 
@@ -64,7 +95,7 @@ form.addEventListener('submit', async function(event) {
             await updateStudent(editingIsu, student);
         }
     } catch (error) {
-        isuError.textContent = "Студент с таким ИСУ уже существует";
+        isuError.textContent = error.message;
         return;
     }
 

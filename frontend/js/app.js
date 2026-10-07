@@ -23,6 +23,9 @@ btnAdd.addEventListener("click", function() {
     document.getElementById("fio-error").textContent = "";
     document.getElementById("group-error").textContent = "";
     document.getElementById("isu-error").textContent = "";
+    document.getElementById("dorm-error").textContent = "";
+    document.getElementById("room-error").textContent = "";
+    document.getElementById("date-error").textContent = "";
 
     // меняем заголовок
     // const h2 = formStudents.querySelector("h2");
@@ -61,8 +64,8 @@ filterButton.addEventListener("click", async function() {
     if (isu) params.isu = isu;
     if (dormitory) params.dormNumber = Number(dormitory);
     if (foreign) params.isForeign = true;
-    if (roomMin) params.roomMin = roomMin;
-    if (roomMax) params.roomMax = roomMax;
+    if (roomMin) params.roomMin = Number(roomMin);
+    if (roomMax) params.roomMax = Number(roomMax);
 
     await renderStudents(params);
 });
