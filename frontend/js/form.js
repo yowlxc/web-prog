@@ -4,7 +4,7 @@ const fioError = document.querySelector("#fio-error");
 const groupError = document.querySelector("#group-error");
 let editingIsu = null;
 
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', async function(event) {
     console.log("Кнопка нажата");
     event.preventDefault();
 
@@ -35,20 +35,8 @@ form.addEventListener('submit', function(event) {
     } 
     isuError.textContent = "";
 
-
-    // проверяем, не существует ли уже такой ИСУ
-    const students = getStudents();
-    const isIsuExists = students.some(function(student) {
-        return student.isu === isu && student.isu !== editingIsu;
-    });
-    if (isIsuExists) {
-        isuError.textContent = "Студент с таким ИСУ уже существует"; 
-        return;
-    }
-    isuError.textContent = "";
-
-    const dormNumber = document.getElementById('num-dorm').value;
-    const roomNumber = document.getElementById('num-room').value;
+    const dormNumber = Number(document.getElementById('num-dorm').value);
+    const roomNumber = Number(document.getElementById('num-room').value);
     const dateInDorm = document.getElementById('date-in-dorm').value;
     const isForeign = document.getElementById('no-rus').checked;
     const notes = document.getElementById('notes').value;
@@ -65,12 +53,12 @@ form.addEventListener('submit', function(event) {
     };
 
     if (editingIsu === null) {
-        addStudent(student);
+        await addStudent(student);
     } else {
-        updateStudent(editingIsu, student);
+        await updateStudent(editingIsu, student);
     }
 
-    renderStudents();
+    await renderStudents();
     console.log('aaaa');
 
     form.parentElement.classList.add("hidden");

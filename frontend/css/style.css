@@ -4,9 +4,8 @@ body {
     font-size: 16px;
     color: #333;
     padding: 1.25em;
-    max-width: 960px;
+    max-width: 1400px;
     margin: 0 auto;
-
 }
 
 h1, h2 {
@@ -125,13 +124,18 @@ tr:hover td {
 }
 
 .actions-col {
-    width: 1%;
-    white-space: nowrap;
+    width: auto;
+    white-space: normal;
 }
 
 .btn-group {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
+}
+
+.btn-group button {
+    margin: 0;
 }
 
 @media (max-width: 690px) {
@@ -211,20 +215,21 @@ input[type=checkbox] {
 .students-content {
     display: flex;
     gap: 2%;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     align-items: flex-start;
 }
 
 .filters {
-    width: 20%;
-    min-width: 12rem;
-    padding: 1.5%;
+    flex: 0 0 16%;
+    min-width: 10rem;
+    padding: 1%;
     box-sizing: border-box;
 }
 
 .students-table {
-    width: 78%;
+    flex: 1;
+    min-width: 0;
     overflow-x: auto;
 }
 

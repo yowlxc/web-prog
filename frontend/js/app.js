@@ -5,7 +5,7 @@ const formStudents = document.querySelector("#form-students");
 const filterButton = document.querySelector("#btn-filter");
 const filterResetButton = document.querySelector("#btn-reset-filter");
 
-await renderStudents();
+renderStudents();
 
 btnAdd.addEventListener("click", function() {
     editingIsu = null;
@@ -59,7 +59,7 @@ filterButton.addEventListener("click", async function() {
     if (fio) params.fio = fio;
     if (group) params.group = group;
     if (isu) params.isu = isu;
-    if (dormitory) params.dormitory = dormitory;
+    if (dormitory) params.dormitory = Number(dormitory);
     if (foreign) params.isForeign = true;
     if (roomMin) params.roomMin = roomMin;
     if (roomMax) params.roomMax = roomMax;

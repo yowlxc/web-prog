@@ -1,4 +1,4 @@
-const studentsTable = document.querySelector("#students-table");
+const studentsTable = document.querySelector(".students-table tbody");
 
 async function renderStudents(params = {}) {
 
@@ -28,6 +28,7 @@ async function renderStudents(params = {}) {
                     <button class="btn-delete" data-id="${student.isu}">
                         Удалить
                     </button>
+                </div>
             </td>
         `;
     studentsTable.appendChild(row);
