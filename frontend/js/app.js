@@ -59,7 +59,7 @@ filterButton.addEventListener("click", async function() {
     if (fio) params.fio = fio;
     if (group) params.group = group;
     if (isu) params.isu = isu;
-    if (dormitory) params.dormitory = Number(dormitory);
+    if (dormitory) params.dormNumber = Number(dormitory);
     if (foreign) params.isForeign = true;
     if (roomMin) params.roomMin = roomMin;
     if (roomMax) params.roomMax = roomMax;

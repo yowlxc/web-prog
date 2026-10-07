@@ -3,7 +3,8 @@ const API_BASE_URL = "http://127.0.0.1:8000";
 async function request(url, options = {}) {
     const response = await fetch(API_BASE_URL + url, options);
     if (!response.ok) {
-        throw new Error("Ошибка сервера");
+        const errorData = await response.json();
+        throw new Error(errorData.error.message);
     }
 
     if (response.status === 204) {

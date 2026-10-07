@@ -56,6 +56,24 @@ def upd_student(isu: str, patch: dict) -> Student:
 def filter_students(param: dict) -> list[Student]:
     students = read_students()
 
-    result = [student for student in students if all(getattr(student, key) == value for key, value in param.items())]
+    result = []
+
+    for student in students:
+        match = True
+
+        for key, value in param.items():
+            if key == "roomMin":
+                if student.roomNumber < value:
+                    match = False
+
+            elif key == "roomMax":
+                if student.roomNumber > value:
+                    match = False
+
+            elif getattr(student, key) != value:
+                match = False
+
+        if match:
+            result.append(student)
 
     return result

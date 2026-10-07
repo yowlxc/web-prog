@@ -1,4 +1,5 @@
 const form = document.querySelector('form');
+form.noValidate = true;
 const isuError = document.querySelector("#isu-error");
 const fioError = document.querySelector("#fio-error");
 const groupError = document.querySelector("#group-error");
@@ -7,6 +8,10 @@ let editingIsu = null;
 form.addEventListener('submit', async function(event) {
     console.log("Кнопка нажата");
     event.preventDefault();
+
+    isuError.textContent = "";
+    fioError.textContent = "";
+    groupError.textContent = "";
 
     //валидация фио
     const fioInput = document.getElementById('fio');
@@ -52,10 +57,15 @@ form.addEventListener('submit', async function(event) {
         notes: notes
     };
 
-    if (editingIsu === null) {
-        await addStudent(student);
-    } else {
-        await updateStudent(editingIsu, student);
+    try {
+        if (editingIsu === null) {
+            await addStudent(student);
+        } else {
+            await updateStudent(editingIsu, student);
+        }
+    } catch (error) {
+        isuError.textContent = "Студент с таким ИСУ уже существует";
+        return;
     }
 
     await renderStudents();
