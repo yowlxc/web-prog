@@ -22,10 +22,9 @@ def get_filter_students(
     fio: str | None = None,
     group: str | None = None,
     dormNumber: int | None = None,
-    roomNumber: int | None = None,
-    dateInDorm: str | None = None,
-    isForeign: bool | None = None,
-    notes: str | None = None):
+    roomMin: int | None = None,
+    roomMax: int | None = None,
+    isForeign: bool | None = None):
 
     filters = {
         name: value
@@ -34,10 +33,9 @@ def get_filter_students(
             "fio": fio,
             "group": group,
             "dormNumber": dormNumber,
-            "roomNumber": roomNumber,
-            "dateInDorm": dateInDorm,
+            "roomMin": roomMin,
+            "roomMax": roomMax,
             "isForeign": isForeign,
-            "notes": notes
         }.items()
         if value is not None
     }

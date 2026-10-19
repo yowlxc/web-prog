@@ -161,4 +161,3 @@ def test_query_filter_fail(client):
 )
 
     assert response.status_code == 400
-
