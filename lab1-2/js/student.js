@@ -6,10 +6,10 @@ const detailsButtons = document.querySelectorAll(".btn-details");
 
 const studsTable = document.querySelector("#list-students tbody");
 
-studsTable.addEventListener("click", async function(event) {
+studsTable.addEventListener("click", function(event) {
     if (event.target.classList.contains("btn-details")) {
         const studentId = event.target.dataset.id;
-        const students = await getStudents();
+        const students = getStudents();
         const student = students.find(function(student) {
             return student.isu == studentId;
         });
@@ -34,8 +34,8 @@ studsTable.addEventListener("click", async function(event) {
         const studentIsu = event.target.dataset.id;
         const confirmed = confirm("Удалить этого студента?");
         if (confirmed) {
-            await deleteStudent(studentIsu);
-            await renderStudents();
+            deleteStudent(studentIsu);
+            renderStudents();
         }
     }
 
@@ -44,7 +44,7 @@ studsTable.addEventListener("click", async function(event) {
         h2.textContent = "Форма редактирования студента";
 
         const studentIsu = event.target.dataset.id;
-        const students = await getStudents();
+        const students = getStudents();
         const student = students.find(function(student) {
             return student.isu === studentIsu;
         });

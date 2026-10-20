@@ -1,12 +1,8 @@
-const studentsTable = document.querySelector(".students-table tbody");
+const studentsTable = document.querySelector("#list-students tbody");
 
-async function renderStudents(params = {}) {
+function renderStudents() {
 
-    if (Object.keys(params).length <= 2) {
-        students = await getStudents(params); // GET
-    } else {
-        students = await queryStudents(params); // QUERY
-    }
+    const students = getStudents();
 
     studentsTable.innerHTML = "";
     students.forEach(function(student) {
@@ -28,7 +24,6 @@ async function renderStudents(params = {}) {
                     <button class="btn-delete" data-id="${student.isu}">
                         Удалить
                     </button>
-                </div>
             </td>
         `;
     studentsTable.appendChild(row);
