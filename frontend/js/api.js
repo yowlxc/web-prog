@@ -4,7 +4,11 @@ async function request(url, options = {}) {
     const response = await fetch(API_BASE_URL + url, options);
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error.message);
+
+        const error = new Error(errorData.error.message);
+        error.details = errorData.error.details;
+
+        throw error;
     }
 
     if (response.status === 204) {

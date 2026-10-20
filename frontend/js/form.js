@@ -95,7 +95,27 @@ form.addEventListener('submit', async function(event) {
             await updateStudent(editingIsu, student);
         }
     } catch (error) {
-        isuError.textContent = error.message;
+        if (error.details && error.details.length > 0) {
+            const field = error.details[0].field.at(-1);
+            const message = error.details[0].message;
+
+            if (field === "fio") {
+                fioError.textContent = message;
+            } else if (field === "group") {
+                groupError.textContent = message;
+            } else if (field === "isu") {
+                isuError.textContent = message;
+            } else if (field === "dormNumber") {
+                dormError.textContent = message;
+            } else if (field === "roomNumber") {
+                roomError.textContent = message;
+            } else if (field === "dateInDorm") {
+                dateError.textContent = message;
+            }
+        } else {
+            isuError.textContent = error.message;
+        }
+
         return;
     }
 
