@@ -2,11 +2,7 @@ const studentsTable = document.querySelector(".students-table tbody");
 
 async function renderStudents(params = {}) {
 
-    if (Object.keys(params).length <= 2) {
-        students = await getStudents(params); // GET
-    } else {
-        students = await queryStudents(params); // QUERY
-    }
+    const students = await getStudents(params);
 
     studentsTable.innerHTML = "";
     students.forEach(function(student) {

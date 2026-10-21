@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "http://127.0.0.1:8080";
 
 async function request(url, options = {}) {
     const response = await fetch(API_BASE_URL + url, options);
@@ -15,11 +15,11 @@ async function request(url, options = {}) {
 
 async function getStudents(params = {}) {
     const query = new URLSearchParams(params);
-    return request(`/api/requests?${query}`);
+    return request(`/api/students?${query}`);
 }
 
 async function addStudent(student) {
-    return request('/api/requests', {
+    return request('/api/students', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -29,7 +29,7 @@ async function addStudent(student) {
 }
 
 async function updateStudent(oldIsu, updatedStudent) {
-    return request(`/api/requests/${oldIsu}`, {
+    return request(`/api/students/${oldIsu}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -39,17 +39,12 @@ async function updateStudent(oldIsu, updatedStudent) {
 }
 
 async function deleteStudent(isu) {
-    return request(`/api/requests/${isu}`, {
+    return request(`/api/students/${isu}`, {
         method: "DELETE",
     });
 }
 
 async function queryStudents(params = {}) {
-    return request("/api/requests", {
-        method: "QUERY",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(params)
-    });
+    const query = new URLSearchParams(params);
+    return request(`/api/students?${query}`);
 }
