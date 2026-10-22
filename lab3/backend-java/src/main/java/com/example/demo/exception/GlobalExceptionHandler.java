@@ -2,12 +2,12 @@ package com.example.demo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.validation.FieldError;
-import java.util.LinkedHashMap;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -22,41 +22,40 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(DuplicateIsuException.claass)
+    @ExceptionHandler(DuplicateIsuException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateIsuException(
-        DuplicateIsuException error
+            DuplicateIsuException error
     ) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(Map.of("message", error.gerMessage()));
+                .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(BadRequestException.claass)
-    public ResponseEntity<Map<String, String>> BadRequestException(
-        BadRequestException error
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, String>> handleBadRequest(
+            BadRequestException error
     ) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("message", error.gerMessage()));
+                .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.claass)
-    public ResponseEntity<Map<String, String>> MethodArgumentNotValidException(
-        MethodArgumentNotValidException error
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationErrors(
+            MethodArgumentNotValidException error
     ) {
         Map<String, String> errors = new LinkedHashMap<>();
 
-        for (FieldError fielderror 
-            : error.getBindingResult().getFieldError()) {
+        for (FieldError fieldError :
+                error.getBindingResult().getFieldErrors()) {
+            errors.putIfAbsent(
+                    fieldError.getField(),
+                    fieldError.getDefaultMessage()
+            );
+        }
 
-                errors.putIfAbsent(
-                    fielderror.getFiald(),
-                    fielderror.getDefaultMessage()
-                )
-        };
         return ResponseEntity
-                .status(422)
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(Map.of("message", errors));
-    }    
-
+    }
 }

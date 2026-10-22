@@ -14,7 +14,7 @@ public record CreateUserRequest(
     )
     @Pattern(
         regexp = "^[A-Za-zА-Яа-яЁё]+$",
-        message = "В имени разрешены только латинские буквы и кириллица"
+        message = "В имени разрешены латинские буквы и кириллица"
     )
     String name,
 
@@ -37,6 +37,5 @@ public record CreateUserRequest(
         message = "Пароль должен содержать от 6 до 64 символов"
     )
     String password
-
 ) {
 }
