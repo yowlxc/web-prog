@@ -1,0 +1,55 @@
+POST http://localhost:8080/api/students
+Content-Type: application/json
+
+{
+  "isu": "123456",
+  "fio": "Иванов Иван",
+  "group": "P1234",
+  "dormNumber": 1,
+  "roomNumber": 101,
+  "dateInDorm": "2024-09-01",
+  "isForeign": false,
+  "notes": ""
+}
+
+###
+
+GET http://localhost:8080/api/students
+
+###
+
+
+GET http://localhost:8080/api/students/123456
+
+###
+
+
+PUT http://localhost:8080/api/students/123456
+Content-Type: application/json
+
+{
+  "isu": "123456",
+  "fio": "Иванов Иван",
+  "group": "P1234",
+  "dormNumber": 1,
+  "roomNumber": 202,
+  "dateInDorm": "2024-09-01",
+  "isForeign": false,
+  "notes": "Номер комнаты обновлён"
+}
+
+###
+
+
+PATCH http://localhost:8080/api/students/123456
+Content-Type: application/json
+
+{
+  "roomNumber": 202
+}
+
+###
+
+GET http://localhost:8080/api/students?roomMin=203
+
+

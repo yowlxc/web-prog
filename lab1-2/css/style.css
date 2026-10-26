@@ -1,0 +1,224 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(235, 235, 235);
+    color: #333;
+    padding: 1.25em;
+    max-width: 960px;
+    margin: 0 auto;
+
+}
+
+h1, h2 {
+    box-sizing: border-box;
+    color: rgb(18, 29, 50);
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(1em, 4cqw, 1.75em);
+    text-align: center;
+    margin-bottom: 0.75em;
+}
+
+h2 {
+    font-size: clamp(0.75em, 2.5cqw, 1.125em);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+p {
+    max-width: 100%;
+    width: auto;
+    padding: 0 15px;
+    word-break: break-word;
+    hyphens: manual;
+}
+
+/* ГЛАВНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭКРАНОВ */
+.hidden {
+    display: none !important;
+}
+
+/* КНОПКИ */
+button {
+    padding: 6px 8px;
+    background-color: #0066ff;
+    color:#f8f8f8;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid #0049b6;
+    margin: 0.5em;
+}
+
+button:hover {
+    background-color: #247bff;
+}
+
+.btn-add {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+.btn-group button {
+    background-color: #cacaca;
+    color: #4a4a4a;
+    border: 2px solid #858585;
+}
+
+.btn-group button:hover {
+    background-color: #ffffff;
+    color: #474747;
+
+}
+
+/* ТАБЛИЦА */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.75em 1em; 
+    border: 1px solid #b4b4b4;
+}
+
+th {
+    background-color: #e7e7e7;
+    color: #414141;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+td {
+    background-color: #f8f9fa;
+    color: #414141;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: auto;
+}
+
+#fio_tbl {
+    max-width: 13em;
+    min-width: 8em;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+#isu_tbl {
+    width: fit-content;
+}
+
+tr:hover td {
+    background-color: #bbbbbb;
+}
+
+.actions-col {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+@media (max-width: 690px) {
+    .actions-col {
+        white-space: normal;
+    }
+    .btn-group {
+        flex-direction: column;
+    }
+}
+
+
+/* ФОРМА */
+form {    
+    container-type: inline-size;
+
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    max-width: 720px;
+    width: 100%;
+    min-width: 360px;
+    box-sizing: border-box;
+    border: 2px solid #ababab;
+    padding: 1.5em;
+    padding-top: 6px;
+    margin: 0 auto;
+
+}
+
+label {
+    display: block;
+    color: #0f151b;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+input, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.625em 0.75em;
+    border: 1px solid #cacaca;
+    border-radius: 6px;
+    max-width: 535px;
+}
+
+input[type=checkbox] {
+    width: 1.3em;
+    height: 1.3em;
+    margin-left: 0;
+    margin-top: 4px;
+}
+
+.form-data, .form-no-rus {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 20% 80%;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.form-notes {
+    display: grid;
+    align-items: start;
+    grid-template-columns: 20% 80%;
+    gap: 0.625em;
+    margin-top: 0.875em;
+}
+
+#isu-error, #fio-error, #group-error {
+    display: block;
+    color: #d32f2f;
+    font-size: 0.875em;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .form-data, .form-notes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.2em;
+        margin-top: 0.7em;
+    }
+    
+    .form-no-rus {
+        display: block;
+        gap: 0.875em;
+        margin-top: 7px;
+    }
+}
