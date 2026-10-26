@@ -22,41 +22,41 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(DuplicateIsuException.claass)
+    @ExceptionHandler(DuplicateIsuException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateIsuException(
         DuplicateIsuException error
     ) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(Map.of("message", error.gerMessage()));
+                .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(BadRequestException.claass)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Map<String, String>> BadRequestException(
         BadRequestException error
     ) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("message", error.gerMessage()));
+                .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.claass)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> MethodArgumentNotValidException(
         MethodArgumentNotValidException error
     ) {
         Map<String, String> errors = new LinkedHashMap<>();
 
         for (FieldError fielderror 
-            : error.getBindingResult().getFieldError()) {
+            : error.getBindingResult().getFieldErrors()) {
 
                 errors.putIfAbsent(
-                    fielderror.getFiald(),
+                    fielderror.getField(),
                     fielderror.getDefaultMessage()
                 )
         };
         return ResponseEntity
                 .status(422)
-                .body(Map.of("message", errors));
+                .body(errors);
     }    
 
 }

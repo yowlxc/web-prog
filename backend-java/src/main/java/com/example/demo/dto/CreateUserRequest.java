@@ -16,7 +16,7 @@ public record CreateUserRequest(
         regexp = "^[A-Za-z]+|[А-Яа-яЁё]+$",
         message = "В имени разрешены латинские буквы и кириллица"
     )
-    String name;
+    String name,
 
     @NotBlank(message = "Укажите логин")
     @Size(
@@ -28,7 +28,7 @@ public record CreateUserRequest(
         regexp = "^[A-Za-z0-9_]+$",
         message = "В логине разрешены латинские буквы, цифры и _"
     )
-    String login;
+    String login,
 
     @NotBlank(message = "Укажите пароль")
     @Size(
@@ -36,6 +36,6 @@ public record CreateUserRequest(
             max = 64,
             message = "Пароль должен содержать от 6 до 64 символов"
     )
-    String password;
+    String password
 ){
 }
