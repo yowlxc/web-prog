@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Student;
+import com.example.demo.exception.DuplicateIsuException;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +45,7 @@ public class StudentService {
 
     public Student createStudent(Student student) {
         if (studentRepository.existsById(student.getIsu())) {
-            throw new IllegalArgumentException(
-                    "Студент с таким ИСУ уже существует"
-            );
+            throw new DuplicateIsuException(student.getIsu());
         }
 
         return studentRepository.save(student);

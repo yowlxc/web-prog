@@ -2,7 +2,7 @@ package com.example.demo.exception;
 
 public class DuplicateIsuException extends RuntimeException {
 
-    public DuplicateIsuException (long id) {
-        super("Студент с id " + id + " уже существует");
+    public DuplicateIsuException(String isu) {
+        super("Студент с ИСУ " + isu + " уже существует");
     }
 }
