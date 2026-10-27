@@ -67,12 +67,12 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidCredentials(
-            InvalidCredentialsException error
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidRefreshTokenException(
+        InvalidRefreshTokenException error
     ) {
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(401)
                 .body(Map.of("message", error.getMessage()));
     }
 

@@ -12,7 +12,9 @@ import java.util.HexFormat;
 import com.example.demo.model.RefreshToken;
 import com.example.demo.model.User;
 import com.example.demo.repository.RefreshTokenRepository;
+import com.example.demo.exception.InvalidRefreshTokenException;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class RefreshTokenService {
@@ -53,4 +55,28 @@ public class RefreshTokenService {
             throw new IllegalStateException("SHA-256 недоступен", error);
         }
     }
+
+    @Transactional
+    public Rotation rotate(String token) {
+        if (token == null || token.isBlank()) {
+            throw new InvalidRefreshTokenException();
+        }
+
+        RefreshToken stored = repository.findByTokenHash(hash(token))
+                .orElseThrow(() -> new InvalidRefreshTokenException());
+
+        if (!stored.getExpiresAt().isAfter(Instant.now())) {
+            throw new InvalidRefreshTokenException();
+        }
+
+        User user = stored.getUser();
+
+        if (repository.consume(stored.getId(), stored.getTokenHash()) != 1) {
+            throw new InvalidRefreshTokenException();
+        }
+
+        return new Rotation(user, issue(user));
+    }
+
+    public record Rotation(User user, String refreshToken) {}
 }
