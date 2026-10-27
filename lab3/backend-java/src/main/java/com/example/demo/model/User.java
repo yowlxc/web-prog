@@ -1,8 +1,8 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-
+import com.example.demo.model.Role;
 
 @Entity
 @Table(name = "users")
@@ -18,8 +18,9 @@ public class User {
     @Column(name = "login", nullable = false, unique = true, length = 30)
     private String login;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 7)
-    private String role;
+    private Role role;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
@@ -48,11 +49,11 @@ public class User {
     }
 
     
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

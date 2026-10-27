@@ -40,12 +40,39 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", error.getMessage()));
     }
 
+    @ExceptionHandler(DuplicateLoginException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateLoginException(
+        DuplicateLoginException error
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of("message", error.getMessage()));
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> AccessDeniedException(
         AccessDeniedException error
     ) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
+                .body(Map.of("message", error.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCredentials(
+            InvalidCredentialsException error
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", error.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCredentials(
+            InvalidCredentialsException error
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", error.getMessage()));
     }
 
@@ -61,7 +88,7 @@ public class GlobalExceptionHandler {
                 errors.putIfAbsent(
                     fielderror.getField(),
                     fielderror.getDefaultMessage()
-                )
+                );
         };
         return ResponseEntity
                 .status(422)

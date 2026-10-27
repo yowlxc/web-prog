@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CreateUserRequest;
 import com.example.demo.dto.UserResponse;
+import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,12 +31,7 @@ public class UserController {
     public UserResponse changeRole(
         @PathVariable("id") Long id
     ) {
-        if (userService.isAdmin()){
-            return userService.changeRole(id);
-        }
-        else {
-            throw new AccessDeniedException();
-        } 
+        throw new AccessDeniedException();
     }
 
 
