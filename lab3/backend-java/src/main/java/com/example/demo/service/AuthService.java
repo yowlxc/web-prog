@@ -2,10 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.InvalidCredentialsException;
+import com.example.demo.exception.InvalidCredentialsException;
 
 @Service
 public class AuthService {

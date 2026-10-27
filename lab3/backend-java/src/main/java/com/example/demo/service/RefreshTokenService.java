@@ -14,6 +14,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.RefreshTokenRepository;
 import com.example.demo.exception.InvalidRefreshTokenException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -28,6 +29,7 @@ public class RefreshTokenService {
         this.repository = repository;
     }
 
+    // Создание рефреша
     public String issue(User user) {
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
@@ -79,4 +81,11 @@ public class RefreshTokenService {
     }
 
     public record Rotation(User user, String refreshToken) {}
+
+    @Transactional
+    public void revoke(String token) {
+        if (token != null && !token.isBlank()) {
+            repository.revokeByTokenHash(hash(token));
+        }
+    }
 }
