@@ -18,14 +18,21 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthService authService;
     private final AccessTokenService accessTokenService;
     private final RefreshTokenService refreshTokenService;
+
+    @Value("${COOKIE_SECURE:false}")
+    private boolean cookieSecure;
 
     public AuthController(
             AuthService authService,
@@ -48,6 +55,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
         User user = authService.authenticate(request.login(), request.password());
+        log.info("Успешный вход: userId={}", user.getId());
 
         String accessToken = accessTokenService.create(user);
         String refreshToken = refreshTokenService.issue(user);
@@ -66,6 +74,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
         RefreshTokenService.Rotation rotation = refreshTokenService.rotate(token);
+        log.info("Access-токен обновлён: userId={}", rotation.user().getId());
         setRefreshCookie(response, rotation.refreshToken(), Duration.ofDays(7));
 
         User user = rotation.user();
@@ -82,6 +91,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
         refreshTokenService.revoke(token);
+        log.info("Выход выполнен");
         setRefreshCookie(response, "", Duration.ZERO);
     }
 
@@ -92,7 +102,7 @@ public class AuthController {
     ) {
         ResponseCookie cookie = ResponseCookie.from("refresh_token", token)
                 .httpOnly(true)
-                .secure(false)
+                .secure(cookieSecure)
                 .sameSite("Lax")
                 .path("/api/auth")
                 .maxAge(maxAge)

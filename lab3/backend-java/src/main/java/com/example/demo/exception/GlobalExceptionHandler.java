@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.validation.FieldError;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.LinkedHashMap;
 
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleStudentNotFound(
@@ -77,7 +82,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> MethodArgumentNotValidException(
+    public ResponseEntity<Map<String, Object>> MethodArgumentNotValidException(
         MethodArgumentNotValidException error
     ) {
         Map<String, String> errors = new LinkedHashMap<>();
@@ -90,9 +95,10 @@ public class GlobalExceptionHandler {
                     fielderror.getDefaultMessage()
                 );
         };
+        log.warn("Ошибка валидации запроса: {}", errors.keySet());
         return ResponseEntity
                 .status(422)
-                .body(errors);
+                .body(Map.of("message", "Ошибка валидации", "errors", errors));
     }    
 
     @ExceptionHandler(BadRequestException.class)
@@ -102,6 +108,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("message", error.getMessage()));
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<Map<String, String>> invalidRequest(Exception error) {
+        log.warn("Некорректный запрос: {}", error.getClass().getSimpleName());
+        return ResponseEntity.badRequest().body(Map.of("message", "Некорректные данные запроса"));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> unexpectedError(Exception error) {
+        log.error("Ошибка сервера", error);
+        return ResponseEntity.status(500).body(Map.of("message", "Ошибка сервера"));
     }
 
 }

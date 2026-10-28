@@ -1,0 +1,230 @@
+openapi: 3.0.3
+info:
+  title: Student management API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Student:
+      type: object
+      required: [isu, fio, group, dormNumber, roomNumber, dateInDorm, isForeign]
+      properties:
+        isu: {type: integer, minimum: 100000, maximum: 999999}
+        fio: {type: string, minLength: 2, maxLength: 50}
+        group: {type: string, pattern: '^[A-Z][1-9][0-9]{3}$'}
+        dormNumber: {type: integer, minimum: 1, maximum: 100}
+        roomNumber: {type: integer, minimum: 1, maximum: 99999}
+        dateInDorm: {type: string, format: date}
+        isForeign: {type: boolean}
+        notes: {type: string, maxLength: 300}
+    StudentPatch:
+      type: object
+      properties:
+        fio: {type: string}
+        group: {type: string}
+        dormNumber: {type: integer}
+        roomNumber: {type: integer}
+        dateInDorm: {type: string, format: date}
+        isForeign: {type: boolean}
+        notes: {type: string}
+    User:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        login: {type: string}
+        role: {type: string, enum: [USER, ADMIN]}
+    AuthResponse:
+      type: object
+      properties:
+        accessToken: {type: string}
+        user: {$ref: '#/components/schemas/User'}
+    Error:
+      type: object
+      properties:
+        message: {type: string}
+        errors: {type: object, additionalProperties: {type: string}}
+paths:
+  /api/auth/csrf:
+    get:
+      summary: Get CSRF token and cookie before changing data
+      responses:
+        '200':
+          description: Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  csrfToken: {type: string}
+  /api/users:
+    post:
+      summary: Register a USER
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, login, password]
+              properties:
+                name: {type: string}
+                login: {type: string}
+                password: {type: string, format: password}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/User'}
+        '422': {description: Invalid input}
+        '409': {description: Duplicate login}
+  /api/users/{id}/role:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: {type: integer}
+    patch:
+      summary: Change user role (ADMIN)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role: {type: string, enum: [USER, ADMIN]}
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/User'}
+        '403': {description: Forbidden}
+  /api/auth/login:
+    post:
+      summary: Log in and receive access token and refresh cookie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [login, password]
+              properties:
+                login: {type: string}
+                password: {type: string, format: password}
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AuthResponse'}
+        '401': {description: Invalid credentials}
+  /api/auth/refresh:
+    post:
+      summary: Rotate refresh cookie and get a new access token
+      responses:
+        '200':
+          description: Refreshed
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AuthResponse'}
+        '401': {description: Invalid refresh token}
+  /api/auth/logout:
+    post:
+      summary: Revoke refresh token
+      responses:
+        '204': {description: Logged out}
+  /api/students:
+    get:
+      summary: List, filter, sort and paginate students (USER or ADMIN)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: roomMin, in: query, schema: {type: integer}}
+        - {name: roomMax, in: query, schema: {type: integer}}
+        - {name: group, in: query, schema: {type: string}}
+        - {name: isu, in: query, schema: {type: integer}}
+        - {name: fio, in: query, schema: {type: string}}
+        - {name: dormNumber, in: query, schema: {type: integer}}
+        - {name: isForeign, in: query, schema: {type: boolean}}
+        - {name: sortBy, in: query, schema: {type: string, default: isu, enum: [isu, fio, group, dormNumber, roomNumber, dateInDorm]}}
+        - {name: sortDir, in: query, schema: {type: string, default: asc, enum: [asc, desc]}}
+        - {name: page, in: query, schema: {type: integer, default: 0, minimum: 0}}
+        - {name: size, in: query, schema: {type: integer, default: 20, minimum: 1, maximum: 100}}
+      responses:
+        '200':
+          description: Students
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Student'}
+    post:
+      summary: Create student (ADMIN)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Student'}
+      responses:
+        '201':
+          description: Created student
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Student'}
+        '409': {description: Duplicate ISU}
+  /api/students/{isu}:
+    parameters:
+      - name: isu
+        in: path
+        required: true
+        schema: {type: integer}
+    get:
+      summary: Get student (USER or ADMIN)
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Student
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Student'}
+        '404': {description: Student not found}
+    put:
+      summary: Replace student (ADMIN)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Student'}
+      responses:
+        '200': {description: Replaced}
+        '404': {description: Student not found}
+    patch:
+      summary: Partially update student (ADMIN)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/StudentPatch'}
+      responses:
+        '200': {description: Updated}
+        '404': {description: Student not found}
+    delete:
+      summary: Delete student (ADMIN)
+      security: [{bearerAuth: []}]
+      responses:
+        '204': {description: Deleted}
+        '404': {description: Student not found}

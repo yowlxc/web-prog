@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "Лабораторная 3 — студенты и авторизация",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8080"},
+    {"key": "csrfToken", "value": ""},
+    {"key": "accessToken", "value": ""},
+    {"key": "userLogin", "value": "student_user"},
+    {"key": "userPassword", "value": "password123"},
+    {"key": "adminLogin", "value": "admin"},
+    {"key": "adminPassword", "value": ""},
+    {"key": "userId", "value": "1"},
+    {"key": "studentIsu", "value": "123456"}
+  ],
+  "item": [
+    {
+      "name": "1. Получить CSRF",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/auth/csrf"},
+      "event": [{"listen": "test", "script": {"exec": ["pm.collectionVariables.set('csrfToken', pm.response.json().csrfToken);"]}}]
+    },
+    {
+      "name": "2. Регистрация USER",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-XSRF-TOKEN", "value": "{{csrfToken}}"}],
+        "body": {"mode": "raw", "raw": "{\"name\":\"Student\",\"login\":\"{{userLogin}}\",\"password\":\"{{userPassword}}\"}"},
+        "url": "{{baseUrl}}/api/users"
+      },
+      "event": [{"listen": "test", "script": {"exec": ["if (pm.response.code === 201) pm.collectionVariables.set('userId', pm.response.json().id);"]}}]
+    },
+    {
+      "name": "3. Вход USER",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-XSRF-TOKEN", "value": "{{csrfToken}}"}],
+        "body": {"mode": "raw", "raw": "{\"login\":\"{{userLogin}}\",\"password\":\"{{userPassword}}\"}"},
+        "url": "{{baseUrl}}/api/auth/login"
+      },
+      "event": [{"listen": "test", "script": {"exec": ["if (pm.response.code === 200) pm.collectionVariables.set('accessToken', pm.response.json().accessToken);"]}}]
+    },
+    {
+      "name": "4. USER читает список",
+      "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}], "url": "{{baseUrl}}/api/students?page=0&size=20&sortBy=isu&sortDir=asc"},
+      "event": [{"listen": "test", "script": {"exec": ["pm.test('USER может читать', () => pm.response.to.have.status(200));"]}}]
+    },
+    {
+      "name": "5. USER не может создавать",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\"isu\":{{studentIsu}},\"fio\":\"Иванов Иван\",\"group\":\"P1234\",\"dormNumber\":1,\"roomNumber\":101,\"dateInDorm\":\"2024-09-01\",\"isForeign\":false,\"notes\":\"\"}"},
+        "url": "{{baseUrl}}/api/students"
+      },
+      "event": [{"listen": "test", "script": {"exec": ["pm.test('USER запрещено создавать', () => pm.response.to.have.status(403));"]}}]
+    },
+    {
+      "name": "6. Вход ADMIN",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "X-XSRF-TOKEN", "value": "{{csrfToken}}"}],
+        "body": {"mode": "raw", "raw": "{\"login\":\"{{adminLogin}}\",\"password\":\"{{adminPassword}}\"}"},
+        "url": "{{baseUrl}}/api/auth/login"
+      },
+      "event": [{"listen": "test", "script": {"exec": ["if (pm.response.code === 200) pm.collectionVariables.set('accessToken', pm.response.json().accessToken);"]}}]
+    },
+    {
+      "name": "7. ADMIN создаёт студента",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\"isu\":{{studentIsu}},\"fio\":\"Иванов Иван\",\"group\":\"P1234\",\"dormNumber\":1,\"roomNumber\":101,\"dateInDorm\":\"2024-09-01\",\"isForeign\":false,\"notes\":\"\"}"},
+        "url": "{{baseUrl}}/api/students"
+      }
+    },
+    {
+      "name": "8. Поиск, фильтр, сортировка и страницы",
+      "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}], "url": "{{baseUrl}}/api/students?fio=Иванов&group=P1234&sortBy=fio&sortDir=desc&page=0&size=10"}
+    },
+    {
+      "name": "9. Получить студента",
+      "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}], "url": "{{baseUrl}}/api/students/{{studentIsu}}"}
+    },
+    {
+      "name": "10. Полное обновление",
+      "request": {
+        "method": "PUT",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\"isu\":{{studentIsu}},\"fio\":\"Иванов Иван\",\"group\":\"P1234\",\"dormNumber\":1,\"roomNumber\":202,\"dateInDorm\":\"2024-09-01\",\"isForeign\":false,\"notes\":\"Полное обновление\"}"},
+        "url": "{{baseUrl}}/api/students/{{studentIsu}}"
+      }
+    },
+    {
+      "name": "11. Частичное обновление",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\"roomNumber\":203}"},
+        "url": "{{baseUrl}}/api/students/{{studentIsu}}"
+      }
+    },
+    {
+      "name": "12. Изменить роль USER",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}, {"key": "X-XSRF-TOKEN", "value": "{{csrfToken}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\"role\":\"ADMIN\"}"},
+        "url": "{{baseUrl}}/api/users/{{userId}}/role"
+      }
+    },
+    {
+      "name": "13. Обновить токен",
+      "request": {"method": "POST", "header": [{"key": "X-XSRF-TOKEN", "value": "{{csrfToken}}"}], "url": "{{baseUrl}}/api/auth/refresh"},
+      "event": [{"listen": "test", "script": {"exec": ["if (pm.response.code === 200) pm.collectionVariables.set('accessToken', pm.response.json().accessToken);"]}}]
+    },
+    {
+      "name": "14. Удалить студента",
+      "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}], "url": "{{baseUrl}}/api/students/{{studentIsu}}"}
+    },
+    {
+      "name": "15. Выход",
+      "request": {"method": "POST", "header": [{"key": "X-XSRF-TOKEN", "value": "{{csrfToken}}"}], "url": "{{baseUrl}}/api/auth/logout"}
+    }
+  ]
+}

@@ -5,7 +5,22 @@ const formStudents = document.querySelector("#form-students");
 const filterButton = document.querySelector("#btn-filter");
 const filterResetButton = document.querySelector("#btn-reset-filter");
 
-renderStudents();
+document.querySelector("#sort-by").addEventListener("change", function() {
+    currentPage = 0;
+    renderStudents();
+});
+document.querySelector("#sort-dir").addEventListener("change", function() {
+    currentPage = 0;
+    renderStudents();
+});
+document.querySelector("#page-prev").addEventListener("click", function() {
+    if (currentPage > 0) currentPage--;
+    renderStudents();
+});
+document.querySelector("#page-next").addEventListener("click", function() {
+    currentPage++;
+    renderStudents();
+});
 
 btnAdd.addEventListener("click", function() {
     editingIsu = null;
@@ -64,7 +79,9 @@ filterButton.addEventListener("click", async function() {
     if (roomMin) params.roomMin = Number(roomMin);
     if (roomMax) params.roomMax = Number(roomMax);
 
-    await renderStudents(params);
+    currentFilters = params;
+    currentPage = 0;
+    await renderStudents();
 });
 
 filterResetButton.addEventListener("click", async function() {
@@ -77,5 +94,7 @@ filterResetButton.addEventListener("click", async function() {
     document.querySelector("#filter-room-max").value = "";
     const params = {}
 
-    await renderStudents(params);
+    currentFilters = params;
+    currentPage = 0;
+    await renderStudents();
 });

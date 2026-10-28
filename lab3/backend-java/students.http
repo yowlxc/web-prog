@@ -1,55 +1,46 @@
-POST http://localhost:8080/api/students
+@baseUrl = http://localhost:8080
+@accessToken = paste_access_token_here
+@csrfToken = paste_csrf_token_here
+
+### Получить CSRF-токен и cookie перед входом или регистрацией
+GET {{baseUrl}}/api/auth/csrf
+
+### Вход
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+X-XSRF-TOKEN: {{csrfToken}}
+
+{"login":"admin","password":"your-strong-password"}
+
+### Список с поиском, сортировкой и пагинацией
+GET {{baseUrl}}/api/students?fio=Иванов&sortBy=isu&sortDir=asc&page=0&size=20
+Authorization: Bearer {{accessToken}}
+
+### Получить студента
+GET {{baseUrl}}/api/students/123456
+Authorization: Bearer {{accessToken}}
+
+### Создать студента (ADMIN)
+POST {{baseUrl}}/api/students
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
-{
-  "isu": "123456",
-  "fio": "Иванов Иван",
-  "group": "P1234",
-  "dormNumber": 1,
-  "roomNumber": 101,
-  "dateInDorm": "2024-09-01",
-  "isForeign": false,
-  "notes": ""
-}
+{"isu":123456,"fio":"Иванов Иван","group":"P1234","dormNumber":1,"roomNumber":101,"dateInDorm":"2024-09-01","isForeign":false,"notes":""}
 
-###
-
-GET http://localhost:8080/api/students
-
-###
-
-
-GET http://localhost:8080/api/students/123456
-
-###
-
-
-PUT http://localhost:8080/api/students/123456
+### Полное обновление (ADMIN)
+PUT {{baseUrl}}/api/students/123456
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
-{
-  "isu": "123456",
-  "fio": "Иванов Иван",
-  "group": "P1234",
-  "dormNumber": 1,
-  "roomNumber": 202,
-  "dateInDorm": "2024-09-01",
-  "isForeign": false,
-  "notes": "Номер комнаты обновлён"
-}
+{"isu":123456,"fio":"Иванов Иван","group":"P1234","dormNumber":1,"roomNumber":202,"dateInDorm":"2024-09-01","isForeign":false,"notes":""}
 
-###
-
-
-PATCH http://localhost:8080/api/students/123456
+### Частичное обновление (ADMIN)
+PATCH {{baseUrl}}/api/students/123456
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
-{
-  "roomNumber": 202
-}
+{"roomNumber":203}
 
-###
-
-GET http://localhost:8080/api/students?roomMin=203
-
-
+### Удаление (ADMIN)
+DELETE {{baseUrl}}/api/students/123456
+Authorization: Bearer {{accessToken}}

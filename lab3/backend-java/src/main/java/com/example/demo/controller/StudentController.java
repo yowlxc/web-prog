@@ -1,18 +1,15 @@
 package com.example.demo.controller;
 
-import jakarta.validation.Valid;
-import com.example.demo.model.Student;
+import com.example.demo.dto.StudentPatchRequest;
+import com.example.demo.dto.StudentRequest;
+import com.example.demo.dto.StudentResponse;
 import com.example.demo.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-@CrossOrigin(origins = {
-    "http://127.0.0.1:5500",
-    "http://localhost:5500"
-}) 
 
 @RestController
 @RequestMapping("/api/students")
@@ -24,56 +21,47 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // получить список студентов (с фильтрами)
     @GetMapping
-    public List<Student> getAllStudents(
+    public List<StudentResponse> getAllStudents(
             @RequestParam(required = false) Integer roomMin,
             @RequestParam(required = false) Integer roomMax,
             @RequestParam(required = false) String group,
             @RequestParam(required = false) Integer isu,
             @RequestParam(required = false) String fio,
             @RequestParam(required = false) Integer dormNumber,
-            @RequestParam(required = false) Boolean isForeign) {
-
-        if (roomMin == null && roomMax == null && group == null
-                && fio == null && isu == null && dormNumber == null && isForeign == null) {
-            return studentService.getAllStudents();
-        }
-
-        return studentService.filterStudents(
-                roomMin, roomMax, group, fio, isu, dormNumber, isForeign);
+            @RequestParam(required = false) Boolean isForeign,
+            @RequestParam(defaultValue = "isu") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        return studentService.getStudents(roomMin, roomMax, group, fio, isu,
+                dormNumber, isForeign, sortBy, sortDir, page, size);
     }
 
-    // получить студента по ИСУ
     @GetMapping("/{isu}")
-    public ResponseEntity<Student> getStudentByIsu(
-            @PathVariable Integer isu) {
-        return studentService.getStudentByIsu(isu)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public StudentResponse getStudentByIsu(@PathVariable Integer isu) {
+        return studentService.getStudentByIsu(isu);
     }
 
-    // создать студента
     @PostMapping
-    public ResponseEntity<Student> createStudent(
-            @Valid @RequestBody Student student) {
-        Student created = studentService.createStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<StudentResponse> createStudent(@Valid @RequestBody StudentRequest student) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.createStudent(student));
     }
 
-    // частично обновить студента
+    @PutMapping("/{isu}")
+    public StudentResponse replaceStudent(@PathVariable Integer isu,
+                                          @Valid @RequestBody StudentRequest student) {
+        return studentService.replaceStudent(isu, student);
+    }
+
     @PatchMapping("/{isu}")
-    public ResponseEntity<Student> updateStudent(
-            @PathVariable Integer isu,
-            @RequestBody Student student) {
-        return ResponseEntity.ok(
-                studentService.updateStudent(isu, student));
+    public StudentResponse updateStudent(@PathVariable Integer isu,
+                                         @Valid @RequestBody StudentPatchRequest student) {
+        return studentService.updateStudent(isu, student);
     }
 
-    // удалить студента
     @DeleteMapping("/{isu}")
-    public ResponseEntity<Void> deleteStudent(
-            @PathVariable Integer isu) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable Integer isu) {
         studentService.deleteStudent(isu);
         return ResponseEntity.noContent().build();
     }

@@ -1,10 +1,36 @@
 const studentsTable = document.querySelector(".students-table tbody");
+let currentPage = 0;
+let currentFilters = {};
+const pageSize = 20;
+let lastRenderRequest = 0;
 
-async function renderStudents(params = {}) {
+async function renderStudents() {
+    const page = currentPage;
+    const requestId = ++lastRenderRequest;
+    const prevButton = document.querySelector("#page-prev");
+    const nextButton = document.querySelector("#page-next");
+    prevButton.disabled = true;
+    nextButton.disabled = true;
+    const params = {
+        ...currentFilters,
+        page: page,
+        size: pageSize,
+        sortBy: document.querySelector("#sort-by").value,
+        sortDir: document.querySelector("#sort-dir").value
+    };
+    let students;
+    try {
+        students = await getStudents(params);
+    } catch (error) {
+        if (requestId === lastRenderRequest) {
+            prevButton.disabled = page === 0;
+            nextButton.disabled = false;
+        }
+        throw error;
+    }
+    if (requestId !== lastRenderRequest) return;
 
-    const students = await getStudents(params);
-
-    studentsTable.innerHTML = "";
+    const rows = document.createDocumentFragment();
     students.forEach(function(student) {
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -17,16 +43,20 @@ async function renderStudents(params = {}) {
                         Подробнее
                     </button>
 
-                    <button class="btn-edit" data-id="${student.isu}">
+                    <button class="btn-edit ${currentUser.role === "ADMIN" ? "" : "hidden"}" data-id="${student.isu}">
                         Редактировать
                     </button>
 
-                    <button class="btn-delete" data-id="${student.isu}">
+                    <button class="btn-delete ${currentUser.role === "ADMIN" ? "" : "hidden"}" data-id="${student.isu}">
                         Удалить
                     </button>
                 </div>
             </td>
         `;
-    studentsTable.appendChild(row);
+    rows.appendChild(row);
     })
+    studentsTable.replaceChildren(rows);
+    document.querySelector("#page-number").textContent = "Страница " + (page + 1);
+    prevButton.disabled = page === 0;
+    nextButton.disabled = students.length < pageSize;
 }

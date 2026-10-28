@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,5 +35,19 @@ class StudentControllerTest {
                     """))
             .andExpect(status().isConflict())
             .andExpect(jsonPath("$.message").value("Студент с ИСУ 123456 уже существует"));
+    }
+
+    @Test
+    void invalidPatchReturnsValidationError() throws Exception {
+        MockMvc mvc = MockMvcBuilders
+            .standaloneSetup(new StudentController(new StudentService(mock(StudentRepository.class))))
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .build();
+
+        mvc.perform(patch("/api/students/123456")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"roomNumber\":0}"))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.message").value("Ошибка валидации"));
     }
 }

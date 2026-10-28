@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CreateUserRequest;
+import com.example.demo.dto.ChangeRoleRequest;
 import com.example.demo.dto.UserResponse;
-import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,9 +29,10 @@ public class UserController {
     @PatchMapping("/{id}/role")
     @ResponseStatus(HttpStatus.OK)
     public UserResponse changeRole(
-        @PathVariable("id") Long id
+        @PathVariable("id") Long id,
+        @Valid @RequestBody ChangeRoleRequest request
     ) {
-        throw new AccessDeniedException();
+        return userService.changeRole(id, request.role());
     }
 
 

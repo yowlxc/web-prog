@@ -6,6 +6,7 @@ const groupError = document.querySelector("#group-error");
 const dormError = document.querySelector("#dorm-error");
 const roomError = document.querySelector("#room-error");
 const dateError = document.querySelector("#date-error");
+document.querySelector("#date-in-dorm").max = new Date().toISOString().slice(0, 10);
 
 let editingIsu = null;
 

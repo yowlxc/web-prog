@@ -44,6 +44,30 @@ p {
     display: none !important;
 }
 
+#auth-section, #user-panel {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+#auth-section form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+#auth-section input {
+    padding: 8px;
+}
+
+.pagination {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 12px;
+}
+
 /* КНОПКИ */
 button {
     padding: 6px 8px;

@@ -9,10 +9,7 @@ const studsTable = document.querySelector("#list-students tbody");
 studsTable.addEventListener("click", async function(event) {
     if (event.target.classList.contains("btn-details")) {
         const studentId = event.target.dataset.id;
-        const students = await getStudents();
-        const student = students.find(function(student) {
-            return student.isu == studentId;
-        });
+        const student = await getStudent(studentId);
         if (!student) {
             return;
         }
@@ -44,10 +41,7 @@ studsTable.addEventListener("click", async function(event) {
         h2.textContent = "Форма редактирования студента";
 
         const studentIsu = event.target.dataset.id;
-        const students = await getStudents();
-        const student = students.find(function(student) {
-            return student.isu === studentIsu;
-        });
+        const student = await getStudent(studentIsu);
 
         if (!student) return;
 
@@ -56,7 +50,7 @@ studsTable.addEventListener("click", async function(event) {
         document.getElementById("fio").value = student.fio;
         document.getElementById("group").value = student.group;
         document.getElementById("isu").value = student.isu;
-        document.getElementById("isu").readOnly = false;
+        document.getElementById("isu").readOnly = true;
         document.getElementById("num-dorm").value = student.dormNumber;
         document.getElementById("num-room").value = student.roomNumber;
         document.getElementById("date-in-dorm").value = student.dateInDorm;

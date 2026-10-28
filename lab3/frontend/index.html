@@ -14,8 +14,37 @@
 <body>
     <h1>Система заявок: Мониторинг студентов</h1>
 
+    <p id="auth-loading">Проверяем сессию...</p>
+    <section id="auth-section" class="hidden">
+        <div id="login-view">
+            <h2>Вход</h2>
+            <form id="login-form">
+                <input id="login" type="text" placeholder="Логин" required>
+                <input id="password" type="password" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+            <button id="btn-show-register" type="button">Регистрация</button>
+        </div>
+        <div id="register-view" class="hidden">
+            <h2>Регистрация</h2>
+            <form id="register-form">
+                <input id="register-name" type="text" placeholder="Имя" required>
+                <input id="register-login" type="text" placeholder="Логин" required>
+                <input id="register-password" type="password" placeholder="Пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <button id="btn-back-login" type="button">Назад ко входу</button>
+        </div>
+        <p id="auth-message"></p>
+    </section>
+
+    <div id="user-panel" class="hidden">
+        <span id="current-user"></span>
+        <button id="btn-logout" type="button">Выйти</button>
+    </div>
+
     <!-- Список студентов -->
-    <section id="list-students">
+    <section id="list-students" class="hidden">
         <div class="btn-add">
             <button id="btn-add">+ Добавить студента</button>
         </div>
@@ -32,7 +61,7 @@
 
                 <div class="filter-item">
                     <label for="filter-group">Группа</label>
-                    <input type="text" id="filter-group" required minlength="5" maxlength="5" pattern="^[A-Za-z][1-9][0-9]{3}$">
+                    <input type="text" id="filter-group" required minlength="5" maxlength="5" pattern="^[A-Z][1-9][0-9]{3}$">
                 </div>
 
                 <div class="filter-item">
@@ -72,6 +101,17 @@
             </aside>
 
             <div class="students-table">
+                <label for="sort-by">Сортировать по</label>
+                <select id="sort-by">
+                    <option value="isu">ИСУ</option>
+                    <option value="fio">ФИО</option>
+                    <option value="group">Группа</option>
+                    <option value="roomNumber">Комната</option>
+                </select>
+                <select id="sort-dir" aria-label="Порядок сортировки">
+                    <option value="asc">По возрастанию</option>
+                    <option value="desc">По убыванию</option>
+                </select>
                 <table>
                     <thead>
                         <tr>
@@ -82,15 +122,13 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-                        <tr>
-                            <th>501606</th>
-                            <th>ПОтёмкин Платон</th>
-                            <th>P3224</th>
-                            <th>Действия</th>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
+                <div class="pagination">
+                    <button id="page-prev" type="button">Назад</button>
+                    <span id="page-number">Страница 1</span>
+                    <button id="page-next" type="button">Далее</button>
+                </div>
             </div>
 
         </div>
@@ -109,7 +147,7 @@
             </div>
             <div class="form-data">
                 <label>Группа</label>
-                <input type="text" id="group" required minlength="5" maxlength="5" pattern="^[A-Za-z][1-9][0-9]{3}$" placeholder="A1234">
+                <input type="text" id="group" required minlength="5" maxlength="5" pattern="^[A-Z][1-9][0-9]{3}$" placeholder="A1234">
                 <span id="group-error"></span>
             </div>
             <div class="form-data">
@@ -129,7 +167,7 @@
             </div>
             <div class="form-data">
                 <label>Дата заселения</label>
-                <input type="date" id="date-in-dorm" required min = "1999-01-01" max = "2026-10-08">
+                <input type="date" id="date-in-dorm" required min="1999-01-01">
                 <span id="date-error"></span>
             </div>
             <div class="form-no-rus">
@@ -161,5 +199,6 @@
     <script src="js/form.js"></script>
     <script src="js/student.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
