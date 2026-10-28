@@ -108,14 +108,14 @@ td {
     margin: auto;
 }
 
-#fio_tbl {
+.fio_tbl {
     max-width: 13em;
     min-width: 8em;
     overflow: hidden;
     text-overflow: ellipsis
 }
 
-#isu_tbl {
+.isu_tbl {
     width: fit-content;
 }
 
@@ -315,6 +315,8 @@ input[type=checkbox] {
     font-weight: bold;
 }
 
+
+
 @media (max-width: 600px) {
     .form-data, .form-notes {
         display: flex;
@@ -328,6 +330,115 @@ input[type=checkbox] {
         display: block;
         gap: 0.875em;
         margin-top: 7px;
+    }
+}
+
+/* Авторизация */
+.auth-panel {
+    width: 55%;
+    max-width: 45rem;
+    margin: 2rem auto;
+}
+
+.auth-panel h2 {
+    white-space: normal;
+}
+
+.auth-panel form {
+    width: 100%;
+    min-width: 0;
+}
+
+.auth-field {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.auth-field label {
+    margin-bottom: 0.4rem;
+}
+
+.auth-field input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+}
+
+.auth-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2%;
+    margin-top: 1.2rem;
+}
+
+.auth-actions button {
+    margin: 0.25rem 0;
+}
+
+.auth-message,
+.app-message {
+    width: 80%;
+    box-sizing: border-box;
+    margin: 1rem auto;
+    padding: 1%;
+    border: 0.0625rem solid #d7a4a4;
+    border-radius: 0.5rem;
+    background: #fff1f1;
+    color: #8b1e1e;
+    white-space: pre-line;
+}
+
+.auth-message.success {
+    background: #eaf7ec;
+    color: #216b32;
+    border-color: #9ac9a4;
+}
+
+.session-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2%;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    padding: 1%;
+    background: #f8f9fa;
+    border: 0.0625rem solid #d0d0d0;
+    border-radius: 0.5rem;
+}
+
+#current-user {
+    font-weight: 600;
+}
+
+#btn-logout {
+    background: #555;
+    border-color: #333;
+}
+
+#btn-logout:hover {
+    background: #707070;
+}
+
+@media (max-width: 40rem) {
+    .auth-panel {
+        width: 95%;
+    }
+
+    .auth-message,
+    .app-message {
+        width: 100%;
+    }
+
+    .session-bar {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .auth-actions {
+        gap: 0.5rem;
     }
 }
 

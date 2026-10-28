@@ -1,4 +1,4 @@
-const form = document.querySelector('form');
+const form = document.querySelector('#form-students form');
 form.noValidate = true;
 const isuError = document.querySelector("#isu-error");
 const fioError = document.querySelector("#fio-error");
