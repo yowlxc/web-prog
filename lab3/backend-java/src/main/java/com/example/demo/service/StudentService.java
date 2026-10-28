@@ -2,11 +2,13 @@ package com.example.demo.service;
 
 import com.example.demo.model.Student;
 import com.example.demo.exception.DuplicateIsuException;
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Comparator;
 
 @Service
 public class StudentService {
@@ -17,8 +19,10 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<Student> getAllStudents(
+            String sortBy, String sortDir, Integer page, Integer size) {
+        return filterStudents(null, null, null, null, null, null, null,
+                sortBy, sortDir, page, size);
     }
 
     public List<Student> filterStudents(
@@ -28,7 +32,32 @@ public class StudentService {
             String fio,
             Integer isu,
             Integer dormNumber,
-            Boolean isForeign) {
+            Boolean isForeign,
+            String sortBy,
+            String sortDir,
+            Integer page,
+            Integer size) {
+
+        if (page < 0 || size < 1 || size > 100) {
+            throw new BadRequestException("page должен быть >= 0, size — от 1 до 100");
+        }
+        if (!sortDir.equalsIgnoreCase("asc") && !sortDir.equalsIgnoreCase("desc")) {
+            throw new BadRequestException("sortDir должен быть asc или desc");
+        }
+
+        Comparator<Student> comparator = switch (sortBy) {
+            case "isu" -> Comparator.comparing(Student::getIsu);
+            case "fio" -> Comparator.comparing(Student::getFio);
+            case "group" -> Comparator.comparing(Student::getGroup);
+            case "dormNumber" -> Comparator.comparing(Student::getDormNumber);
+            case "roomNumber" -> Comparator.comparing(Student::getRoomNumber);
+            case "dateInDorm" -> Comparator.comparing(Student::getDateInDorm);
+            default -> throw new BadRequestException("Неизвестное поле сортировки: " + sortBy);
+        };
+        comparator = comparator.thenComparing(Student::getIsu);
+        if (sortDir.equalsIgnoreCase("desc")) {
+            comparator = comparator.reversed();
+        }
 
         return studentRepository.findAll().stream()
                 .filter(s -> roomMin == null || s.getRoomNumber() >= roomMin)
@@ -38,6 +67,9 @@ public class StudentService {
                 .filter(s -> isu == null || s.getIsu().equals(isu))
                 .filter(s -> dormNumber == null || s.getDormNumber().equals(dormNumber))
                 .filter(s -> isForeign == null || s.getIsForeign().equals(isForeign))
+                .sorted(comparator)
+                .skip((long) page * size)
+                .limit(size)
                 .toList();
     }
 

@@ -233,6 +233,20 @@ input[type=checkbox] {
     overflow-x: auto;
 }
 
+.list-controls, .pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 8px 0;
+}
+
+.list-controls select {
+    padding: 6px;
+    border: 1px solid #cacaca;
+    border-radius: 6px;
+}
+
 .students-table table {
     width: 100%;
 }

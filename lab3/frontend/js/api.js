@@ -18,6 +18,10 @@ async function getStudents(params = {}) {
     return request(`/api/students?${query}`);
 }
 
+async function getStudent(isu) {
+    return request(`/api/students/${isu}`);
+}
+
 async function addStudent(student) {
     return request('/api/students', {
         method: "POST",

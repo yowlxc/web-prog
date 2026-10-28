@@ -33,15 +33,20 @@ public class StudentController {
             @RequestParam(required = false) Integer isu,
             @RequestParam(required = false) String fio,
             @RequestParam(required = false) Integer dormNumber,
-            @RequestParam(required = false) Boolean isForeign) {
+            @RequestParam(required = false) Boolean isForeign,
+            @RequestParam(defaultValue = "isu") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
 
         if (roomMin == null && roomMax == null && group == null
                 && fio == null && isu == null && dormNumber == null && isForeign == null) {
-            return studentService.getAllStudents();
+            return studentService.getAllStudents(sortBy, sortDir, page, size);
         }
 
         return studentService.filterStudents(
-                roomMin, roomMax, group, fio, isu, dormNumber, isForeign);
+                roomMin, roomMax, group, fio, isu, dormNumber, isForeign,
+                sortBy, sortDir, page, size);
     }
 
     // получить студента по ИСУ

@@ -72,6 +72,21 @@
             </aside>
 
             <div class="students-table">
+                <div class="list-controls">
+                    <label for="sort-by">Сортировка:</label>
+                    <select id="sort-by">
+                        <option value="isu">ИСУ</option>
+                        <option value="fio">ФИО</option>
+                        <option value="group">Группа</option>
+                        <option value="dormNumber">Общежитие</option>
+                        <option value="roomNumber">Комната</option>
+                        <option value="dateInDorm">Дата заселения</option>
+                    </select>
+                    <select id="sort-dir" aria-label="Порядок сортировки">
+                        <option value="asc">По возрастанию</option>
+                        <option value="desc">По убыванию</option>
+                    </select>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -82,15 +97,13 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-                        <tr>
-                            <th>501606</th>
-                            <th>ПОтёмкин Платон</th>
-                            <th>P3224</th>
-                            <th>Действия</th>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
+                <div class="pagination">
+                    <button id="page-prev" type="button">Назад</button>
+                    <span id="page-number">Страница 1</span>
+                    <button id="page-next" type="button">Далее</button>
+                </div>
             </div>
 
         </div>
