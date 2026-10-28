@@ -19,7 +19,7 @@ class StudentControllerTest {
     @Test
     void duplicateIsuReturnsConflict() throws Exception {
         StudentRepository repository = mock(StudentRepository.class);
-        when(repository.existsById("123456")).thenReturn(true);
+        when(repository.existsById(123456)).thenReturn(true);
         MockMvc mvc = MockMvcBuilders
             .standaloneSetup(new StudentController(new StudentService(repository)))
             .setControllerAdvice(new GlobalExceptionHandler())
@@ -28,7 +28,7 @@ class StudentControllerTest {
         mvc.perform(post("/api/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"isu":"123456","fio":"Иванов Иван","group":"P1234",
+                    {"isu":123456,"fio":"Иванов Иван","group":"P1234",
                      "dormNumber":1,"roomNumber":101,"dateInDorm":"2024-09-01",
                      "isForeign":false,"notes":""}
                     """))

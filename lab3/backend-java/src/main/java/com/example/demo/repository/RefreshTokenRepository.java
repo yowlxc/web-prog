@@ -8,28 +8,24 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
-<<<<<<< HEAD
-=======
-    @Query("""
-    select t from RefreshToken t
-    join fetch t.user
-    where t.tokenHash = :tokenHash
-    """)
->>>>>>> ab5d2912ef64b8c8c0f38d30b4be629e31cfaf14
-    Optional<RefreshToken> findByTokenHash(String tokenHash);
+public interface RefreshTokenRepository
+        extends JpaRepository<RefreshToken, Long> {
+
+    @Query("SELECT t FROM RefreshToken t JOIN FETCH t.user WHERE t.tokenHash = :tokenHash")
+    Optional<RefreshToken> findByTokenHash(
+            @Param("tokenHash") String tokenHash
+    );
 
     @Modifying
-    @Query("""
-        delete from RefreshToken t
-        where t.id = :id and t.tokenHash = :tokenHash
-        """)
-    int consume(@Param("id") Long id, @Param("tokenHash") String tokenHash);
-<<<<<<< HEAD
-=======
+    @Query("DELETE FROM RefreshToken t WHERE t.id = :id AND t.tokenHash = :tokenHash")
+    int consume(
+            @Param("id") Long id,
+            @Param("tokenHash") String tokenHash
+    );
 
     @Modifying
-    @Query("delete from RefreshToken t where t.tokenHash = :tokenHash")
-    int revokeByTokenHash(@Param("tokenHash") String tokenHash);
->>>>>>> ab5d2912ef64b8c8c0f38d30b4be629e31cfaf14
+    @Query("DELETE FROM RefreshToken t WHERE t.tokenHash = :tokenHash")
+    int revokeByTokenHash(
+            @Param("tokenHash") String tokenHash
+    );
 }

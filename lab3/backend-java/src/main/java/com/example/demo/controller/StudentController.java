@@ -30,23 +30,24 @@ public class StudentController {
             @RequestParam(required = false) Integer roomMin,
             @RequestParam(required = false) Integer roomMax,
             @RequestParam(required = false) String group,
+            @RequestParam(required = false) Integer isu,
             @RequestParam(required = false) String fio,
             @RequestParam(required = false) Integer dormNumber,
             @RequestParam(required = false) Boolean isForeign) {
 
         if (roomMin == null && roomMax == null && group == null
-                && fio == null && dormNumber == null && isForeign == null) {
+                && fio == null && isu == null && dormNumber == null && isForeign == null) {
             return studentService.getAllStudents();
         }
 
         return studentService.filterStudents(
-                roomMin, roomMax, group, fio, dormNumber, isForeign);
+                roomMin, roomMax, group, fio, isu, dormNumber, isForeign);
     }
 
     // получить студента по ИСУ
     @GetMapping("/{isu}")
     public ResponseEntity<Student> getStudentByIsu(
-            @PathVariable String isu) {
+            @PathVariable Integer isu) {
         return studentService.getStudentByIsu(isu)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -63,7 +64,7 @@ public class StudentController {
     // частично обновить студента
     @PatchMapping("/{isu}")
     public ResponseEntity<Student> updateStudent(
-            @PathVariable String isu,
+            @PathVariable Integer isu,
             @RequestBody Student student) {
         return ResponseEntity.ok(
                 studentService.updateStudent(isu, student));
@@ -72,7 +73,7 @@ public class StudentController {
     // удалить студента
     @DeleteMapping("/{isu}")
     public ResponseEntity<Void> deleteStudent(
-            @PathVariable String isu) {
+            @PathVariable Integer isu) {
         studentService.deleteStudent(isu);
         return ResponseEntity.noContent().build();
     }

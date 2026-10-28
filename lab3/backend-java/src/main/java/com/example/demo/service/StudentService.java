@@ -26,6 +26,7 @@ public class StudentService {
             Integer roomMax,
             String group,
             String fio,
+            Integer isu,
             Integer dormNumber,
             Boolean isForeign) {
 
@@ -34,29 +35,29 @@ public class StudentService {
                 .filter(s -> roomMax == null || s.getRoomNumber() <= roomMax)
                 .filter(s -> group == null || s.getGroup().equals(group))
                 .filter(s -> fio == null || s.getFio().equals(fio))
+                .filter(s -> isu == null || s.getIsu().equals(isu))
                 .filter(s -> dormNumber == null || s.getDormNumber().equals(dormNumber))
                 .filter(s -> isForeign == null || s.getIsForeign().equals(isForeign))
                 .toList();
     }
 
-    public Optional<Student> getStudentByIsu(String isu) {
+    public Optional<Student> getStudentByIsu(Integer isu) {
         return studentRepository.findById(isu);
     }
 
     public Student createStudent(Student student) {
         if (studentRepository.existsById(student.getIsu())) {
-            throw new DuplicateIsuException(student.getIsu());
+            throw new DuplicateIsuException(String.valueOf(student.getIsu()));
         }
 
         return studentRepository.save(student);
     }
 
-    public Student updateStudent(String isu, Student updatedStudent) {
+    public Student updateStudent(Integer isu, Student updatedStudent) {
         Student existing = studentRepository.findById(isu)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Студент не найден: " + isu
                 ));
-
         if (updatedStudent.getFio() != null) {
             existing.setFio(updatedStudent.getFio());
         }
@@ -82,7 +83,7 @@ public class StudentService {
         return studentRepository.save(existing);
     }
 
-    public void deleteStudent(String isu) {
+    public void deleteStudent(Integer isu) {
         if (!studentRepository.existsById(isu)) {
             throw new IllegalArgumentException(
                     "Студент не найден: " + isu

@@ -8,6 +8,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.HexFormat;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import com.example.demo.model.RefreshToken;
 import com.example.demo.model.User;
@@ -23,6 +25,10 @@ public class RefreshTokenService {
     private static final Duration LIFETIME = Duration.ofDays(7);
 
     private final RefreshTokenRepository repository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final SecureRandom random = new SecureRandom();
 
     public RefreshTokenService(RefreshTokenRepository repository) {
@@ -76,6 +82,9 @@ public class RefreshTokenService {
         if (repository.consume(stored.getId(), stored.getTokenHash()) != 1) {
             throw new InvalidRefreshTokenException();
         }
+
+        // Удаляем старый объект из persistence context Hibernate.
+        entityManager.detach(stored);
 
         return new Rotation(user, issue(user));
     }

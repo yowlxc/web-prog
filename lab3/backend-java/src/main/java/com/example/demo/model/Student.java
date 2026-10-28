@@ -22,9 +22,11 @@ import java.time.LocalDate;
 public class Student {
 
     @Id
-    @Pattern(regexp = "^[1-9][0-9]{5}$")
-    @Column(nullable = false, length = 6)
-    private String isu;
+    @NotNull
+    @Min(100000)
+    @Max(999999)
+    @Column(nullable = false)
+    private Integer isu;
 
     @jakarta.validation.constraints.NotBlank
     @Size(min = 2, max = 50)
@@ -82,11 +84,11 @@ public class Student {
                 && !dateInDorm.isAfter(LocalDate.now()));
     }
 
-    public String getIsu() {
+    public Integer getIsu() {
         return isu;
     }
 
-    public void setIsu(String isu) {
+    public void setIsu(Integer isu) {
         this.isu = isu;
     }
 
