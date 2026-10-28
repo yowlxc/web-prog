@@ -46,7 +46,7 @@ studsTable.addEventListener("click", async function(event) {
         const studentIsu = event.target.dataset.id;
         const students = await getStudents();
         const student = students.find(function(student) {
-            return student.isu === studentIsu;
+            return String(student.isu) === studentIsu;
         });
 
         if (!student) return;
