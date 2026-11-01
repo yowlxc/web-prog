@@ -32,6 +32,11 @@ function clearAuthMessage() {
 }
 
 function showAuthPanel(panel) {
+    ///
+    
+    if (panel === "login") {
+        document.querySelector("#login-password").value = "";
+    }
     loginPanel.classList.toggle("hidden", panel !== "login");
     registerPanel.classList.toggle("hidden", panel !== "register");
     clearAuthMessage();
