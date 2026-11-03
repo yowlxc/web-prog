@@ -32,11 +32,11 @@ function clearAuthMessage() {
 }
 
 function showAuthPanel(panel) {
-    ///
-    
+    // убраем пароль при новом переходе
     if (panel === "login") {
         document.querySelector("#login-password").value = "";
     }
+    //
     loginPanel.classList.toggle("hidden", panel !== "login");
     registerPanel.classList.toggle("hidden", panel !== "register");
     clearAuthMessage();
