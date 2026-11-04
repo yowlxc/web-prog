@@ -15,8 +15,8 @@ public class User {
     @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "login", nullable = false, unique = true, length = 30)
-    private String login;
+    @Column(name = "email", nullable = false, unique = true, length = 30)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 7)
@@ -40,12 +40,12 @@ public class User {
         this.name = name;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     

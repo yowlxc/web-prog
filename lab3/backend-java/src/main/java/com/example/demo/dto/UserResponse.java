@@ -5,7 +5,7 @@ import com.example.demo.model.Role;
 public record UserResponse(
         Long id,
         String name,
-        String login,
+        String email,
         Role role
 ) {
 }

@@ -35,21 +35,23 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .requestMatchers(HttpMethod.POST,
-                    "/api/auth/login",
+                    "/api/auth/email",
                     "/api/auth/refresh",
                     "/api/auth/logout"
                 ).permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/students/**")
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/students",
+                    "/api/students/**"
+                ).hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/students/query")
                     .hasAnyRole("USER", "ADMIN")
-                .requestMatchers(
-                    HttpMethod.POST, "/api/students/**"
-                ).hasRole("ADMIN")
-                .requestMatchers(
-                    HttpMethod.PATCH, "/api/students/**"
-                ).hasRole("ADMIN")
-                .requestMatchers(
-                    HttpMethod.DELETE, "/api/students/**"
-                ).hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/students/**")
+                    .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/students/**")
+                    .hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/students/**")
+                .hasRole("ADMIN")
                 .anyRequest().denyAll()
             )
             .oauth2ResourceServer(oauth2 -> oauth2

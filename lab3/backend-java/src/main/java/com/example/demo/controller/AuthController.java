@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.Map;
 
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.EmailRequest;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.service.AccessTokenService;
@@ -42,12 +42,12 @@ public class AuthController {
         return Map.of("csrfToken", token.getToken());
     }
 
-    @PostMapping("/login")
-    public AuthResponse login(
-            @Valid @RequestBody LoginRequest request,
+    @PostMapping("/email")
+    public AuthResponse email(
+            @Valid @RequestBody EmailRequest request,
             HttpServletResponse response
     ) {
-        User user = authService.authenticate(request.login(), request.password());
+        User user = authService.authenticate(request.email(), request.password());
 
         String accessToken = accessTokenService.create(user);
         String refreshToken = refreshTokenService.issue(user);
@@ -55,7 +55,7 @@ public class AuthController {
         setRefreshCookie(response, refreshToken, Duration.ofDays(7));
 
         UserResponse userResponse = new UserResponse(
-                user.getId(), user.getName(), user.getLogin(), user.getRole()
+                user.getId(), user.getName(), user.getEmail(), user.getRole()
         );
         return new AuthResponse(accessToken, userResponse);
     }
@@ -71,7 +71,7 @@ public class AuthController {
         User user = rotation.user();
         return new AuthResponse(
                 accessTokenService.create(user),
-                new UserResponse(user.getId(), user.getName(), user.getLogin(), user.getRole())
+                new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole())
         );
     }
 

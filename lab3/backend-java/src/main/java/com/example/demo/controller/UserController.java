@@ -33,8 +33,4 @@ public class UserController {
     ) {
         throw new AccessDeniedException();
     }
-
-
-
-
 }
