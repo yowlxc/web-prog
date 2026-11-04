@@ -1,5 +1,5 @@
 package com.example.demo.service;
-
+import com.example.demo.exception.DuplicateNameException;
 import com.example.demo.dto.CreateUserRequest;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
@@ -27,6 +27,14 @@ public class UserService {
 
     public UserResponse create(CreateUserRequest request) {
 
+        // Проверяем уникальность имени
+        String name = request.name().trim();
+
+        if (userRepository.existsByName(name)) {
+            throw new DuplicateNameException(name);
+        }
+
+        // Проверяем уникальность email
         String email = request.email().trim().toLowerCase(Locale.ROOT);
 
         if (userRepository.existsByEmail(email)) {
@@ -36,7 +44,7 @@ public class UserService {
         String passwordHash = passwordEncoder.encode(request.password());
 
         User user = new User();
-        user.setName(request.name());
+        user.setName(name);
         user.setEmail(email);
         user.setRole(Role.USER);
         user.setPasswordHash(passwordHash);
