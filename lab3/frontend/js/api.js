@@ -152,13 +152,61 @@ async function logoutUser() {
     }
 }
 
-// ---------- Студенты ----------
+// Получить студентов с фильтрами
 
 async function getStudents(params = {}) {
-    const query = new URLSearchParams(params);
-    const suffix = query.toString();
+    const filterKeys = [
+        "fio",
+        "group",
+        "isu",
+        "dormNumber",
+        "isForeign",
+        "roomMin",
+        "roomMax"
+    ];
 
-    return request(`/api/students${suffix ? `?${suffix}` : ""}`);
+    // Получаем только заполненные фильтры.
+    const filters = Object.fromEntries(
+        filterKeys
+            .filter(key =>
+                params[key] !== undefined &&
+                params[key] !== null &&
+                params[key] !== ""
+            )
+            .map(key => [key, params[key]])
+    );
+
+    const filterCount = Object.keys(filters).length;
+
+    // Параметры пагинации и сортировки.
+    const query = new URLSearchParams({
+        page: params.page ?? 0,
+        size: params.size ?? 8,
+        sortBy: params.sortBy ?? "isu",
+        sortDir: params.sortDir ?? "asc"
+    });
+
+    // Более двух фильтров — POST /query.
+    if (filterCount > 2) {
+        return request(`/api/students/query?${query}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(filters)
+        });
+    }
+
+    // Два фильтра или меньше — GET.
+    const getParams = new URLSearchParams({
+        ...filters,
+        page: params.page ?? 0,
+        size: params.size ?? 8,
+        sortBy: params.sortBy ?? "isu",
+        sortDir: params.sortDir ?? "asc"
+    });
+
+    return request(`/api/students?${getParams}`);
 }
 
 async function addStudent(student) {

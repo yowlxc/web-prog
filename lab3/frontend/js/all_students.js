@@ -1,14 +1,52 @@
 
 const studentsTable = document.querySelector(".students-table tbody");
+let currentPage = 0;
+let currentFilters = {};
+const pageSize = 8;
+let lastRequest = 0;
 
-async function renderStudents(params = {}) {
-    const students = await getStudents(params);
+async function renderStudents(params = currentFilters) {
+    currentFilters = params;
+    const page = currentPage;
+    const requestId = ++lastRequest;
+    const prevButton = document.querySelector("#page-prev");
+    const nextButton = document.querySelector("#page-next");
+    prevButton.disabled = true;
+    nextButton.disabled = true;
+
+    let students;
+    try {
+        students = await getStudents({
+            ...params,
+            sortBy: document.querySelector("#sort-by").value,
+            sortDir: document.querySelector("#sort-dir").value,
+            page,
+            size: pageSize
+        });
+    } catch (error) {
+        if (requestId === lastRequest) {
+            prevButton.disabled = page === 0;
+            nextButton.disabled = false;
+        }
+        throw error;
+    }
+    if (requestId !== lastRequest) return;
 
     if (!Array.isArray(students)) {
         throw new Error("Сервер вернул список студентов в неожиданном формате.");
     }
 
+    if (students.length === 0 && page > 0) {
+        currentPage--;
+        await renderStudents();
+        nextButton.disabled = true;
+        return;
+    }
+
     studentsTable.replaceChildren();
+    document.querySelector("#page-number").textContent = `Страница ${page + 1}`;
+    prevButton.disabled = page === 0;
+    nextButton.disabled = students.length < pageSize;
 
     if (students.length === 0) {
         const row = document.createElement("tr");

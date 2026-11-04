@@ -32,6 +32,11 @@ function clearAuthMessage() {
 }
 
 function showAuthPanel(panel) {
+    // убраем пароль при новом переходе
+    if (panel === "login") {
+        document.querySelector("#login-password").value = "";
+    }
+    //
     loginPanel.classList.toggle("hidden", panel !== "login");
     registerPanel.classList.toggle("hidden", panel !== "register");
     clearAuthMessage();
@@ -56,7 +61,7 @@ function showAppMessage(message = "") {
     appMessage.classList.toggle("hidden", !message);
 }
 
-async function loadStudents(params = {}) {
+async function loadStudents(params = currentFilters) {
     try {
         await renderStudents(params);
         showAppMessage();
@@ -84,8 +89,29 @@ async function showAuthenticatedApp() {
     const isAdmin = user.role === "ADMIN";
     btnAdd.closest(".btn-add").classList.toggle("hidden", !isAdmin);
 
-    await loadStudents();
+    currentPage = 0;
+    await loadStudents({});
 }
+
+document.querySelector("#sort-by").addEventListener("change", () => {
+    currentPage = 0;
+    loadStudents();
+});
+
+document.querySelector("#sort-dir").addEventListener("change", () => {
+    currentPage = 0;
+    loadStudents();
+});
+
+document.querySelector("#page-prev").addEventListener("click", () => {
+    if (currentPage > 0) currentPage--;
+    loadStudents();
+});
+
+document.querySelector("#page-next").addEventListener("click", () => {
+    currentPage++;
+    loadStudents();
+});
 
 // Переключение между входом и регистрацией
 document.querySelector("#btn-show-register").addEventListener("click", () => {
@@ -227,6 +253,7 @@ filterButton.addEventListener("click", async () => {
     if (roomMin) params.roomMin = Number(roomMin);
     if (roomMax) params.roomMax = Number(roomMax);
 
+    currentPage = 0;
     await loadStudents(params);
 });
 
@@ -245,7 +272,8 @@ filterResetButton.addEventListener("click", async () => {
 
     document.querySelector("#filter-foreign").checked = false;
 
-    await loadStudents();
+    currentPage = 0;
+    await loadStudents({});
 });
 
 // При открытии страницы восстанавливаем сессию
