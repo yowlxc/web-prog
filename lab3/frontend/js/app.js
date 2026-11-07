@@ -7,9 +7,9 @@ const filterButton = document.querySelector("#btn-filter");
 const filterResetButton = document.querySelector("#btn-reset-filter");
 
 const authScreen = document.querySelector("#auth-screen");
-const loginPanel = document.querySelector("#login-panel");
+const emailPanel = document.querySelector("#email-panel");
 const registerPanel = document.querySelector("#register-panel");
-const loginForm = document.querySelector("#login-form");
+const emailForm = document.querySelector("#email-form");
 const registerForm = document.querySelector("#register-form");
 const authMessage = document.querySelector("#auth-message");
 
@@ -18,6 +18,13 @@ const currentUser = document.querySelector("#current-user");
 const logoutButton = document.querySelector("#btn-logout");
 const appMessage = document.querySelector("#app-message");
 const detailsSection = document.querySelector("#dosie-students");
+const filterIsuInput = document.querySelector("#filter-isu");
+
+filterIsuInput.addEventListener("input", () => {
+    filterIsuInput.value = filterIsuInput.value
+        .replace(/\D/g, "")
+        .slice(0, 6);
+});
 
 function showAuthMessage(message, success = false) {
     authMessage.textContent = message;
@@ -33,11 +40,11 @@ function clearAuthMessage() {
 
 function showAuthPanel(panel) {
     // убраем пароль при новом переходе
-    if (panel === "login") {
-        document.querySelector("#login-password").value = "";
+    if (panel === "email") {
+        document.querySelector("#email-password").value = "";
     }
     //
-    loginPanel.classList.toggle("hidden", panel !== "login");
+    emailPanel.classList.toggle("hidden", panel !== "email");
     registerPanel.classList.toggle("hidden", panel !== "register");
     clearAuthMessage();
 }
@@ -49,7 +56,7 @@ function showAuthScreen(message = "", success = false) {
     detailsSection.classList.add("hidden");
     sessionBar.classList.add("hidden");
 
-    showAuthPanel("login");
+    showAuthPanel("email");
 
     if (message) {
         showAuthMessage(message, success);
@@ -118,24 +125,24 @@ document.querySelector("#btn-show-register").addEventListener("click", () => {
     showAuthPanel("register");
 });
 
-document.querySelector("#btn-show-login").addEventListener("click", () => {
-    showAuthPanel("login");
+document.querySelector("#btn-show-email").addEventListener("click", () => {
+    showAuthPanel("email");
 });
 
 // Вход
-loginForm.addEventListener("submit", async (event) => {
+emailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearAuthMessage();
 
-    const login = document.querySelector("#login-login").value.trim();
-    const password = document.querySelector("#login-password").value;
-    const button = loginForm.querySelector('[type="submit"]');
+    const email = document.querySelector("#email-email").value.trim();
+    const password = document.querySelector("#email-password").value;
+    const button = emailForm.querySelector('[type="submit"]');
 
     button.disabled = true;
 
     try {
-        await loginUser(login, password);
-        loginForm.reset();
+        await emailUser(email, password);
+        emailForm.reset();
         await showAuthenticatedApp();
     } catch (error) {
         showAuthMessage(error.message);
@@ -150,20 +157,20 @@ registerForm.addEventListener("submit", async (event) => {
     clearAuthMessage();
 
     const name = document.querySelector("#register-name").value.trim();
-    const login = document.querySelector("#register-login").value.trim();
+    const email = document.querySelector("#register-email").value.trim();
     const password = document.querySelector("#register-password").value;
     const button = registerForm.querySelector('[type="submit"]');
 
     button.disabled = true;
 
     try {
-        await registerUser(name, login, password);
+        await registerUser(name, email, password);
 
         registerForm.reset();
 
         // После регистрации пользователь сам входит в систему.
-        document.querySelector("#login-login").value = login;
-        showAuthPanel("login");
+        document.querySelector("#email-email").value = email;
+        showAuthPanel("email");
 
         showAuthMessage(
             "Регистрация прошла успешно! Теперь войдите в систему.",
@@ -277,19 +284,41 @@ filterResetButton.addEventListener("click", async () => {
 });
 
 // При открытии страницы восстанавливаем сессию
+// async function initializeApp() {
+//     formStudents.classList.add("hidden");
+//     detailsSection.classList.add("hidden");
+
+//     formStudents.querySelector("form").reset();
+
+//     const user = await restoreSession();
+
+//     if (user) {
+//         await showAuthenticatedApp();
+//     } else {
+//         showAuthScreen();
+//     }
+// }
 async function initializeApp() {
+    console.log("1. INITIALIZE APP START");
+
     formStudents.classList.add("hidden");
     detailsSection.classList.add("hidden");
 
     formStudents.querySelector("form").reset();
 
+    console.log("2. BEFORE RESTORE SESSION");
+
     const user = await restoreSession();
+
+    console.log("3. RESTORE SESSION RESULT:", user);
 
     if (user) {
         await showAuthenticatedApp();
     } else {
         showAuthScreen();
     }
+
+    console.log("4. INITIALIZE APP FINISHED");
 }
 
 initializeApp();

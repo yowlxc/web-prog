@@ -101,23 +101,23 @@ async function request(url, options = {}) {
 
 // ---------- Регистрация и авторизация ----------
 
-async function registerUser(name, login, password) {
+async function registerUser(name, email, password) {
     return request("/api/users", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ name, login, password })
+        body: JSON.stringify({ name, email, password })
     });
 }
 
-async function loginUser(login, password) {
-    const data = await request("/api/auth/login", {
+async function emailUser(email, password) {
+    const data = await request("/api/auth/email", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ login, password })
+        body: JSON.stringify({ email, password })
     });
 
     setAuthSession(data);
@@ -233,4 +233,8 @@ async function deleteStudent(isu) {
     return request(`/api/students/${encodeURIComponent(isu)}`, {
         method: "DELETE"
     });
+}
+
+async function getStudent(isu) {
+    return request(`/api/students/${encodeURIComponent(isu)}`);
 }
