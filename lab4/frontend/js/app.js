@@ -149,6 +149,10 @@ emailForm.addEventListener("submit", async (event) => {
     } finally {
         button.disabled = false;
     }
+
+    if(responce.ok){
+        window.location.href = 'home.html'
+    }
 });
 
 // Регистрация
@@ -181,6 +185,10 @@ registerForm.addEventListener("submit", async (event) => {
     } finally {
         button.disabled = false;
     }
+
+    if(responce.ok){
+        window.location.href = 'login.html'
+    }
 });
 
 // Выход
@@ -196,6 +204,10 @@ logoutButton.addEventListener("click", async () => {
         );
     } finally {
         logoutButton.disabled = false;
+    }
+
+    if(responce.ok){
+        window.location.href = 'login.html'
     }
 });
 
@@ -229,6 +241,10 @@ btnAdd.addEventListener("click", () => {
     showAppMessage();
     listStudents.classList.add("hidden");
     formStudents.classList.remove("hidden");
+
+    if(responce.ok){
+        window.location.href = 'home.html'
+    }
 });
 
 // Отмена добавления или редактирования
