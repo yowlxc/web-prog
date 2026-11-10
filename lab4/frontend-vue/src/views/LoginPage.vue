@@ -57,8 +57,8 @@ async function handleLogin() {
     if(!email.value.trim()) errorMessage.value = 'Укажите электронную почту'
     if(!password.value.trim()) errorMessage.value = 'Введите пароль'
 
-    if(isSubmitting) return
-    idSubmitting = true
+    if (isSubmitting.value) return
+    isSubmitting.value = true
 
     try {
         const user = await loginUser(email.value.trim(), password.value)
