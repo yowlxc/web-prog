@@ -1,11 +1,9 @@
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = ""; 
 
 async function fetchCsrfToken() {
-    console.log("--> Запрос CSRF...");
     const response = await fetch(`${API_BASE_URL}/api/auth/csrf`, {
         credentials: "include"
     });
-    console.log("<-- Ответ CSRF:", response.status);
     if (!response.ok) throw new Error("Не удалось получить CSRF-токен");
     const data = await response.json();
     return data.csrfToken;
@@ -21,41 +19,52 @@ async function request(url, options = {}) {
         headers.set("X-XSRF-TOKEN", csrfToken);
     }
 
-    console.log(`--> Запрос ${method} ${url}`);
+    if (!headers.has("Content-Type") && !isReadOnly) {
+        headers.set("Content-Type", "application/json");
+    }
+
+    // Пытаемся сделать запрос (если сервер упал - это поймает catch)
+    let response;
     try {
-        const response = await fetch(`${API_BASE_URL}${url}`, {
+        response = await fetch(`${API_BASE_URL}${url}`, {
             ...options,
             method,
             headers,
             credentials: "include"
         });
-        console.log(`<-- Ответ ${url}:`, response.status);
-
-        if (!response.ok) {
-            let errorData = {};
-            try { errorData = await response.json(); } catch {}
-            
-            let message = `Ошибка ${response.status}`;
-            if (errorData.message) message = errorData.message;
-            else if (Object.keys(errorData).length > 0) message = Object.values(errorData).join(", ");
-            
-            throw new Error(message);
-        }
-
-        if (response.status === 204) return null;
-        return response.json();
-
-    } catch (error) {
-        console.error("!!! СЕТЕВАЯ ОШИБКА !!!", error);
+    } catch (networkError) {
+        // Сюда мы попадаем ТОЛЬКО если сервер выключен или нет интернета
+        console.error("Сетевая ошибка:", networkError);
         throw new Error("Не удалось связаться с сервером. Проверьте, запущен ли бэкенд.");
     }
+
+    // Если сервер ответил ошибкой (400, 401, 422, 500)
+    if (!response.ok) {
+        let errorData = {};
+        try {
+            errorData = await response.json();
+        } catch {
+            // Если сервер вернул не JSON
+        }
+        
+        let message = `Ошибка ${response.status}`;
+        if (errorData.message) {
+            message = errorData.message;
+        } else if (Object.keys(errorData).length > 0) {
+            message = Object.values(errorData).join(", ");
+        }
+        
+        // Выбрасываем ошибку с текстом от сервера
+        throw new Error(message);
+    }
+
+    if (response.status === 204) return null;
+    return response.json();
 }
 
 export async function loginUser(email, password) {
-    console.log("loginUser: начинаем...");
     const data = await request("/api/auth/email", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
     });
 
@@ -67,7 +76,6 @@ export async function loginUser(email, password) {
 export async function registerUser(name, email, password) {
     return request("/api/users", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })
     });
 }

@@ -1,5 +1,4 @@
 <template>
-        <section id="auth-screen">
         <div id="auth-message"
             class="auth-message hidden"
             role="alert"

@@ -42,7 +42,10 @@
 <script setup>
 
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { loginUser } from '@/services/api'
+
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
@@ -65,6 +68,8 @@ async function handleLogin() {
         // TODO: позже сделаю редирект на страницу со студентами
         console.log('Успешный вход', user)
         console.log('Логин:', email.value, password.value)
+
+        router.push('/')
     } catch (error) {
         errorMessage.value = error.message
     } finally {
