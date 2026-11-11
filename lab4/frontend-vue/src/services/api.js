@@ -33,7 +33,6 @@ async function request(url, options = {}) {
             credentials: "include"
         });
     } catch (networkError) {
-        // Сюда мы попадаем ТОЛЬКО если сервер выключен или нет интернета
         console.error("Сетевая ошибка:", networkError);
         throw new Error("Не удалось связаться с сервером. Проверьте, запущен ли бэкенд.");
     }
@@ -78,4 +77,42 @@ export async function registerUser(name, email, password) {
         method: "POST",
         body: JSON.stringify({ name, email, password })
     });
+}
+
+export async function logoutUser() {
+    try {
+        // Говорим бэку убить refresh-cookie
+        await request("/api/auth/logout", { method: "POST" });
+    } catch (e) {
+        console.warn("Сервер не ответил при выходе, но мы всё равно выйдем локально", e);
+    } finally {
+        // В любом случае чистим localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+    }
+}
+
+// Получить список студентов с учетом фильтров, пагинации и сортировки
+export async function getStudents(params = {}) {
+    const queryParams = {
+        page: 0,
+        size: 8, // Как в твоем старом коде
+        sortBy: 'isu',
+        sortDir: 'asc',
+        ...params // Сюда развернутся переданные фильтры (fio, group и т.д.)
+    }
+
+    const cleanParams = {}
+    for (const key in queryParams) {
+        const val = queryParams[key]
+        if (val !== '' && val !== null && val !== undefined) {
+            cleanParams[key] = val
+        }
+    }
+
+    // 3. Формируем URL-строку: ?page=0&size=8&fio=Иван
+    const urlParams = new URLSearchParams(cleanParams).toString()
+    
+    // 4. Отправляем запрос (GET, CSRF не нужен)
+    return request(`/api/students?${urlParams}`)
 }

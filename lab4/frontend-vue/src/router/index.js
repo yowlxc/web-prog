@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '../views/LoginPage.vue'
-import RegisterPage from '../views/RegisterPage.vue' // <--- 1. Импорт файла
+import RegisterPage from '../views/RegisterPage.vue' 
+import Profile from '../views/Profile.vue'
+import HomePage from '../views/HomePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,15 +13,20 @@ const router = createRouter({
       component: LoginPage
     },
     {
-      path: '/register',           // <--- 2. Адрес в браузере
+      path: '/register',      
       name: 'register',
-      component: RegisterPage      // <--- 3. Какой файл показать
+      component: RegisterPage     
     },
     {
-        path: '/',
+        path: '/', 
         name: 'home',
         component: () => import('../views/HomePage.vue') // Ленивая загрузка (можно и так)
-    }
+    },
+    {
+      path: '/profile',          
+      name: 'profile',
+      component: Profile    
+    },
   ]
 })
 
