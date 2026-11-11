@@ -5,6 +5,7 @@ import Profile from '../views/Profile.vue'
 import HomePage from '../views/HomePage.vue'
 import StudentsPage from '../views/StudentsPage.vue'
 import StudentForm from '../views/StudentForm.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,9 +46,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const isLoggedIn = localStorage.getItem('accessToken') && localStorage.getItem('user')
-  if ((to.path === '/' || to.path === '/profile' || to.path.startsWith('/students/')) && !isLoggedIn) {
+  const authStore = useAuthStore()
+  if ((to.path === '/' || to.path === '/profile' || to.path.startsWith('/students/')) && !authStore.isAuthenticated) {
     return '/login'
+  }
+  if ((to.path === '/students/new' || to.path.endsWith('/edit')) && !authStore.isAdmin) {
+    return '/'
   }
 })
 

@@ -1,4 +1,6 @@
-const API_BASE_URL = ""; 
+import { useAuthStore } from '@/stores/auth'
+
+const API_BASE_URL = "";
 
 async function fetchCsrfToken() {
     const response = await fetch(`${API_BASE_URL}/api/auth/csrf`, {
@@ -9,12 +11,13 @@ async function fetchCsrfToken() {
     return data.csrfToken;
 }
 
-async function request(url, options = {}) {
+async function request(url, options = {}, canRefresh = true) {
     const method = (options.method || "GET").toUpperCase();
     const headers = new Headers(options.headers || {});
-
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+    const authStore = useAuthStore()
+    if (!url.startsWith('/api/auth/') && authStore.accessToken) {
+        headers.set('Authorization', `Bearer ${authStore.accessToken}`)
+    }
 
     const isReadOnly = ["GET", "HEAD", "OPTIONS"].includes(method);
     if (!isReadOnly && !url.startsWith("/api/students")) {
@@ -26,7 +29,6 @@ async function request(url, options = {}) {
         headers.set("Content-Type", "application/json");
     }
 
-    // Пытаемся сделать запрос (если сервер упал - это поймает catch)
     let response;
     try {
         response = await fetch(`${API_BASE_URL}${url}`, {
@@ -40,7 +42,18 @@ async function request(url, options = {}) {
         throw new Error("Не удалось связаться с сервером. Проверьте, запущен ли бэкенд.");
     }
 
-    // Если сервер ответил ошибкой (400, 401, 422, 500)
+    if (response.status === 401 && canRefresh && !url.startsWith('/api/auth/')) {
+        try {
+            const data = await refreshToken()
+            authStore.accessToken = data.accessToken
+            authStore.user = data.user
+            return request(url, options, false)
+        } catch {
+            authStore.accessToken = null
+            authStore.user = null
+        }
+    }
+
     if (!response.ok) {
         let errorData = {};
         try {
@@ -59,7 +72,6 @@ async function request(url, options = {}) {
         // Выбрасываем ошибку с текстом от сервера
         throw new Error(message);
     }
-
     if (response.status === 204) return null;
     return response.json();
 }
@@ -69,15 +81,15 @@ export async function loginUser(email, password) {
         method: "POST",
         body: JSON.stringify({ email, password })
     });
-
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    return data.user;
+    return data;
 }
 
 export async function registerUser(name, email, password) {
     return request("/api/users", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({ name, email, password })
     });
 }
@@ -95,29 +107,58 @@ export async function logoutUser() {
     }
 }
 
+export async function refreshToken() {
+    // Запрос отправляет refresh-cookie (credentials: "include" уже в request)
+    return request("/api/auth/refresh", { method: "POST" });
+}
+
 // Получить список студентов с учетом фильтров, пагинации и сортировки
 export async function getStudents(params = {}) {
+    const filterKeys = [
+        "fio",
+        "group",
+        "isu",
+        "dormNumber",
+        "isForeign",
+        "roomMin",
+        "roomMax"
+    ];
+
+    // Получаем только заполненные фильтры.
+    const filters = Object.fromEntries(
+        filterKeys
+            .filter(key =>
+                params[key] !== undefined &&
+                params[key] !== null &&
+                params[key] !== "" &&
+                !(key === 'isForeign' && params[key] === false)
+            )
+            .map(key => [key, params[key]])
+    );
+
+    const filterCount = Object.keys(filters).length;
+
+    // Параметры пагинации и сортировки.
     const queryParams = {
-        page: 0,
-        size: 8,
-        sortBy: 'isu',
-        sortDir: 'asc',
-        ...params
+        page: params.page ?? 0,
+        size: params.size ?? 8,
+        sortBy: params.sortBy ?? "isu",
+        sortDir: params.sortDir ?? "asc"
+    };
+
+    // Более двух фильтров — POST /query.
+    if (filterCount > 2) {
+        const query = new URLSearchParams(queryParams).toString();
+        return request(`/api/students/query?${query}`, {
+            method: "POST",
+            body: JSON.stringify(filters)
+        });
     }
 
-    const cleanParams = {}
-    for (const key in queryParams) {
-        const val = queryParams[key]
-        if (val !== '' && val !== null && val !== undefined) {
-            cleanParams[key] = val
-        }
-    }
-
-    // 3. Формируем URL-строку: ?page=0&size=8&fio=Иван
-    const urlParams = new URLSearchParams(cleanParams).toString()
+    // Два фильтра или меньше — GET.
+    const getParams = new URLSearchParams({ ...filters, ...queryParams });
     
-    // 4. Отправляем запрос (GET, CSRF не нужен)
-    return request(`/api/students?${urlParams}`)
+    return request(`/api/students?${getParams}`);
 }
 
 export function getStudent(isu) {

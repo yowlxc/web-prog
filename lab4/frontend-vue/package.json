@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/rxjs": "^15.0.0",
+    "pinia": "^4.1.0",
+    "rxjs": "^7.8.2",
     "vue": "rc",
     "vue-router": "^5.3.1"
   },

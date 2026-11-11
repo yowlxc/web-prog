@@ -32,29 +32,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { logoutUser } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
+const authStore = useAuthStore()
 const router = useRouter()
-const user = ref(null)
+const { user } = storeToRefs(authStore)
 const isLoggingOut = ref(false)
-
-// Хук жизненного цикла: выполняется при загрузке страницы
-onMounted(() => {
-    const savedUser = localStorage.getItem('user')
-    if (savedUser) {
-        user.value = JSON.parse(savedUser)
-    } else {
-        // Если данных нет (не залогинен), кидаем на вход
-        router.push('/login')
-    }
-})
 
 async function handleLogout() {
     isLoggingOut.value = true
     try {
-        await logoutUser()
+        await authStore.logout()
         // После выхода переходим на страницу логина
         router.push('/login')
     } finally {
