@@ -16,6 +16,7 @@
             <StudentFilters 
                 @apply="onFilterApply" 
                 @reset="onFilterReset"
+                @liveSearch="onLiveSearch"
             />
 
             <!-- Правая колонка: сортировка, таблица, пагинация -->
@@ -68,7 +69,11 @@ import { useRouter } from 'vue-router'
 import StudentTable from '@/components/StudentTable.vue'
 import StudentFilters from '@/components/StudentFilters.vue'
 import { getStudents } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
+const authStore = useAuthStore()
+const { user, isAdmin } = storeToRefs(authStore) 
 const router = useRouter()
 
 const students = ref([])
@@ -81,32 +86,41 @@ const sortBy = ref('isu')
 const sortDir = ref('asc')
 const activeFilters = ref({}) // Храним примененные фильтры
 
-const user = ref(null)
-
 // Загрузка данных
 async function loadData() {
+    // 1. Если токена нет вообще — даже не пытаемся что-то грузить
+    if (!authStore.accessToken) {
+        router.push('/login')
+        return
+    }
+
     try {
         isLoading.value = true
-        errorMessage.value = ''
+        errorMessage.value = '' // Очищаем старые ошибки
         
+        console.log('Токен в HomePage:', authStore.accessToken)
         const data = await getStudents({
             page: currentPage.value,
             size: 8, 
             sortBy: sortBy.value,
             sortDir: sortDir.value,
-            ...activeFilters.value 
-        })
+            ...activeFilters.value
+        }, authStore.accessToken)
+        
         students.value = data
     } catch (error) {
-        errorMessage.value = error.message
+        console.error('Ошибка загрузки:', error)
+        
+        // 2. Если произошла ЛЮБАЯ ошибка при загрузке (401, 403 или сеть)
+        // отправляем на логин и чистим сессию.
+        authStore.logout()
+        router.push('/login')
     } finally {
         isLoading.value = false
     }
 }
 
 onMounted(() => {
-    const savedUser = localStorage.getItem('user')
-    if (savedUser) user.value = JSON.parse(savedUser)
     loadData()
 })
 
@@ -127,6 +141,12 @@ function onFilterReset() {
 function onSortChange() {
     currentPage.value = 0
     loadData()
+}
+
+function onLiveSearch(newFilters) {
+    activeFilters.value = newFilters
+    currentPage.value = 0
+    loadData() // Загружаем данные с новыми фильтрами
 }
 
 function nextPage() { currentPage.value++; loadData() }

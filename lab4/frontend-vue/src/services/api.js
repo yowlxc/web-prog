@@ -13,6 +13,8 @@ async function request(url, options = {}) {
     const method = (options.method || "GET").toUpperCase();
     const headers = new Headers(options.headers || {});
 
+    // Токен будет приходить в headers из Pinia.
+
     const isReadOnly = ["GET", "HEAD", "OPTIONS"].includes(method);
     if (!isReadOnly && !url.startsWith("/api/students")) {
         const csrfToken = await fetchCsrfToken();
@@ -23,7 +25,6 @@ async function request(url, options = {}) {
         headers.set("Content-Type", "application/json");
     }
 
-    // Пытаемся сделать запрос (если сервер упал - это поймает catch)
     let response;
     try {
         response = await fetch(`${API_BASE_URL}${url}`, {
@@ -37,8 +38,8 @@ async function request(url, options = {}) {
         throw new Error("Не удалось связаться с сервером. Проверьте, запущен ли бэкенд.");
     }
 
-    // Если сервер ответил ошибкой (400, 401, 422, 500)
     if (!response.ok) {
+        
         let errorData = {};
         try {
             errorData = await response.json();
@@ -56,7 +57,6 @@ async function request(url, options = {}) {
         // Выбрасываем ошибку с текстом от сервера
         throw new Error(message);
     }
-
     if (response.status === 204) return null;
     return response.json();
 }
@@ -65,16 +65,16 @@ export async function loginUser(email, password) {
     const data = await request("/api/auth/email", {
         method: "POST",
         body: JSON.stringify({ email, password })
-    });
-
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    return data.user;
+    });  
+    return data; 
 }
 
 export async function registerUser(name, email, password) {
     return request("/api/users", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({ name, email, password })
     });
 }
@@ -92,27 +92,63 @@ export async function logoutUser() {
     }
 }
 
+export async function refreshToken() {
+    // Запрос отправляет refresh-cookie (credentials: "include" уже в request)
+    return request("/api/auth/refresh", { method: "POST" });
+}
+
 // Получить список студентов с учетом фильтров, пагинации и сортировки
-export async function getStudents(params = {}) {
+export async function getStudents(params = {}, token = null) {
+    const filterKeys = [
+        "fio",
+        "group",
+        "isu",
+        "dormNumber",
+        "isForeign",
+        "roomMin",
+        "roomMax"
+    ];
+
+    // Получаем только заполненные фильтры.
+    const filters = Object.fromEntries(
+        filterKeys
+            .filter(key =>
+                params[key] !== undefined &&
+                params[key] !== null &&
+                params[key] !== ""
+            )
+            .map(key => [key, params[key]])
+    );
+
+    const filterCount = Object.keys(filters).length;
+
+    // Параметры пагинации и сортировки.
     const queryParams = {
-        page: 0,
-        size: 8, // Как в твоем старом коде
-        sortBy: 'isu',
-        sortDir: 'asc',
-        ...params // Сюда развернутся переданные фильтры (fio, group и т.д.)
+        page: params.page ?? 0,
+        size: params.size ?? 8,
+        sortBy: params.sortBy ?? "isu",
+        sortDir: params.sortDir ?? "asc"
+    };
+
+    // Формируем заголовки с токеном (если он есть)
+    const headers = {};
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const cleanParams = {}
-    for (const key in queryParams) {
-        const val = queryParams[key]
-        if (val !== '' && val !== null && val !== undefined) {
-            cleanParams[key] = val
-        }
+    // Более двух фильтров — POST /query.
+    if (filterCount > 2) {
+        const query = new URLSearchParams(queryParams).toString();
+        return request(`/api/students/query?${query}`, {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify(filters)
+        });
     }
 
-    // 3. Формируем URL-строку: ?page=0&size=8&fio=Иван
-    const urlParams = new URLSearchParams(cleanParams).toString()
+    // Два фильтра или меньше — GET.
+    const getParams = new URLSearchParams({ ...filters, ...queryParams });
     
-    // 4. Отправляем запрос (GET, CSRF не нужен)
-    return request(`/api/students?${urlParams}`)
+    // Передаем headers в request! (Вот тут была ошибка)
+    return request(`/api/students?${getParams}`, { headers });
 }

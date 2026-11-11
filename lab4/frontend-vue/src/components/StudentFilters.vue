@@ -49,9 +49,11 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+import { fromEvent, Subject } from 'rxjs'
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators'
 
-const emit = defineEmits(['apply', 'reset'])
+const emit = defineEmits(['apply', 'reset', 'liveSearch'])
 
 const filters = reactive({
     fio: '',
@@ -63,7 +65,29 @@ const filters = reactive({
     roomMax: ''
 })
 
-// Кнопка "Применить"
+// 1. Создаем ссылку на DOM-элемент
+const fioInputRef = ref(null)
+
+// 2. Настраиваем RxJS при монтировании компонента
+onMounted(() => {
+    if (!fioInputRef.value) return
+
+    // Создаем поток событий ввода
+    const fioInput$ = fromEvent(fioInputRef.value, 'input').pipe(
+        map(event => event.target.value), // Берем текст из инпута
+        debounceTime(500),                // Ждем 500мс тишины
+        distinctUntilChanged()            // Если текст не изменился - игнорируем
+    )
+
+    // Подписываемся на поток
+    fioInput$.subscribe((text) => {
+        console.log('RxJS поиск по ФИО:', text)
+        // Отправляем событие наверх в HomePage для живого поиска
+        emit('liveSearch', { ...filters, fio: text })
+    })
+})
+
+// Для кнопки "Применить" (остальные поля)
 function onApply() {
     const activeFilters = {}
     for (const key in filters) {
@@ -71,11 +95,9 @@ function onApply() {
             activeFilters[key] = filters[key]
         }
     }
-    // Отправляем наверх
     emit('apply', activeFilters)
 }
 
-// Кнопка "Сбросить"
 function onReset() {
     filters.fio = ''
     filters.group = ''
@@ -84,7 +106,6 @@ function onReset() {
     filters.isForeign = false
     filters.roomMin = ''
     filters.roomMax = ''
-    // Отправляем наверх
     emit('reset')
 }
 </script>

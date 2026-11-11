@@ -19,7 +19,7 @@
                 <button @click="handleLogout" :disabled="isLoggingOut" class="btn-logout">
                     {{ isLoggingOut ? 'Выход...' : 'Выйти из системы' }}
                 </button>
-                <button @click="$router.push('/home')">
+                <button @click="$router.push('/')">
                     К списку студентов
                 </button>
             </div>
@@ -35,7 +35,9 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { logoutUser } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const router = useRouter()
 const user = ref(null)
 const isLoggingOut = ref(false)

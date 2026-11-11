@@ -40,12 +40,12 @@
 </template>
 
 <script setup>
-
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { loginUser } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const email = ref('')
 const password = ref('')
@@ -53,22 +53,26 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 
 async function handleLogin() {
-    console.log('handleSubmit вызван')
-
+    console.log('handleLogin вызван')
     errorMessage.value = ''
 
-    if(!email.value.trim()) errorMessage.value = 'Укажите электронную почту'
-    if(!password.value.trim()) errorMessage.value = 'Введите пароль'
+    if (!email.value.trim()) {
+        errorMessage.value = 'Укажите электронную почту'
+        return
+    }
+    if (!password.value.trim()) {
+        errorMessage.value = 'Введите пароль'
+        return
+    }
 
     if (isSubmitting.value) return
     isSubmitting.value = true
 
     try {
-        const user = await loginUser(email.value.trim(), password.value)
-        // TODO: позже сделаю редирект на страницу со студентами
-        console.log('Успешный вход', user)
-        console.log('Логин:', email.value, password.value)
-
+        // Вызываем метод login из Pinia. Он сам сделает запрос и сохранит токен.
+        await authStore.login(email.value.trim(), password.value)
+        
+        console.log('Успешный вход!')
         router.push('/')
     } catch (error) {
         errorMessage.value = error.message
@@ -76,8 +80,6 @@ async function handleLogin() {
         isSubmitting.value = false
     }
 }
-
-
 </script>
 
 <style scoped>
