@@ -1,0 +1,34 @@
+# Лабораторная работа №4
+
+Frontend на Vue, backend на Spring Boot, база SQLite. Frontend обращается к REST API по пути `/api`.
+
+## Запуск через Docker
+
+Из папки `lab4` выполните:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up --build
+```
+
+Откройте `http://localhost:8081`. Для остановки нажмите `Ctrl+C` или выполните `docker compose down` из другого терминала.
+
+В `.env` задайте собственный постоянный `JWT_SECRET`: Base64 от 32 случайных байт. Сгенерировать его в PowerShell можно так:
+
+```powershell
+[Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+```
+
+Не меняйте секрет при каждом запуске: ранее выданные access token тогда перестанут работать. `WEB_PORT` задаёт порт сайта, по умолчанию `8081`. Переменные `ADMIN_EMAIL`, `ADMIN_NAME` и `ADMIN_PASSWORD` создают одного администратора при первом запуске с пустой базой. Если пользователь с такой почтой или именем уже есть, его роль автоматически не меняется. Образец пароля в `.env.example` замените перед использованием.
+
+Nginx отдаёт собранный frontend и направляет `/api` в контейнер backend. Файл базы хранится в Docker-томе `students-data`, поэтому `docker compose down` не удаляет данные. Локальная база из `backend-java/data` в этот том не копируется.
+
+Для полной остановки и удаления созданных контейнеров выполните `docker compose down`. Команда `docker compose down -v` также удалит базу данных из тома.
+
+## Запуск без Docker
+
+В `backend-java` задайте `JWT_SECRET` и запустите `./mvnw spring-boot:run` (Windows: `.\mvnw.cmd spring-boot:run`). В `frontend-vue` выполните `npm ci` и `npm run dev`. Сайт будет доступен по адресу Vite, обычно `http://localhost:5173`.
+
+## Возможности
+
+Регистрация, вход, выход, профиль, access token и refresh cookie; просмотр, добавление, редактирование и удаление студентов; поиск, фильтры, сортировка и пагинация. Создание, редактирование и удаление доступны администратору. Поиск по ФИО выполняется после короткой паузы, а предыдущий запрос отменяется при новом вводе.

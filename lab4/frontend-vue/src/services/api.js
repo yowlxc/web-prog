@@ -3,10 +3,19 @@ import { useAuthStore } from '@/stores/auth'
 const API_BASE_URL = "";
 
 async function fetchCsrfToken() {
-    const response = await fetch(`${API_BASE_URL}/api/auth/csrf`, {
-        credentials: "include"
-    });
-    if (!response.ok) throw new Error("Не удалось получить CSRF-токен");
+    let response
+    try {
+        response = await fetch(`${API_BASE_URL}/api/auth/csrf`, {
+            credentials: "include"
+        });
+    } catch {
+        throw new Error('Нет соединения с сервером. Проверьте, запущен ли backend.')
+    }
+    if (!response.ok) {
+        throw new Error(response.status === 502
+            ? 'Backend недоступен. Проверьте, запущен ли он.'
+            : 'Не удалось получить CSRF-токен')
+    }
     const data = await response.json();
     return data.csrfToken;
 }
@@ -38,6 +47,7 @@ async function request(url, options = {}, canRefresh = true) {
             credentials: "include"
         });
     } catch (networkError) {
+        if (networkError.name === 'AbortError') throw networkError
         console.error("Сетевая ошибка:", networkError);
         throw new Error("Не удалось связаться с сервером. Проверьте, запущен ли бэкенд.");
     }
@@ -62,10 +72,18 @@ async function request(url, options = {}, canRefresh = true) {
             // Если сервер вернул не JSON
         }
         
-        let message = `Ошибка ${response.status}`;
-        if (errorData.message) {
+        const defaultMessages = {
+            401: 'Сеанс закончился. Войдите снова.',
+            403: 'Недостаточно прав для этого действия.',
+            404: 'Запись не найдена.',
+            422: 'Проверьте введённые данные.',
+            500: 'Ошибка сервера. Попробуйте позже.',
+            502: 'Backend недоступен. Проверьте, запущен ли он.'
+        }
+        let message = defaultMessages[response.status] || `Ошибка ${response.status}`;
+        if (response.status < 500 && errorData.message) {
             message = errorData.message;
-        } else if (Object.keys(errorData).length > 0) {
+        } else if (response.status < 500 && Object.keys(errorData).length > 0) {
             message = Object.values(errorData).join(", ");
         }
         
@@ -113,7 +131,7 @@ export async function refreshToken() {
 }
 
 // Получить список студентов с учетом фильтров, пагинации и сортировки
-export async function getStudents(params = {}) {
+export async function getStudents(params = {}, signal) {
     const filterKeys = [
         "fio",
         "group",
@@ -121,7 +139,10 @@ export async function getStudents(params = {}) {
         "dormNumber",
         "isForeign",
         "roomMin",
-        "roomMax"
+        "roomMax",
+        "dateFrom",
+        "dateTo",
+        "notes"
     ];
 
     // Получаем только заполненные фильтры.
@@ -130,8 +151,7 @@ export async function getStudents(params = {}) {
             .filter(key =>
                 params[key] !== undefined &&
                 params[key] !== null &&
-                params[key] !== "" &&
-                !(key === 'isForeign' && params[key] === false)
+                params[key] !== ""
             )
             .map(key => [key, params[key]])
     );
@@ -151,14 +171,15 @@ export async function getStudents(params = {}) {
         const query = new URLSearchParams(queryParams).toString();
         return request(`/api/students/query?${query}`, {
             method: "POST",
-            body: JSON.stringify(filters)
+            body: JSON.stringify(filters),
+            signal
         });
     }
 
     // Два фильтра или меньше — GET.
     const getParams = new URLSearchParams({ ...filters, ...queryParams });
     
-    return request(`/api/students?${getParams}`);
+    return request(`/api/students?${getParams}`, { signal });
 }
 
 export function getStudent(isu) {

@@ -84,8 +84,16 @@ async function handleRegister() {
         errorMessage.value = 'Укажите электронную почту'
         return
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        errorMessage.value = 'Введите корректный адрес электронной почты'
+        return
+    }
     if(!password.value.trim()) {
         errorMessage.value = 'Придумайте пароль'
+        return
+    }
+    if (password.value.length < 6 || password.value.length > 64) {
+        errorMessage.value = 'Пароль должен содержать от 6 до 64 символов'
         return
     }
 
@@ -94,7 +102,7 @@ async function handleRegister() {
 
     try {
         await registerUser(name.value.trim(), email.value.trim(), password.value)
-        router.push('/')
+        router.push('/login')
     } catch (error) {
         console.error('Ошибка регистрации:', error)
         errorMessage.value = error.message

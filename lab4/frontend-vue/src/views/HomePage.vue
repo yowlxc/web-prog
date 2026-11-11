@@ -46,6 +46,7 @@
                     v-else
                     :students="students"
                     :is-admin="isAdmin"
+                    :deleting-isu="deletingIsu"
                     @details="handleDetails"
                     @edit="handleEdit"
                     @delete="handleDelete"
@@ -64,11 +65,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import StudentTable from '@/components/StudentTable.vue'
 import StudentFilters from '@/components/StudentFilters.vue'
-import { getStudents, deleteStudent } from '@/services/api'
+import { deleteStudent } from '@/services/api'
+import { createStudentSearch } from '@/services/studentSearch'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 
@@ -79,6 +81,7 @@ const router = useRouter()
 const students = ref([])
 const isLoading = ref(true)
 const errorMessage = ref('')
+const deletingIsu = ref(null)
 
 // Состояние для API
 const currentPage = ref(0)
@@ -86,40 +89,40 @@ const sortBy = ref('isu')
 const sortDir = ref('asc')
 const activeFilters = ref({}) // Храним примененные фильтры
 
-// Загрузка данных
-async function loadData() {
-    // 1. Если токена нет вообще — даже не пытаемся что-то грузить
+const search = createStudentSearch(
+    () => {
+        isLoading.value = true
+        errorMessage.value = ''
+    },
+    data => {
+        students.value = data
+        isLoading.value = false
+    },
+    error => {
+        errorMessage.value = error.message
+        isLoading.value = false
+        if (!authStore.isAuthenticated) router.push('/login')
+    }
+)
+
+function loadData(live = false) {
     if (!authStore.accessToken) {
         router.push('/login')
         return
     }
-
-    try {
-        isLoading.value = true
-        errorMessage.value = '' // Очищаем старые ошибки
-
-        const data = await getStudents({
-            page: currentPage.value,
-            size: 8, 
-            sortBy: sortBy.value,
-            sortDir: sortDir.value,
-            ...activeFilters.value
-        })
-
-        students.value = data
-    } catch (error) {
-        console.error('Ошибка загрузки:', error)
-
-        errorMessage.value = error.message
-        if (!authStore.isAuthenticated) router.push('/login')
-    } finally {
-        isLoading.value = false
-    }
+    search.search({
+        page: currentPage.value,
+        size: 8,
+        sortBy: sortBy.value,
+        sortDir: sortDir.value,
+        ...activeFilters.value
+    }, live)
 }
 
 onMounted(() => {
     loadData()
 })
+onUnmounted(() => search.stop())
 
 // --- Обработка фильтров ---
 function onFilterApply(newFilters) {
@@ -143,7 +146,7 @@ function onSortChange() {
 function onLiveSearch(newFilters) {
     activeFilters.value = newFilters
     currentPage.value = 0
-    loadData() // Загружаем данные с новыми фильтрами
+    loadData(true)
 }
 
 function nextPage() { currentPage.value++; loadData() }
@@ -158,17 +161,20 @@ function handleEdit(isu) {
 }
 
 async function handleDelete(isu) {
+    if (deletingIsu.value !== null) return
     if (!confirm(`Удалить студента с ИСУ ${isu}?`)) return
 
+    deletingIsu.value = isu
     try {
         await deleteStudent(isu)
-        await loadData()
-        if (students.value.length === 0 && currentPage.value > 0) {
+        if (students.value.length === 1 && currentPage.value > 0) {
             currentPage.value--
-            await loadData()
         }
+        loadData()
     } catch (error) {
         errorMessage.value = error.message
+    } finally {
+        deletingIsu.value = null
     }
 }
 </script>

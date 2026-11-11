@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.StudentFilterRequest;
 
 import java.util.List; 
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/students")
@@ -30,18 +31,23 @@ public class StudentController {
             @RequestParam(required = false) String fio,
             @RequestParam(required = false) Integer dormNumber,
             @RequestParam(required = false) Boolean isForeign,
+            @RequestParam(required = false) LocalDate dateFrom,
+            @RequestParam(required = false) LocalDate dateTo,
+            @RequestParam(required = false) String notes,
             @RequestParam(defaultValue = "isu") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "20") Integer size) {
 
         if (roomMin == null && roomMax == null && group == null
-                && fio == null && isu == null && dormNumber == null && isForeign == null) {
+                && fio == null && isu == null && dormNumber == null && isForeign == null
+                && dateFrom == null && dateTo == null && notes == null) {
             return studentService.getAllStudents(sortBy, sortDir, page, size);
         }
 
         return studentService.filterStudents(
                 roomMin, roomMax, group, fio, isu, dormNumber, isForeign,
+                dateFrom, dateTo, notes,
                 sortBy, sortDir, page, size);
     }
 
@@ -61,6 +67,9 @@ public class StudentController {
                 filter.isu(),
                 filter.dormNumber(),
                 filter.isForeign(),
+                filter.dateFrom(),
+                filter.dateTo(),
+                filter.notes(),
                 sortBy,
                 sortDir,
                 page,

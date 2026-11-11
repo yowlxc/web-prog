@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.time.LocalDate;
+
 public record StudentFilterRequest(
         Integer roomMin,
         Integer roomMax,
@@ -7,5 +9,8 @@ public record StudentFilterRequest(
         String fio,
         Integer isu,
         Integer dormNumber,
-        Boolean isForeign
+        Boolean isForeign,
+        LocalDate dateFrom,
+        LocalDate dateTo,
+        String notes
 ) {}

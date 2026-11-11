@@ -6,9 +6,10 @@ import { createStudent, getStudent, updateStudent } from '@/services/api'
 const route = useRoute()
 const router = useRouter()
 const errorMessage = ref('')
-const isLoading = ref(false)
+const isLoading = ref(!!route.params.isu)
 const isSaving = ref(false)
 const isEditMode = !!route.params.isu
+const today = new Date().toLocaleDateString('sv-SE')
 
 const student = reactive({
     isu: null,
@@ -36,6 +37,7 @@ onMounted(async () => {
 })
 
 async function handleSubmit() {
+    if (isSaving.value) return
     errorMessage.value = ''
     isSaving.value = true
 
@@ -95,7 +97,7 @@ async function handleSubmit() {
             <div class="form-data">
                 <label for="date-in-dorm">Дата заселения</label>
                 <input id="date-in-dorm" v-model="student.dateInDorm" type="date" required
-                       min="1999-01-01">
+                       min="1999-01-01" :max="today">
             </div>
 
             <div class="form-no-rus">
@@ -110,7 +112,9 @@ async function handleSubmit() {
             </div>
 
             <div class="btn-form">
-                <button type="submit" :disabled="isSaving">Сохранить</button>
+                <button type="submit" :disabled="isSaving">
+                    {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+                </button>
                 <button type="button" @click="router.push('/')">Отмена</button>
             </div>
         </form>

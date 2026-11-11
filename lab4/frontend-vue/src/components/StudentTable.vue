@@ -8,6 +8,10 @@ defineProps({
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    deletingIsu: {
+        type: Number,
+        default: null
     }
 })
 
@@ -50,8 +54,9 @@ const emit = defineEmits(['delete', 'edit', 'details'])
                                 <button class="btn-edit" @click="emit('edit', student.isu)">
                                     Редактировать
                                 </button>
-                                <button class="btn-delete" @click="emit('delete', student.isu)">
-                                    Удалить
+                                <button class="btn-delete" :disabled="deletingIsu !== null"
+                                        @click="emit('delete', student.isu)">
+                                    {{ deletingIsu === student.isu ? 'Удаление...' : 'Удалить' }}
                                 </button>
                             </template>
                         </div>

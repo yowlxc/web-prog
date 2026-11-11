@@ -12,6 +12,7 @@ import java.util.Comparator;
 
 import java.text.Collator;
 import java.util.Locale;
+import java.time.LocalDate;
 
 @Service
 public class StudentService {
@@ -25,6 +26,7 @@ public class StudentService {
     public List<Student> getAllStudents(
             String sortBy, String sortDir, Integer page, Integer size) {
         return filterStudents(null, null, null, null, null, null, null,
+                null, null, null,
                 sortBy, sortDir, page, size);
     }
 
@@ -36,6 +38,9 @@ public class StudentService {
             Integer isu,
             Integer dormNumber,
             Boolean isForeign,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String notes,
             String sortBy,
             String sortDir,
             Integer page,
@@ -46,6 +51,12 @@ public class StudentService {
         }
         if (!sortDir.equalsIgnoreCase("asc") && !sortDir.equalsIgnoreCase("desc")) {
             throw new BadRequestException("sortDir должен быть asc или desc");
+        }
+        if (roomMin != null && roomMax != null && roomMin > roomMax) {
+            throw new BadRequestException("Начало диапазона комнат больше конца");
+        }
+        if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+            throw new BadRequestException("Начало диапазона дат позже конца");
         }
 
         Collator fioCollator = Collator.getInstance(
@@ -70,10 +81,15 @@ public class StudentService {
                 .filter(s -> roomMin == null || s.getRoomNumber() >= roomMin)
                 .filter(s -> roomMax == null || s.getRoomNumber() <= roomMax)
                 .filter(s -> group == null || s.getGroup().equals(group))
-                .filter(s -> fio == null || s.getFio().equals(fio))
+                .filter(s -> fio == null || s.getFio().toLowerCase(Locale.ROOT)
+                        .contains(fio.toLowerCase(Locale.ROOT)))
                 .filter(s -> isu == null || s.getIsu().equals(isu))
                 .filter(s -> dormNumber == null || s.getDormNumber().equals(dormNumber))
                 .filter(s -> isForeign == null || s.getIsForeign().equals(isForeign))
+                .filter(s -> dateFrom == null || !s.getDateInDorm().isBefore(dateFrom))
+                .filter(s -> dateTo == null || !s.getDateInDorm().isAfter(dateTo))
+                .filter(s -> notes == null || s.getNotes().toLowerCase(Locale.ROOT)
+                        .contains(notes.toLowerCase(Locale.ROOT)))
                 .sorted(comparator)
                 .skip((long) page * size)
                 .limit(size)

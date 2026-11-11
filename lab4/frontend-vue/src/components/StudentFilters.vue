@@ -4,7 +4,7 @@
 
         <div class="filter-item">
             <label for="filter-fio">ФИО</label>
-            <input type="text" id="filter-fio" v-model="filters.fio" ref="fioInputRef">
+            <input type="text" id="filter-fio" v-model="filters.fio" @input="onLiveSearch">
         </div>
 
         <div class="filter-item">
@@ -22,12 +22,13 @@
             <input type="number" id="filter-dormitory" v-model="filters.dormNumber">
         </div>
 
-        <div class="filter-item filter-checkbox">
-            <label class="checkbox-label">
-                <input type="checkbox" v-model="filters.isForeign">
-                <span class="custom-checkbox"></span>
-                <span>Иностранец</span>
-            </label>
+        <div class="filter-item">
+            <label for="filter-foreign">Иностранец</label>
+            <select id="filter-foreign" v-model="filters.isForeign">
+                <option value="">Любой</option>
+                <option :value="true">Да</option>
+                <option :value="false">Нет</option>
+            </select>
         </div>
 
         <div class="filter-item">
@@ -37,6 +38,21 @@
                 <input type="number" v-model="filters.roomMax" placeholder="До">
             </div>
         </div>
+
+        <div class="filter-item">
+            <label>Дата заселения</label>
+            <div class="room-range">
+                <input type="date" v-model="filters.dateFrom" aria-label="Дата от">
+                <input type="date" v-model="filters.dateTo" aria-label="Дата до">
+            </div>
+        </div>
+
+        <div class="filter-item">
+            <label for="filter-notes">Примечания</label>
+            <input type="text" id="filter-notes" v-model="filters.notes">
+        </div>
+
+        <p v-if="filterError" class="auth-message">{{ filterError }}</p>
 
         <button type="button" class="btn-filter" @click="onApply">
             Применить
@@ -49,9 +65,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue'
-import { fromEvent } from 'rxjs'
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators'
+import { reactive, ref } from 'vue'
 
 const emit = defineEmits(['apply', 'reset', 'liveSearch'])
 
@@ -60,44 +74,39 @@ const filters = reactive({
     group: '',
     isu: '',
     dormNumber: '',
-    isForeign: false,
+    isForeign: '',
     roomMin: '',
-    roomMax: ''
+    roomMax: '',
+    dateFrom: '',
+    dateTo: '',
+    notes: ''
 })
+const filterError = ref('')
 
-// 1. Создаем ссылку на DOM-элемент
-const fioInputRef = ref(null)
-let fioSubscription
+function activeFilters() {
+    const result = {}
+    for (const key in filters) {
+        if (filters[key] !== '' && filters[key] !== null) result[key] = filters[key]
+    }
+    return result
+}
 
-// 2. Настраиваем RxJS при монтировании компонента
-onMounted(() => {
-    if (!fioInputRef.value) return
-
-    // Создаем поток событий ввода
-    const fioInput$ = fromEvent(fioInputRef.value, 'input').pipe(
-        map(event => event.target.value), // Берем текст из инпута
-        debounceTime(500),                // Ждем 500мс тишины
-        distinctUntilChanged()            // Если текст не изменился - игнорируем
-    )
-
-    // Подписываемся на поток
-    fioSubscription = fioInput$.subscribe((text) => {
-        // Отправляем событие наверх в HomePage для живого поиска
-        emit('liveSearch', { ...filters, fio: text })
-    })
-})
-
-onUnmounted(() => fioSubscription?.unsubscribe())
+function onLiveSearch() {
+    emit('liveSearch', activeFilters())
+}
 
 // Для кнопки "Применить" (остальные поля)
 function onApply() {
-    const activeFilters = {}
-    for (const key in filters) {
-        if (filters[key] !== '' && filters[key] !== false && filters[key] !== null) {
-            activeFilters[key] = filters[key]
-        }
+    filterError.value = ''
+    if (filters.roomMin && filters.roomMax && Number(filters.roomMin) > Number(filters.roomMax)) {
+        filterError.value = 'Начало диапазона комнат больше конца'
+        return
     }
-    emit('apply', activeFilters)
+    if (filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo) {
+        filterError.value = 'Начало диапазона дат позже конца'
+        return
+    }
+    emit('apply', activeFilters())
 }
 
 function onReset() {
@@ -105,9 +114,13 @@ function onReset() {
     filters.group = ''
     filters.isu = ''
     filters.dormNumber = ''
-    filters.isForeign = false
+    filters.isForeign = ''
     filters.roomMin = ''
     filters.roomMax = ''
+    filters.dateFrom = ''
+    filters.dateTo = ''
+    filters.notes = ''
+    filterError.value = ''
     emit('reset')
 }
 </script>

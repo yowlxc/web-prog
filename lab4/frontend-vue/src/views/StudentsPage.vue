@@ -8,12 +8,15 @@ const router = useRouter()
 
 const student = ref(null)
 const errorMessage = ref('')
+const isLoading = ref(true)
 
 onMounted(async () => {
     try {
         student.value = await getStudent(route.params.isu)
     } catch (error) {
         errorMessage.value = error.message
+    } finally {
+        isLoading.value = false
     }
 })
 </script>
@@ -24,7 +27,7 @@ onMounted(async () => {
         <h2>Досье студента</h2>
 
         <p v-if="errorMessage" class="auth-message">{{ errorMessage }}</p>
-        <p v-else-if="!student">Загрузка...</p>
+        <p v-else-if="isLoading">Загрузка...</p>
 
         <div v-else>
             <p><strong>ФИО:</strong> {{ student.fio }}</p>

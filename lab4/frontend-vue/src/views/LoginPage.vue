@@ -60,6 +60,10 @@ async function handleLogin() {
         errorMessage.value = 'Укажите электронную почту'
         return
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        errorMessage.value = 'Введите корректный адрес электронной почты'
+        return
+    }
     if (!password.value.trim()) {
         errorMessage.value = 'Введите пароль'
         return
