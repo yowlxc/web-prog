@@ -5,6 +5,7 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.demo.exception.InvalidCredentialsException;
+import java.util.Locale;
 
 @Service
 public class AuthService {
@@ -17,9 +18,11 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User authenticate(String login, String password) {
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new InvalidCredentialsException());
+    public User authenticate(String email, String password) {
+        email = email.trim().toLowerCase(Locale.ROOT);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new InvalidCredentialsException();

@@ -1,3 +1,4 @@
+
 const btnAdd = document.querySelector("#btn-add");
 const btnCancel = document.querySelector("#btn-cancel");
 const listStudents = document.querySelector("#list-students");
@@ -5,61 +6,242 @@ const formStudents = document.querySelector("#form-students");
 const filterButton = document.querySelector("#btn-filter");
 const filterResetButton = document.querySelector("#btn-reset-filter");
 
-document.querySelector("#sort-by").addEventListener("change", function() {
-    currentPage = 0;
-    renderStudents();
-});
-document.querySelector("#sort-dir").addEventListener("change", function() {
-    currentPage = 0;
-    renderStudents();
-});
-document.querySelector("#page-prev").addEventListener("click", function() {
-    if (currentPage > 0) currentPage--;
-    renderStudents();
-});
-document.querySelector("#page-next").addEventListener("click", function() {
-    currentPage++;
-    renderStudents();
+const authScreen = document.querySelector("#auth-screen");
+const emailPanel = document.querySelector("#email-panel");
+const registerPanel = document.querySelector("#register-panel");
+const emailForm = document.querySelector("#email-form");
+const registerForm = document.querySelector("#register-form");
+const authMessage = document.querySelector("#auth-message");
+
+const sessionBar = document.querySelector("#session-bar");
+const currentUser = document.querySelector("#current-user");
+const logoutButton = document.querySelector("#btn-logout");
+const appMessage = document.querySelector("#app-message");
+const detailsSection = document.querySelector("#dosie-students");
+const filterIsuInput = document.querySelector("#filter-isu");
+
+filterIsuInput.addEventListener("input", () => {
+    filterIsuInput.value = filterIsuInput.value
+        .replace(/\D/g, "")
+        .slice(0, 6);
 });
 
-btnAdd.addEventListener("click", function() {
+function showAuthMessage(message, success = false) {
+    authMessage.textContent = message;
+    authMessage.classList.toggle("success", success);
+    authMessage.classList.remove("hidden");
+}
+
+function clearAuthMessage() {
+    authMessage.textContent = "";
+    authMessage.classList.add("hidden");
+    authMessage.classList.remove("success");
+}
+
+function showAuthPanel(panel) {
+    // убраем пароль при новом переходе
+    if (panel === "email") {
+        document.querySelector("#email-password").value = "";
+    }
+    //
+    emailPanel.classList.toggle("hidden", panel !== "email");
+    registerPanel.classList.toggle("hidden", panel !== "register");
+    clearAuthMessage();
+}
+
+function showAuthScreen(message = "", success = false) {
+    authScreen.classList.remove("hidden");
+    listStudents.classList.add("hidden");
+    formStudents.classList.add("hidden");
+    detailsSection.classList.add("hidden");
+    sessionBar.classList.add("hidden");
+
+    showAuthPanel("email");
+
+    if (message) {
+        showAuthMessage(message, success);
+    }
+}
+
+function showAppMessage(message = "") {
+    appMessage.textContent = message;
+    appMessage.classList.toggle("hidden", !message);
+}
+
+async function loadStudents(params = currentFilters) {
+    try {
+        await renderStudents(params);
+        showAppMessage();
+    } catch (error) {
+        showAppMessage(`Не удалось загрузить студентов: ${error.message}`);
+    }
+}
+
+async function showAuthenticatedApp() {
+    const user = window.authState?.user;
+
+    if (!user) {
+        showAuthScreen();
+        return;
+    }
+
+    authScreen.classList.add("hidden");
+    listStudents.classList.remove("hidden");
+    formStudents.classList.add("hidden");
+    detailsSection.classList.add("hidden");
+    sessionBar.classList.remove("hidden");
+
+    currentUser.textContent = `${user.name} (${user.role})`;
+
+    const isAdmin = user.role === "ADMIN";
+    btnAdd.closest(".btn-add").classList.toggle("hidden", !isAdmin);
+
+    currentPage = 0;
+    await loadStudents({});
+}
+
+document.querySelector("#sort-by").addEventListener("change", () => {
+    currentPage = 0;
+    loadStudents();
+});
+
+document.querySelector("#sort-dir").addEventListener("change", () => {
+    currentPage = 0;
+    loadStudents();
+});
+
+document.querySelector("#page-prev").addEventListener("click", () => {
+    if (currentPage > 0) currentPage--;
+    loadStudents();
+});
+
+document.querySelector("#page-next").addEventListener("click", () => {
+    currentPage++;
+    loadStudents();
+});
+
+// Переключение между входом и регистрацией
+document.querySelector("#btn-show-register").addEventListener("click", () => {
+    showAuthPanel("register");
+});
+
+document.querySelector("#btn-show-email").addEventListener("click", () => {
+    showAuthPanel("email");
+});
+
+// Вход
+emailForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearAuthMessage();
+
+    const email = document.querySelector("#email-email").value.trim();
+    const password = document.querySelector("#email-password").value;
+    const button = emailForm.querySelector('[type="submit"]');
+
+    button.disabled = true;
+
+    try {
+        await emailUser(email, password);
+        emailForm.reset();
+        await showAuthenticatedApp();
+    } catch (error) {
+        showAuthMessage(error.message);
+    } finally {
+        button.disabled = false;
+    }
+});
+
+// Регистрация
+registerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearAuthMessage();
+
+    const name = document.querySelector("#register-name").value.trim();
+    const email = document.querySelector("#register-email").value.trim();
+    const password = document.querySelector("#register-password").value;
+    const button = registerForm.querySelector('[type="submit"]');
+
+    button.disabled = true;
+
+    try {
+        await registerUser(name, email, password);
+
+        registerForm.reset();
+
+        // После регистрации пользователь сам входит в систему.
+        document.querySelector("#email-email").value = email;
+        showAuthPanel("email");
+
+        showAuthMessage(
+            "Регистрация прошла успешно! Теперь войдите в систему.",
+            true
+        );
+    } catch (error) {
+        showAuthMessage(error.message);
+    } finally {
+        button.disabled = false;
+    }
+});
+
+// Выход
+logoutButton.addEventListener("click", async () => {
+    logoutButton.disabled = true;
+
+    try {
+        await logoutUser();
+        showAuthScreen("Вы вышли из системы.", true);
+    } catch (error) {
+        showAuthScreen(
+            `Сессия завершена локально, но сервер не подтвердил выход: ${error.message}`
+        );
+    } finally {
+        logoutButton.disabled = false;
+    }
+});
+
+// Добавление студента
+btnAdd.addEventListener("click", () => {
+    if (window.authState?.user?.role !== "ADMIN") {
+        showAppMessage("Добавлять студентов может только администратор.");
+        return;
+    }
+
     editingIsu = null;
 
     const form = formStudents.querySelector("form");
     form.reset();
 
-    // разблокируем ИСУ
-    document.getElementById("isu").readOnly = false;
+    document.querySelector("#isu").readOnly = false;
 
-    // очищаем ошибки
-    document.getElementById("fio-error").textContent = "";
-    document.getElementById("group-error").textContent = "";
-    document.getElementById("isu-error").textContent = "";
-    document.getElementById("dorm-error").textContent = "";
-    document.getElementById("room-error").textContent = "";
-    document.getElementById("date-error").textContent = "";
+    [
+        "fio-error",
+        "group-error",
+        "isu-error",
+        "dorm-error",
+        "room-error",
+        "date-error"
+    ].forEach((id) => {
+        document.getElementById(id).textContent = "";
+    });
 
-    // меняем заголовок
-    // const h2 = formStudents.querySelector("h2");
-    // h2.textContent = "Форма добавления студента";
+    formStudents.querySelector("h2").textContent = "Форма добавления студента";
 
-    // переключаем отображение
+    showAppMessage();
     listStudents.classList.add("hidden");
     formStudents.classList.remove("hidden");
 });
 
-
-// Отмена
-btnCancel.addEventListener("click", function() {
-    const h2 = formStudents.querySelector("h2");
-    h2.textContent = "Форма редактирования студента";
-
+// Отмена добавления или редактирования
+btnCancel.addEventListener("click", () => {
     formStudents.classList.add("hidden");
     listStudents.classList.remove("hidden");
+
+    formStudents.querySelector("h2").textContent =
+        "Форма редактирования студента";
 });
 
-filterButton.addEventListener("click", async function() {
-
+// Применение фильтров
+filterButton.addEventListener("click", async () => {
     const params = {};
 
     const fio = document.querySelector("#filter-fio").value.trim();
@@ -70,7 +252,6 @@ filterButton.addEventListener("click", async function() {
     const roomMin = document.querySelector("#filter-room-min").value;
     const roomMax = document.querySelector("#filter-room-max").value;
 
-
     if (fio) params.fio = fio;
     if (group) params.group = group;
     if (isu) params.isu = isu;
@@ -79,22 +260,65 @@ filterButton.addEventListener("click", async function() {
     if (roomMin) params.roomMin = Number(roomMin);
     if (roomMax) params.roomMax = Number(roomMax);
 
-    currentFilters = params;
     currentPage = 0;
-    await renderStudents();
+    await loadStudents(params);
 });
 
-filterResetButton.addEventListener("click", async function() {
-    document.querySelector("#filter-fio").value = "";
-    document.querySelector("#filter-group").value = "";
-    document.querySelector("#filter-isu").value = "";
-    document.querySelector("#filter-dormitory").value = "";
+// Сброс фильтров
+filterResetButton.addEventListener("click", async () => {
+    [
+        "filter-fio",
+        "filter-group",
+        "filter-isu",
+        "filter-dormitory",
+        "filter-room-min",
+        "filter-room-max"
+    ].forEach((id) => {
+        document.getElementById(id).value = "";
+    });
+
     document.querySelector("#filter-foreign").checked = false;
-    document.querySelector("#filter-room-min").value = "";
-    document.querySelector("#filter-room-max").value = "";
-    const params = {}
 
-    currentFilters = params;
     currentPage = 0;
-    await renderStudents();
+    await loadStudents({});
 });
+
+// При открытии страницы восстанавливаем сессию
+// async function initializeApp() {
+//     formStudents.classList.add("hidden");
+//     detailsSection.classList.add("hidden");
+
+//     formStudents.querySelector("form").reset();
+
+//     const user = await restoreSession();
+
+//     if (user) {
+//         await showAuthenticatedApp();
+//     } else {
+//         showAuthScreen();
+//     }
+// }
+async function initializeApp() {
+    console.log("1. INITIALIZE APP START");
+
+    formStudents.classList.add("hidden");
+    detailsSection.classList.add("hidden");
+
+    formStudents.querySelector("form").reset();
+
+    console.log("2. BEFORE RESTORE SESSION");
+
+    const user = await restoreSession();
+
+    console.log("3. RESTORE SESSION RESULT:", user);
+
+    if (user) {
+        await showAuthenticatedApp();
+    } else {
+        showAuthScreen();
+    }
+
+    console.log("4. INITIALIZE APP FINISHED");
+}
+
+initializeApp();

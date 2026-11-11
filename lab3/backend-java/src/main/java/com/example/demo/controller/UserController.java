@@ -34,8 +34,4 @@ public class UserController {
     ) {
         return userService.changeRole(id, request.role());
     }
-
-
-
-
 }

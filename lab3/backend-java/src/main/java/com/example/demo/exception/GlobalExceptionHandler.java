@@ -45,9 +45,9 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", error.getMessage()));
     }
 
-    @ExceptionHandler(DuplicateLoginException.class)
-    public ResponseEntity<Map<String, String>> handleDuplicateLoginException(
-        DuplicateLoginException error
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateEmailException(
+        DuplicateEmailException error
     ) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)

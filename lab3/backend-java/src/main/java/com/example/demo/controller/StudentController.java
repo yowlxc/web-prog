@@ -1,15 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.StudentPatchRequest;
-import com.example.demo.dto.StudentRequest;
-import com.example.demo.dto.StudentResponse;
-import com.example.demo.service.StudentService;
 import jakarta.validation.Valid;
+import com.example.demo.model.Student;
+import com.example.demo.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.dto.StudentFilterRequest;
 
-import java.util.List;
+import java.util.List; 
 
 @RestController
 @RequestMapping("/api/students")
@@ -21,8 +20,9 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    // получить список студентов (с фильтрами)
     @GetMapping
-    public List<StudentResponse> getAllStudents(
+    public List<Student> getAllStudents(
             @RequestParam(required = false) Integer roomMin,
             @RequestParam(required = false) Integer roomMax,
             @RequestParam(required = false) String group,
@@ -34,34 +34,70 @@ public class StudentController {
             @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "20") Integer size) {
-        return studentService.getStudents(roomMin, roomMax, group, fio, isu,
-                dormNumber, isForeign, sortBy, sortDir, page, size);
+
+        if (roomMin == null && roomMax == null && group == null
+                && fio == null && isu == null && dormNumber == null && isForeign == null) {
+            return studentService.getAllStudents(sortBy, sortDir, page, size);
+        }
+
+        return studentService.filterStudents(
+                roomMin, roomMax, group, fio, isu, dormNumber, isForeign,
+                sortBy, sortDir, page, size);
     }
 
+    @PostMapping("/query")
+    public List<Student> queryStudents(
+            @RequestBody StudentFilterRequest filter,
+            @RequestParam(defaultValue = "isu") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer size) {
+
+        return studentService.filterStudents(
+                filter.roomMin(),
+                filter.roomMax(),
+                filter.group(),
+                filter.fio(),
+                filter.isu(),
+                filter.dormNumber(),
+                filter.isForeign(),
+                sortBy,
+                sortDir,
+                page,
+                size
+        );
+    }
+
+    // получить студента по ИСУ
     @GetMapping("/{isu}")
-    public StudentResponse getStudentByIsu(@PathVariable Integer isu) {
-        return studentService.getStudentByIsu(isu);
+    public ResponseEntity<Student> getStudentByIsu(
+            @PathVariable Integer isu) {
+        return studentService.getStudentByIsu(isu)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // создать студента
     @PostMapping
-    public ResponseEntity<StudentResponse> createStudent(@Valid @RequestBody StudentRequest student) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.createStudent(student));
+    public ResponseEntity<Student> createStudent(
+            @Valid @RequestBody Student student) {
+        Student created = studentService.createStudent(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PutMapping("/{isu}")
-    public StudentResponse replaceStudent(@PathVariable Integer isu,
-                                          @Valid @RequestBody StudentRequest student) {
-        return studentService.replaceStudent(isu, student);
-    }
-
+    // частично обновить студента
     @PatchMapping("/{isu}")
-    public StudentResponse updateStudent(@PathVariable Integer isu,
-                                         @Valid @RequestBody StudentPatchRequest student) {
-        return studentService.updateStudent(isu, student);
+    public ResponseEntity<Student> updateStudent(
+            @PathVariable Integer isu,
+            @RequestBody Student student) {
+        return ResponseEntity.ok(
+                studentService.updateStudent(isu, student));
     }
 
+    // удалить студента
     @DeleteMapping("/{isu}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Integer isu) {
+    public ResponseEntity<Void> deleteStudent(
+            @PathVariable Integer isu) {
         studentService.deleteStudent(isu);
         return ResponseEntity.noContent().build();
     }
