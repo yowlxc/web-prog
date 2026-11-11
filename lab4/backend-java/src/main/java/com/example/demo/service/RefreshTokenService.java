@@ -78,6 +78,7 @@ public class RefreshTokenService {
         }
 
         User user = stored.getUser();
+        user.getRole();
 
         if (repository.consume(stored.getId(), stored.getTokenHash()) != 1) {
             throw new InvalidRefreshTokenException();
