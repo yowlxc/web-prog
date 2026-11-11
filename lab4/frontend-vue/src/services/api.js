@@ -13,6 +13,9 @@ async function request(url, options = {}) {
     const method = (options.method || "GET").toUpperCase();
     const headers = new Headers(options.headers || {});
 
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+
     const isReadOnly = ["GET", "HEAD", "OPTIONS"].includes(method);
     if (!isReadOnly && !url.startsWith("/api/students")) {
         const csrfToken = await fetchCsrfToken();
@@ -96,10 +99,10 @@ export async function logoutUser() {
 export async function getStudents(params = {}) {
     const queryParams = {
         page: 0,
-        size: 8, // Как в твоем старом коде
+        size: 8,
         sortBy: 'isu',
         sortDir: 'asc',
-        ...params // Сюда развернутся переданные фильтры (fio, group и т.д.)
+        ...params
     }
 
     const cleanParams = {}
@@ -115,4 +118,26 @@ export async function getStudents(params = {}) {
     
     // 4. Отправляем запрос (GET, CSRF не нужен)
     return request(`/api/students?${urlParams}`)
+}
+
+export function getStudent(isu) {
+    return request(`/api/students/${isu}`)
+}
+
+export function createStudent(student) {
+    return request('/api/students', {
+        method: 'POST',
+        body: JSON.stringify(student)
+    })
+}
+
+export function updateStudent(isu, student) {
+    return request(`/api/students/${isu}`, {
+        method: 'PATCH',
+        body: JSON.stringify(student)
+    })
+}
+
+export function deleteStudent(isu) {
+    return request(`/api/students/${isu}`, { method: 'DELETE' })
 }

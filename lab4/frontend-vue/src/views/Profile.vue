@@ -19,7 +19,7 @@
                 <button @click="handleLogout" :disabled="isLoggingOut" class="btn-logout">
                     {{ isLoggingOut ? 'Выход...' : 'Выйти из системы' }}
                 </button>
-                <button @click="$router.push('/home')">
+                <button @click="$router.push('/')">
                     К списку студентов
                 </button>
             </div>

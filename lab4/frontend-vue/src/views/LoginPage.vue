@@ -67,7 +67,6 @@ async function handleLogin() {
         const user = await loginUser(email.value.trim(), password.value)
         // TODO: позже сделаю редирект на страницу со студентами
         console.log('Успешный вход', user)
-        console.log('Логин:', email.value, password.value)
 
         router.push('/')
     } catch (error) {

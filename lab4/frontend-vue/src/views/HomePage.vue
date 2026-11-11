@@ -6,7 +6,7 @@
         </div>
 
         <div class="btn-add" v-if="user?.role === 'ADMIN'">
-            <button>+ Добавить студента</button>
+            <button @click="router.push('/students/new')">+ Добавить студента</button>
         </div>
 
         <!-- Главный контейнер с двумя колонками -->
@@ -133,7 +133,9 @@ function nextPage() { currentPage.value++; loadData() }
 function prevPage() { if (currentPage.value > 0) { currentPage.value--; loadData() } }
 
 // Обработчики от таблицы
-function handleDetails(isu) { console.log('Details', isu) }
+function handleDetails(isu) {
+    router.push(`/students/${isu}`)
+}
 function handleEdit(isu) { console.log('Edit', isu) }
 function handleDelete(isu) { console.log('Delete', isu) }
 </script>
