@@ -84,7 +84,7 @@ async function handleRegister() {
         errorMessage.value = 'Укажите электронную почту'
         return
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    if (!/^[^\s@]+@[^\s@]+$/.test(email.value.trim())) {
         errorMessage.value = 'Введите корректный адрес электронной почты'
         return
     }
