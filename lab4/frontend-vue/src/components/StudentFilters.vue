@@ -47,11 +47,6 @@
             </div>
         </div>
 
-        <div class="filter-item">
-            <label for="filter-notes">Примечания</label>
-            <input type="text" id="filter-notes" v-model="filters.notes">
-        </div>
-
         <p v-if="filterError" class="auth-message">{{ filterError }}</p>
 
         <button type="button" class="btn-filter" @click="onApply">
@@ -79,7 +74,6 @@ const filters = reactive({
     roomMax: '',
     dateFrom: '',
     dateTo: '',
-    notes: ''
 })
 const filterError = ref('')
 
@@ -119,7 +113,6 @@ function onReset() {
     filters.roomMax = ''
     filters.dateFrom = ''
     filters.dateTo = ''
-    filters.notes = ''
     filterError.value = ''
     emit('reset')
 }

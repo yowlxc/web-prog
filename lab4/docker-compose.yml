@@ -2,13 +2,13 @@ services:
   backend:
     build: ./backend-java
     environment:
-      DB_URL: jdbc:sqlite:/data/students.db
+      DB_URL: jdbc:sqlite:data/students.db
       JWT_SECRET: ${JWT_SECRET:?Скопируйте .env.example в .env}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_NAME: ${ADMIN_NAME:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     volumes:
-      - students-data:/data
+      - ./backend-java/data:/data
 
   frontend:
     build: ./frontend-vue
