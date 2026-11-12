@@ -87,7 +87,6 @@ async function request(url, options = {}, canRefresh = true) {
             message = Object.values(errorData).join(", ");
         }
         
-        // Выбрасываем ошибку с текстом от сервера
         throw new Error(message);
     }
     if (response.status === 204) return null;
@@ -114,12 +113,10 @@ export async function registerUser(name, email, password) {
 
 export async function logoutUser() {
     try {
-        // Говорим бэку убить refresh-cookie
         await request("/api/auth/logout", { method: "POST" });
     } catch (e) {
         console.warn("Сервер не ответил при выходе, но мы всё равно выйдем локально", e);
     } finally {
-        // В любом случае чистим localStorage
         localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
     }
@@ -130,7 +127,6 @@ export async function refreshToken() {
     return request("/api/auth/refresh", { method: "POST" });
 }
 
-// Получить список студентов с учетом фильтров, пагинации и сортировки
 export async function getStudents(params = {}, signal) {
     const filterKeys = [
         "fio",
@@ -145,7 +141,6 @@ export async function getStudents(params = {}, signal) {
         "notes"
     ];
 
-    // Получаем только заполненные фильтры.
     const filters = Object.fromEntries(
         filterKeys
             .filter(key =>
@@ -158,7 +153,6 @@ export async function getStudents(params = {}, signal) {
 
     const filterCount = Object.keys(filters).length;
 
-    // Параметры пагинации и сортировки.
     const queryParams = {
         page: params.page ?? 0,
         size: params.size ?? 8,

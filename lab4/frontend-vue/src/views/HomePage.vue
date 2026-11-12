@@ -9,19 +9,15 @@
             <button @click="router.push('/students/new')">+ Добавить студента</button>
         </div>
 
-        <!-- Главный контейнер с двумя колонками -->
         <div class="students-content">
             
-            <!-- Левая колонка: фильтры -->
             <StudentFilters 
                 @apply="onFilterApply" 
                 @reset="onFilterReset"
                 @liveSearch="onLiveSearch"
             />
 
-            <!-- Правая колонка: сортировка, таблица, пагинация -->
             <div class="students-table">
-                <!-- Сортировка -->
                 <div class="list-controls">
                     <label for="sort-by">Сортировать по:</label>
                     <select id="sort-by" v-model="sortBy" @change="onSortChange">
@@ -37,11 +33,9 @@
                     </select>
                 </div>
 
-                <!-- Лоадер и ошибки -->
                 <div v-if="isLoading" style="text-align: center; padding: 20px;">Загрузка...</div>
                 <div v-else-if="errorMessage" class="auth-message">{{ errorMessage }}</div>
 
-                <!-- Сама таблица -->
                 <StudentTable 
                     v-else
                     :students="students"
@@ -52,11 +46,9 @@
                     @delete="handleDelete"
                 />
 
-                <!-- Пагинация -->
                 <div class="pagination">
                     <button @click="prevPage" :disabled="currentPage === 0 || isLoading">Назад</button>
                     <span>Страница {{ currentPage + 1 }}</span>
-                    <!-- Если пришло меньше 8 записей, значит это конец -->
                     <button @click="nextPage" :disabled="students.length < 8 || isLoading">Далее</button>
                 </div>
             </div>
@@ -83,11 +75,10 @@ const isLoading = ref(true)
 const errorMessage = ref('')
 const deletingIsu = ref(null)
 
-// Состояние для API
 const currentPage = ref(0)
 const sortBy = ref('isu')
 const sortDir = ref('asc')
-const activeFilters = ref({}) // Храним примененные фильтры
+const activeFilters = ref({})
 
 const search = createStudentSearch(
     () => {
@@ -124,7 +115,6 @@ onMounted(() => {
 })
 onUnmounted(() => search.stop())
 
-// --- Обработка фильтров ---
 function onFilterApply(newFilters) {
     activeFilters.value = newFilters
     currentPage.value = 0 
@@ -137,7 +127,6 @@ function onFilterReset() {
     loadData()
 }
 
-// Сортировка и пагинация 
 function onSortChange() {
     currentPage.value = 0
     loadData()
@@ -152,7 +141,6 @@ function onLiveSearch(newFilters) {
 function nextPage() { currentPage.value++; loadData() }
 function prevPage() { if (currentPage.value > 0) { currentPage.value--; loadData() } }
 
-// Обработчики от таблицы
 function handleDetails(isu) {
     router.push(`/students/${isu}`)
 }

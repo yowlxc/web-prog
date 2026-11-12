@@ -39,11 +39,9 @@ function clearAuthMessage() {
 }
 
 function showAuthPanel(panel) {
-    // убраем пароль при новом переходе
     if (panel === "email") {
         document.querySelector("#email-password").value = "";
     }
-    //
     emailPanel.classList.toggle("hidden", panel !== "email");
     registerPanel.classList.toggle("hidden", panel !== "register");
     clearAuthMessage();
@@ -120,7 +118,6 @@ document.querySelector("#page-next").addEventListener("click", () => {
     loadStudents();
 });
 
-// Переключение между входом и регистрацией
 document.querySelector("#btn-show-register").addEventListener("click", () => {
     showAuthPanel("register");
 });
@@ -129,7 +126,6 @@ document.querySelector("#btn-show-email").addEventListener("click", () => {
     showAuthPanel("email");
 });
 
-// Вход
 emailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearAuthMessage();
@@ -150,12 +146,8 @@ emailForm.addEventListener("submit", async (event) => {
         button.disabled = false;
     }
 
-    if(responce.ok){
-        window.location.href = 'home.html'
-    }
 });
 
-// Регистрация
 registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearAuthMessage();
@@ -172,7 +164,6 @@ registerForm.addEventListener("submit", async (event) => {
 
         registerForm.reset();
 
-        // После регистрации пользователь сам входит в систему.
         document.querySelector("#email-email").value = email;
         showAuthPanel("email");
 
@@ -186,12 +177,8 @@ registerForm.addEventListener("submit", async (event) => {
         button.disabled = false;
     }
 
-    if(responce.ok){
-        window.location.href = 'login.html'
-    }
 });
 
-// Выход
 logoutButton.addEventListener("click", async () => {
     logoutButton.disabled = true;
 
@@ -206,12 +193,8 @@ logoutButton.addEventListener("click", async () => {
         logoutButton.disabled = false;
     }
 
-    if(responce.ok){
-        window.location.href = 'login.html'
-    }
 });
 
-// Добавление студента
 btnAdd.addEventListener("click", () => {
     if (window.authState?.user?.role !== "ADMIN") {
         showAppMessage("Добавлять студентов может только администратор.");
@@ -242,12 +225,8 @@ btnAdd.addEventListener("click", () => {
     listStudents.classList.add("hidden");
     formStudents.classList.remove("hidden");
 
-    if(responce.ok){
-        window.location.href = 'home.html'
-    }
 });
 
-// Отмена добавления или редактирования
 btnCancel.addEventListener("click", () => {
     formStudents.classList.add("hidden");
     listStudents.classList.remove("hidden");
@@ -256,7 +235,6 @@ btnCancel.addEventListener("click", () => {
         "Форма редактирования студента";
 });
 
-// Применение фильтров
 filterButton.addEventListener("click", async () => {
     const params = {};
 
@@ -280,7 +258,6 @@ filterButton.addEventListener("click", async () => {
     await loadStudents(params);
 });
 
-// Сброс фильтров
 filterResetButton.addEventListener("click", async () => {
     [
         "filter-fio",
@@ -299,34 +276,13 @@ filterResetButton.addEventListener("click", async () => {
     await loadStudents({});
 });
 
-// При открытии страницы восстанавливаем сессию
-// async function initializeApp() {
-//     formStudents.classList.add("hidden");
-//     detailsSection.classList.add("hidden");
-
-//     formStudents.querySelector("form").reset();
-
-//     const user = await restoreSession();
-
-//     if (user) {
-//         await showAuthenticatedApp();
-//     } else {
-//         showAuthScreen();
-//     }
-// }
 async function initializeApp() {
-    console.log("1. INITIALIZE APP START");
-
     formStudents.classList.add("hidden");
     detailsSection.classList.add("hidden");
 
     formStudents.querySelector("form").reset();
 
-    console.log("2. BEFORE RESTORE SESSION");
-
     const user = await restoreSession();
-
-    console.log("3. RESTORE SESSION RESULT:", user);
 
     if (user) {
         await showAuthenticatedApp();
@@ -334,7 +290,6 @@ async function initializeApp() {
         showAuthScreen();
     }
 
-    console.log("4. INITIALIZE APP FINISHED");
 }
 
 initializeApp();

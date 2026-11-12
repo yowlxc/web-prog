@@ -5,10 +5,8 @@ const groupError = document.querySelector("#group-error");
 let editingIsu = null;
 
 form.addEventListener('submit', function(event) {
-    console.log("Кнопка нажата");
     event.preventDefault();
 
-    //валидация фио
     const fioInput = document.getElementById('fio');
     const fio = fioInput.value;
     if (!fioInput.checkValidity()) {
@@ -17,7 +15,6 @@ form.addEventListener('submit', function(event) {
     }
     fioError.textContent = "";
 
-    // валидация группы
     const groupInput = document.getElementById('group');
     const group = groupInput.value;
     if (!groupInput.checkValidity()) {
@@ -26,7 +23,6 @@ form.addEventListener('submit', function(event) {
     }
     groupError.textContent = "";
 
-    //валидация ису-шника
     const isuInput = document.getElementById('isu');
     const isu = isuInput.value;
     if (!isuInput.checkValidity()) {
@@ -36,7 +32,6 @@ form.addEventListener('submit', function(event) {
     isuError.textContent = "";
 
 
-    // проверяем, не существует ли уже такой ИСУ
     const students = getStudents();
     const isIsuExists = students.some(function(student) {
         return student.isu === isu && student.isu !== editingIsu;
@@ -71,7 +66,6 @@ form.addEventListener('submit', function(event) {
     }
 
     renderStudents();
-    console.log('aaaa');
 
     form.parentElement.classList.add("hidden");
     document.querySelector("#list-students").classList.remove("hidden");

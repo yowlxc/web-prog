@@ -65,7 +65,6 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 
 async function handleRegister() {
-    console.log('handleRegister() вызван')
 
     if(!name.value.trim()) {
         errorMessage.value = 'Укажите имя'

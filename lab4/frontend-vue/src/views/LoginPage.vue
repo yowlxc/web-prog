@@ -53,7 +53,6 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 
 async function handleLogin() {
-    console.log('handleLogin вызван')
     errorMessage.value = ''
 
     if (!email.value.trim()) {

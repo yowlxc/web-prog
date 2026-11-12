@@ -95,7 +95,6 @@ function onLiveSearch() {
     emit('liveSearch', activeFilters())
 }
 
-// Для кнопки "Применить" (остальные поля)
 function onApply() {
     filterError.value = ''
     if (filters.roomMin && filters.roomMax && Number(filters.roomMin) > Number(filters.roomMax)) {

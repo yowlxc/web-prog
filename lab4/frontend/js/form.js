@@ -10,7 +10,6 @@ const dateError = document.querySelector("#date-error");
 let editingIsu = null;
 
 form.addEventListener('submit', async function(event) {
-    console.log("Кнопка нажата");
     event.preventDefault();
 
     isuError.textContent = "";
@@ -20,7 +19,6 @@ form.addEventListener('submit', async function(event) {
     roomError.textContent = "";
     dateError.textContent = "";
 
-    //валидация фио
     const fioInput = document.getElementById('fio');
     const fio = fioInput.value;
     if (!fioInput.checkValidity()) {
@@ -29,7 +27,6 @@ form.addEventListener('submit', async function(event) {
     }
     fioError.textContent = "";
 
-    // валидация группы
     const groupInput = document.getElementById('group');
     const group = groupInput.value;
     if (!groupInput.checkValidity()) {
@@ -38,7 +35,6 @@ form.addEventListener('submit', async function(event) {
     }
     groupError.textContent = "";
 
-    //валидация ису-шника
     const isuInput = document.getElementById('isu');
     const isu = isuInput.value;
     if (!isuInput.checkValidity()) {
@@ -100,7 +96,6 @@ form.addEventListener('submit', async function(event) {
     }
 
     await renderStudents();
-    console.log('aaaa');
 
     form.parentElement.classList.add("hidden");
     document.querySelector("#list-students").classList.remove("hidden");

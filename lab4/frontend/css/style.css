@@ -39,12 +39,10 @@ p {
     hyphens: manual;
 }
 
-/* ГЛАВНЫЙ КЛАСС ДЛЯ СКРЫТИЯ ЭКРАНОВ */
 .hidden {
     display: none !important;
 }
 
-/* КНОПКИ */
 button {
     padding: 6px 8px;
     background-color: #0066ff;
@@ -82,7 +80,6 @@ button:hover {
 
 }
 
-/* ТАБЛИЦА */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -148,7 +145,6 @@ tr:hover td {
 }
 
 
-/* ФОРМА */
 form {    
     container-type: inline-size;
 
@@ -333,7 +329,6 @@ input[type=checkbox] {
     }
 }
 
-/* Авторизация */
 .auth-panel {
     width: 55%;
     max-width: 45rem;

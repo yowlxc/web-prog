@@ -99,8 +99,6 @@ async function request(url, options = {}) {
     return null;
 }
 
-// ---------- Регистрация и авторизация ----------
-
 async function registerUser(name, email, password) {
     return request("/api/users", {
         method: "POST",
@@ -152,8 +150,6 @@ async function logoutUser() {
     }
 }
 
-// Получить студентов с фильтрами
-
 async function getStudents(params = {}) {
     const filterKeys = [
         "fio",
@@ -165,7 +161,6 @@ async function getStudents(params = {}) {
         "roomMax"
     ];
 
-    // Получаем только заполненные фильтры.
     const filters = Object.fromEntries(
         filterKeys
             .filter(key =>
@@ -178,7 +173,6 @@ async function getStudents(params = {}) {
 
     const filterCount = Object.keys(filters).length;
 
-    // Параметры пагинации и сортировки.
     const query = new URLSearchParams({
         page: params.page ?? 0,
         size: params.size ?? 8,

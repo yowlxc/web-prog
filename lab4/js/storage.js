@@ -28,7 +28,6 @@ function addStudent(student) {
 function updateStudent(oldIsu, updatedStudent) {
     const students = getStudents();
 
-    // Проверяем, есть ли другой студент с новым ИСУ
     const exists = students.some(student =>
         student.isu === updatedStudent.isu &&
         student.isu !== oldIsu
