@@ -7,7 +7,6 @@ Frontend на Vue, backend на Spring Boot, база SQLite. Frontend обра�
 Из папки `lab4` выполните:
 
 ```powershell
-Copy-Item .env.example .env
 docker compose up --build
 ```
 
