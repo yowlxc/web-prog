@@ -1,35 +1,16 @@
+const API_BASE_URL = "";
 import { useAuthStore } from '@/stores/auth'
 
-const API_BASE_URL = "";
-
-async function fetchCsrfToken() {
-    const response = await fetch(`${API_BASE_URL}/api/auth/csrf`, {
-        credentials: "include"
-    });
-    if (!response.ok) throw new Error("Не удалось получить CSRF-токен");
-    const data = await response.json();
-    return data.csrfToken;
-}
-
-async function request(url, options = {}, canRefresh = true) {
+async function request(url, options = {}) {
     const method = (options.method || "GET").toUpperCase();
     const headers = new Headers(options.headers || {});
     
-    // Берем токен из Pinia, если он есть (и это не запрос на логин)
     const authStore = useAuthStore()
     if (!url.startsWith('/api/auth/') && authStore.accessToken) {
         headers.set('Authorization', `Bearer ${authStore.accessToken}`)
     }
 
-    const isReadOnly = ["GET", "HEAD", "OPTIONS"].includes(method);
-    
-    // CSRF нужен для POST/PATCH/DELETE, КРОМЕ /api/students
-    if (!isReadOnly && !url.startsWith("/api/students")) {
-        const csrfToken = await fetchCsrfToken();
-        headers.set("X-XSRF-TOKEN", csrfToken);
-    }
-
-    if (!headers.has("Content-Type") && !isReadOnly) {
+    if (!headers.has("Content-Type") && ["POST", "PATCH", "PUT"].includes(method)) {
         headers.set("Content-Type", "application/json");
     }
 
@@ -43,23 +24,21 @@ async function request(url, options = {}, canRefresh = true) {
         });
     } catch (networkError) {
         console.error("Сетевая ошибка:", networkError);
-        throw new Error("Не удалось связаться с сервером. Проверьте, запущен ли бэкенд.");
+        throw new Error("Не удалось связаться с сервером.");
     }
 
-    // Обработка 401 (обновление токена)
-    if (response.status === 401 && canRefresh && !url.startsWith('/api/auth/')) {
+    if (response.status === 401 && !url.startsWith('/api/auth/')) {
         try {
             const data = await refreshToken()
             authStore.accessToken = data.accessToken
             authStore.user = data.user
-            return request(url, options, false)
+            return request(url, options)
         } catch {
             authStore.accessToken = null
             authStore.user = null
         }
     }
 
-    // Обработка остальных ошибок
     if (!response.ok) {
         let errorData = {};
         try {
@@ -67,8 +46,11 @@ async function request(url, options = {}, canRefresh = true) {
         } catch {}
         
         let message = `Ошибка ${response.status}`;
-        if (errorData.message) message = errorData.message;
-        else if (Object.keys(errorData).length > 0) message = Object.values(errorData).join(", ");
+        if (errorData.message) {
+            message = errorData.message;
+        } else if (Object.keys(errorData).length > 0) {
+            message = Object.values(errorData).join(", ");
+        }
         
         throw new Error(message);
     }
@@ -104,8 +86,7 @@ export async function refreshToken() {
     return request("/api/auth/refresh", { method: "POST" });
 }
 
-// --- CRUD (из кода напарника) ---
-export async function getStudents(params = {}, signal) {
+export async function getStudents(params = {}, token = null) {
     const filterKeys = ["fio", "group", "isu", "dormNumber", "isForeign", "roomMin", "roomMax", "dateFrom", "dateTo"];
     const filters = Object.fromEntries(
         filterKeys.filter(key => params[key] !== undefined && params[key] !== null && params[key] !== "").map(key => [key, params[key]])
@@ -113,13 +94,16 @@ export async function getStudents(params = {}, signal) {
     const filterCount = Object.keys(filters).length;
     const queryParams = { page: params.page ?? 0, size: params.size ?? 8, sortBy: params.sortBy ?? "isu", sortDir: params.sortDir ?? "asc" };
 
+    const headers = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
     if (filterCount > 2) {
         const query = new URLSearchParams(queryParams).toString();
-        return request(`/api/students/query?${query}`, { method: "POST", body: JSON.stringify(filters), signal });
+        return request(`/api/students/query?${query}`, { method: "POST", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(filters) });
     }
 
     const getParams = new URLSearchParams({ ...filters, ...queryParams });
-    return request(`/api/students?${getParams}`, { signal });
+    return request(`/api/students?${getParams}`, { headers });
 }
 
 export function getStudent(isu) { return request(`/api/students/${isu}`) }

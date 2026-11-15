@@ -73,6 +73,8 @@ import { deleteStudent } from '@/services/api'
 import { createStudentSearch } from '@/services/studentSearch'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
+import { interval } from 'rxjs'
+import { startWith, switchMap } from 'rxjs/operators'
 
 const authStore = useAuthStore()
 const { user, isAdmin } = storeToRefs(authStore)
@@ -120,7 +122,16 @@ function loadData(live = false) {
 }
 
 onMounted(() => {
-    loadData()
+    // Опрос каждые 5 секунд
+    const poll$ = interval(5000).pipe(
+        startWith(0), // Сразу при загрузке
+        switchMap(() => loadData()) // Отменяет старые запросы
+    )
+    
+    // Сохраняем, чтобы отписаться
+    const sub = poll$.subscribe()
+    
+    onUnmounted(() => sub.unsubscribe())
 })
 onUnmounted(() => search.stop())
 
