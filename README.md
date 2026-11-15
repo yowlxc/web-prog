@@ -3,6 +3,8 @@
 
 ./mvnw spring-boot:run - запуск из backend-java/
 
+npm run dev - запуск из frontend-vue/
+
 sqlite3 data/students.db - обращение к БД
 
 query и пароли
