@@ -21,7 +21,6 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // получить список студентов (с фильтрами)
     @GetMapping
     public List<Student> getAllStudents(
             @RequestParam(required = false) Integer roomMin,
@@ -77,7 +76,6 @@ public class StudentController {
         );
     }
 
-    // получить студента по ИСУ
     @GetMapping("/{isu}")
     public ResponseEntity<Student> getStudentByIsu(
             @PathVariable Integer isu) {
@@ -86,7 +84,6 @@ public class StudentController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // создать студента
     @PostMapping
     public ResponseEntity<Student> createStudent(
             @Valid @RequestBody Student student) {
@@ -94,7 +91,6 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // частично обновить студента
     @PatchMapping("/{isu}")
     public ResponseEntity<Student> updateStudent(
             @PathVariable Integer isu,
@@ -103,7 +99,6 @@ public class StudentController {
                 studentService.updateStudent(isu, student));
     }
 
-    // удалить студента
     @DeleteMapping("/{isu}")
     public ResponseEntity<Void> deleteStudent(
             @PathVariable Integer isu) {

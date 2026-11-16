@@ -65,7 +65,6 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 
 async function handleRegister() {
-    console.log('handleRegister() вызван')
 
     if(!name.value.trim()) {
         errorMessage.value = 'Укажите имя'
@@ -84,7 +83,7 @@ async function handleRegister() {
         errorMessage.value = 'Укажите электронную почту'
         return
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    if (!/^[^\s@]+@[^\s@]+$/.test(email.value.trim())) {
         errorMessage.value = 'Введите корректный адрес электронной почты'
         return
     }

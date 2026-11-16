@@ -27,14 +27,12 @@ public class UserService {
 
     public UserResponse create(CreateUserRequest request) {
 
-        // Проверяем уникальность имени
         String name = request.name().trim();
 
         if (userRepository.existsByName(name)) {
             throw new DuplicateNameException(name);
         }
 
-        // Проверяем уникальность email
         String email = request.email().trim().toLowerCase(Locale.ROOT);
 
         if (userRepository.existsByEmail(email)) {

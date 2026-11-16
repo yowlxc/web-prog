@@ -7,7 +7,6 @@ Frontend на Vue, backend на Spring Boot, база SQLite. Frontend обра�
 Из папки `lab4` выполните:
 
 ```powershell
-Copy-Item .env.example .env
 docker compose up --build
 ```
 
@@ -27,7 +26,9 @@ Nginx отдаёт собранный frontend и направляет `/api` в
 
 ## Запуск без Docker
 
-В `backend-java` задайте `JWT_SECRET` и запустите `./mvnw spring-boot:run` (Windows: `.\mvnw.cmd spring-boot:run`). В `frontend-vue` выполните `npm ci` и `npm run dev`. Сайт будет доступен по адресу Vite, обычно `http://localhost:5173`.
+Создайте файл `lab4/.env` и запишите в него постоянный `JWT_SECRET` (команда генерации указана выше). При запуске из папки `backend-java` Spring Boot прочитает этот файл. Затем запустите `.\mvnw.cmd spring-boot:run` (на Linux/macOS: `./mvnw spring-boot:run`). В `frontend-vue` выполните `npm ci` и `npm run dev`. Сайт будет доступен по адресу Vite, обычно `http://localhost:5173`.
+
+Входите под пользователем из локальной базы `backend-java/data/students.db`. Администратор из переменных `ADMIN_*` создаётся только если все три значения указаны в `.env` и такого пользователя ещё нет. База Docker хранится отдельно от локальной.
 
 ## Возможности
 

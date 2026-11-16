@@ -53,14 +53,13 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 
 async function handleLogin() {
-    console.log('handleLogin вызван')
     errorMessage.value = ''
 
     if (!email.value.trim()) {
         errorMessage.value = 'Укажите электронную почту'
         return
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    if (!/^[^\s@]+@[^\s@]+$/.test(email.value.trim())) {
         errorMessage.value = 'Введите корректный адрес электронной почты'
         return
     }

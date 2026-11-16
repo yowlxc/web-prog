@@ -35,12 +35,10 @@ public class RefreshTokenService {
         this.repository = repository;
     }
 
-    // Создание рефреша
     public String issue(User user) {
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
 
-        // Просто создает удобный токен
         String token = Base64.getUrlEncoder()
                 .withoutPadding()
                 .encodeToString(bytes);

@@ -8,7 +8,6 @@
                 <p><strong>Email:</strong> {{ user.email }}</p>
                 <p>
                     <strong>Роль: </strong> 
-                    <!-- Условный рендеринг: если ADMIN, показываем красным, иначе синим -->
                     <span :class="user.role === 'ADMIN' ? 'role-admin' : 'role-user'">
                         {{ user.role === 'ADMIN' ? 'Администратор' : 'Пользователь' }}
                     </span>
@@ -46,7 +45,6 @@ async function handleLogout() {
     isLoggingOut.value = true
     try {
         await authStore.logout()
-        // После выхода переходим на страницу логина
         router.push('/login')
     } finally {
         isLoggingOut.value = false

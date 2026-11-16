@@ -23,7 +23,7 @@ const router = createRouter({
     {
         path: '/', 
         name: 'home',
-        component: () => import('../views/HomePage.vue') // Ленивая загрузка (можно и так)
+        component: () => import('../views/HomePage.vue')
     },
     {
       path: '/profile',          
