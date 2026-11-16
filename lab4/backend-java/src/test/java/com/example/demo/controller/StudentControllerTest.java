@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.exception.GlobalExceptionHandler;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.service.StudentEventService;
 import com.example.demo.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ class StudentControllerTest {
         StudentRepository repository = mock(StudentRepository.class);
         when(repository.existsById(123456)).thenReturn(true);
         MockMvc mvc = MockMvcBuilders
-            .standaloneSetup(new StudentController(new StudentService(repository)))
+            .standaloneSetup(new StudentController(new StudentService(repository, new StudentEventService())))
             .setControllerAdvice(new GlobalExceptionHandler())
             .build();
 

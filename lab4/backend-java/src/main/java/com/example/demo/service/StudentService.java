@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
-
 import java.text.Collator;
 import java.util.Locale;
 import java.time.LocalDate;
@@ -18,9 +17,11 @@ import java.time.LocalDate;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final StudentEventService eventService;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, StudentEventService eventService) {
         this.studentRepository = studentRepository;
+        this.eventService = eventService;
     }
 
     public List<Student> getAllStudents(
@@ -99,7 +100,7 @@ public class StudentService {
         if (studentRepository.existsById(student.getIsu())) {
             throw new DuplicateIsuException(String.valueOf(student.getIsu()));
         }
-
+        eventService.broadcast();
         return studentRepository.save(student);
     }
 
@@ -129,7 +130,7 @@ public class StudentService {
         if (updatedStudent.getNotes() != null) {
             existing.setNotes(updatedStudent.getNotes());
         }
-
+        eventService.broadcast();
         return studentRepository.save(existing);
     }
 
@@ -139,7 +140,7 @@ public class StudentService {
                     "Студент не найден: " + isu
             );
         }
-
+        eventService.broadcast();
         studentRepository.deleteById(isu);
     }
 }

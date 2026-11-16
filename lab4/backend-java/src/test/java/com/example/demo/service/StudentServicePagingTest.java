@@ -20,7 +20,7 @@ class StudentServicePagingTest {
                 student(234567, "Петров Пётр", "P1234"),
                 student(345678, "Сидоров Сидор", "P4321")
         ));
-        StudentService service = new StudentService(repository);
+        StudentService service = new StudentService(repository, new StudentEventService());
 
         List<Student> result = service.filterStudents(null, null, "P1234",
                 null, null, null, null, null, null, null, "isu", "desc", 1, 1);
@@ -31,7 +31,7 @@ class StudentServicePagingTest {
 
     @Test
     void rejectsInvalidPageAndSortField() {
-        StudentService service = new StudentService(mock(StudentRepository.class));
+        StudentService service = new StudentService(repository, new StudentEventService());
 
         assertThrows(BadRequestException.class,
                 () -> service.getAllStudents("isu", "asc", -1, 20));
@@ -52,7 +52,7 @@ class StudentServicePagingTest {
         second.setIsForeign(true);
         when(repository.findAll()).thenReturn(List.of(first, second));
 
-        List<Student> result = new StudentService(repository).filterStudents(
+        List<Student> result = new StudentService(repository, new StudentEventService()).filterStudents(
                 null, null, null, "иван", null, null, false,
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), "КОМНАТА",
                 "isu", "asc", 0, 8);

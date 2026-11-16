@@ -65,8 +65,7 @@ import { deleteStudent } from '@/services/api'
 import { createStudentSearch } from '@/services/studentSearch'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
-import { interval } from 'rxjs'
-import { startWith, tap } from 'rxjs/operators'
+import { fromEvent } from 'rxjs' // <--- Изменили импорт
 
 const authStore = useAuthStore()
 const { user, isAdmin } = storeToRefs(authStore)
@@ -94,7 +93,7 @@ const search = createStudentSearch(
     data => {
         students.value = data
         isLoading.value = false
-        isFirstLoad = false 
+        isFirstLoad = false
     },
     error => {
         errorMessage.value = error.message
@@ -118,42 +117,39 @@ function loadData(live = false) {
     }, live)
 }
 
-let pollingSub = null
+let sseSubscription = null
+let eventSource = null
 
 onMounted(() => {
-    const poll$ = interval(2000).pipe(
-        startWith(0),
-        tap(() => loadData())
-    )
-    pollingSub = poll$.subscribe()
+    // 1. Загружаем данные один раз при открытии страницы
+    loadData()
+
+    // 2. Открываем соединение с сервером (SSE)
+    eventSource = new EventSource('/api/students/stream')
+
+    // 3. Слушаем события 'update' с помощью RxJS
+    sseSubscription = fromEvent(eventSource, 'update').subscribe(() => {
+        console.log('Сервер сообщил об изменениях. Тихо обновляем таблицу...')
+        loadData(true) // Тихо обновляем данные (без лоадера)
+    })
 })
 
 onUnmounted(() => {
-    if (pollingSub) pollingSub.unsubscribe()
+    // Отключаемся от SSE и RxJS при уходе со страницы
+    if (sseSubscription) sseSubscription.unsubscribe()
+    if (eventSource) eventSource.close()
     search.stop()
 })
-
-function onFilterApply(newFilters) {
-    activeFilters.value = newFilters
-    currentPage.value = 0 
-    loadData()
-}
-
-function onFilterReset() {
-    activeFilters.value = {}
-    currentPage.value = 0
-    loadData()
-}
-
-function onSortChange() {
-    currentPage.value = 0
-    loadData()
-}
 
 function onLiveSearch(newFilters) {
     activeFilters.value = newFilters
     currentPage.value = 0
     loadData(true)
+}
+
+function onSortChange() {
+    currentPage.value = 0
+    loadData()
 }
 
 function nextPage() { currentPage.value++; loadData() }
@@ -173,10 +169,8 @@ async function handleDelete(isu) {
     deletingIsu.value = isu
     try {
         await deleteStudent(isu)
-        if (students.value.length === 1 && currentPage.value > 0) {
-            currentPage.value--
-        }
-        loadData()
+        // Мы не вызываем loadData() здесь!
+        // Бэкенд пришлет SSE-событие, и таблица обновится сама.
     } catch (error) {
         errorMessage.value = error.message
     } finally {
