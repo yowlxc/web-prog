@@ -33,18 +33,15 @@
 
             <div class="auth-actions">
                 <button type="submit" :disabled="isSubmitting">{{ isSubmitting ? 'Вход…' : 'Войти' }}</button>
-                <button type="button" @click="$router.push('/register')"> Регистрация</button>
+                <button type="button" @click="navigateTo('/register')"> Регистрация</button>
             </div>
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
-const router = useRouter()
 const authStore = useAuthStore()
 
 const email = ref('')
@@ -73,7 +70,7 @@ async function handleLogin() {
 
     try {
         await authStore.login(email.value.trim(), password.value)
-        router.push('/')
+        await navigateTo('/home')
     } catch (error) {
         errorMessage.value = error.message
     } finally {

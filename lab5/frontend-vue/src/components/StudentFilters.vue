@@ -48,23 +48,14 @@
         </div>
 
         <p v-if="filterError" class="auth-message">{{ filterError }}</p>
-
-        <button type="button" class="btn-filter" @click="onApply">
-            Применить
-        </button>
-
-        <button type="button" class="btn-reset" @click="onReset">
-            Сбросить
-        </button>
     </aside>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue'
-import { fromEvent, merge, Subscription } from 'rxjs'
+import { fromEvent, merge } from 'rxjs'
 import { debounceTime, map } from 'rxjs/operators'
 
-const emit = defineEmits(['apply', 'reset', 'liveSearch'])
+const emit = defineEmits(['liveSearch'])
 
 const filters = reactive({
     fio: '',
@@ -115,8 +106,8 @@ onMounted(() => {
     ]
 
     subscription = merge(...inputs).pipe(
-        debounceTime(500), // Ждем 500мс тишины
-        map(() => getActiveFilters()) // Собираем текущие значения фильтров
+        debounceTime(500), // ждем 500мс тишины
+        map(() => getActiveFilters()) // cобираем текущие значения фильтров
     ).subscribe((activeFilters) => {
         console.log('RxJS: Отправляем живые фильтры', activeFilters)
         emit('liveSearch', activeFilters)
@@ -127,33 +118,6 @@ onMounted(() => {
 onUnmounted(() => {
     if (subscription) subscription.unsubscribe()
 })
-
-function onApply() {
-    filterError.value = ''
-    if (filters.roomMin && filters.roomMax && Number(filters.roomMin) > Number(filters.roomMax)) {
-        filterError.value = 'Начало диапазона комнат больше конца'
-        return
-    }
-    if (filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo) {
-        filterError.value = 'Начало диапазона дат позже конца'
-        return
-    }
-    emit('apply', getActiveFilters())
-}
-
-function onReset() {
-    filters.fio = ''
-    filters.group = ''
-    filters.isu = ''
-    filters.dormNumber = ''
-    filters.isForeign = ''
-    filters.roomMin = ''
-    filters.roomMax = ''
-    filters.dateFrom = ''
-    filters.dateTo = ''
-    filterError.value = ''
-    emit('reset')
-}
 </script>
 
 <style scoped>

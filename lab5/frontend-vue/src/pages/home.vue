@@ -2,18 +2,16 @@
     <div class="home-page">
         <div class="session-bar" v-if="user">
             <span> Вы вошли как: <strong>{{ user.name }}</strong></span>
-            <button @click="$router.push('/profile')">Профиль</button>
+            <button @click="navigateTo('/profile')">Профиль</button>
         </div>
 
         <div class="btn-add" v-if="isAdmin">
-            <button @click="router.push('/students/new')">+ Добавить студента</button>
+            <button @click="navigateTo('/students/new')">+ Добавить студента</button>
         </div>
 
         <div class="students-content">
             
             <StudentFilters 
-                @apply="onFilterApply" 
-                @reset="onFilterReset"
                 @liveSearch="onLiveSearch"
             />
 
@@ -57,19 +55,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
-import StudentTable from '@/components/StudentTable.vue'
-import StudentFilters from '@/components/StudentFilters.vue'
 import { deleteStudent } from '@/services/api'
 import { createStudentSearch } from '@/services/studentSearch'
-import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
-import { fromEvent } from 'rxjs' // <--- Изменили импорт
+import { fromEvent } from 'rxjs' 
 
 const authStore = useAuthStore()
 const { user, isAdmin } = storeToRefs(authStore)
-const router = useRouter()
 
 const students = ref([])
 const isLoading = ref(true)
@@ -99,13 +91,13 @@ const search = createStudentSearch(
         errorMessage.value = error.message
         isLoading.value = false
         isFirstLoad = false
-        if (!authStore.isAuthenticated) router.push('/login')
+        if (!authStore.isAuthenticated) navigateTo('/login')
     }
 )
 
 function loadData(live = false) {
     if (!authStore.accessToken) {
-        router.push('/login')
+        navigateTo('/login')
         return
     }
     search.search({
@@ -121,17 +113,15 @@ let sseSubscription = null
 let eventSource = null
 
 onMounted(() => {
-    // 1. Загружаем данные один раз при открытии страницы
     loadData()
-
-    // 2. Открываем соединение с сервером (SSE)
-    eventSource = new EventSource('/api/students/stream')
-
-    // 3. Слушаем события 'update' с помощью RxJS
-    sseSubscription = fromEvent(eventSource, 'update').subscribe(() => {
-        console.log('Сервер сообщил об изменениях. Тихо обновляем таблицу...')
-        loadData(true) // Тихо обновляем данные (без лоадера)
-    })
+    if (process.client) {
+        eventSource = new EventSource('/api/students/stream')
+        eventSource.onerror = () => eventSource.close() //защита от спама
+        sseSubscription = fromEvent(eventSource, 'update').subscribe(() => {
+            console.log('Сервер сообщил об изменениях. Тихо обновляем таблицу...')
+            loadData(true) 
+        })
+    }
 })
 
 onUnmounted(() => {
@@ -156,10 +146,10 @@ function nextPage() { currentPage.value++; loadData() }
 function prevPage() { if (currentPage.value > 0) { currentPage.value--; loadData() } }
 
 function handleDetails(isu) {
-    router.push(`/students/${isu}`)
+    navigateTo(`/students/${isu}`)
 }
 function handleEdit(isu) {
-    router.push(`/students/${isu}/edit`)
+    navigateTo(`/students/${isu}/edit`)
 }
 
 async function handleDelete(isu) {
@@ -169,8 +159,6 @@ async function handleDelete(isu) {
     deletingIsu.value = isu
     try {
         await deleteStudent(isu)
-        // Мы не вызываем loadData() здесь!
-        // Бэкенд пришлет SSE-событие, и таблица обновится сама.
     } catch (error) {
         errorMessage.value = error.message
     } finally {

@@ -19,7 +19,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "${WEB_PORT:-8081}:80"
+      - "${WEB_PORT:-8081}:3000"
 
 volumes:
   students-data:

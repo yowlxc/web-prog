@@ -1,10 +1,7 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { createStudent, getStudent, updateStudent } from '@/services/api'
 
 const route = useRoute()
-const router = useRouter()
 const errorMessage = ref('')
 const isLoading = ref(!!route.params.isu)
 const isSaving = ref(false)
@@ -45,7 +42,7 @@ async function handleSubmit() {
         const saved = isEditMode
             ? await updateStudent(route.params.isu, student)
             : await createStudent(student)
-        router.push(`/students/${saved.isu}`)
+        navigateTo(`/students/${saved.isu}`)
     } catch (error) {
         errorMessage.value = error.message
     } finally {
@@ -115,7 +112,7 @@ async function handleSubmit() {
                 <button type="submit" :disabled="isSaving">
                     {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
                 </button>
-                <button type="button" @click="router.push('/')">Отмена</button>
+                <button type="button" @click="navigateTo('/home')">Отмена</button>
             </div>
         </form>
     </section>

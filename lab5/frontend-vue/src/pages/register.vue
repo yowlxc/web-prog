@@ -44,19 +44,14 @@
 
             <div class="auth-actions">
                 <button type="submit" :disabled = "isSubmitting"> {{isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}} </button>
-                <button type="button" @click="$router.push('/login')"> Назад ко входу </button>
+                <button type="button" @click="navigateTo('/login')"> Назад ко входу </button>
             </div>
         </form>
     </div>
 </template>
 
 <script setup>
-
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { registerUser } from '@/services/api'
-
-const router = useRouter()
 
 const name = ref('')
 const email = ref('')
@@ -101,7 +96,7 @@ async function handleRegister() {
 
     try {
         await registerUser(name.value.trim(), email.value.trim(), password.value)
-        router.push('/login')
+        navigateTo('/login')
     } catch (error) {
         console.error('Ошибка регистрации:', error)
         errorMessage.value = error.message

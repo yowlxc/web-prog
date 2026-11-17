@@ -1,10 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { getStudent } from '@/services/api'
 
 const route = useRoute()
-const router = useRouter()
 
 const student = ref(null)
 const errorMessage = ref('')
@@ -23,7 +20,7 @@ onMounted(async () => {
 
 <template>
     <section class="students-page">
-        <button @click="router.push('/')">Назад</button>
+        <button @click="navigateTo('/home')">Назад</button>
         <h2>Досье студента</h2>
 
         <p v-if="errorMessage" class="auth-message">{{ errorMessage }}</p>

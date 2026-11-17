@@ -18,7 +18,7 @@
                 <button @click="handleLogout" :disabled="isLoggingOut" class="btn-logout">
                     {{ isLoggingOut ? 'Выход...' : 'Выйти из системы' }}
                 </button>
-                <button @click="$router.push('/')">
+                <button @click="navigateTo('/home')">
                     К списку студентов
                 </button>
             </div>
@@ -31,13 +31,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 
 const authStore = useAuthStore()
-const router = useRouter()
 const { user } = storeToRefs(authStore)
 const isLoggingOut = ref(false)
 
@@ -45,7 +42,7 @@ async function handleLogout() {
     isLoggingOut.value = true
     try {
         await authStore.logout()
-        router.push('/login')
+        navigateTo('/login')
     } finally {
         isLoggingOut.value = false
     }
