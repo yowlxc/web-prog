@@ -18,10 +18,10 @@
         "./types/nitro-imports"
       ],
       "~/*": [
-        "../*"
+        "../src/*"
       ],
       "@/*": [
-        "../*"
+        "../src/*"
       ],
       "~~/*": [
         "../*"
@@ -128,8 +128,6 @@
   },
   "include": [
     "./types/nitro-nuxt.d.ts",
-    "../../../../node_modules/runtime/server",
-    "../../../../node_modules/dist/runtime/server",
     "../node_modules/runtime/server",
     "../node_modules/dist/runtime/server",
     "../server/**/*",
@@ -140,7 +138,7 @@
     "../node_modules",
     "../../../node_modules",
     "../node_modules/nuxt/node_modules",
-    "../../../../node_modules/@pinia/nuxt/node_modules",
+    "../node_modules/@pinia/nuxt/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist"

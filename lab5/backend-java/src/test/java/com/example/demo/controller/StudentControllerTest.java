@@ -21,8 +21,11 @@ class StudentControllerTest {
     void duplicateIsuReturnsConflict() throws Exception {
         StudentRepository repository = mock(StudentRepository.class);
         when(repository.existsById(123456)).thenReturn(true);
+        StudentEventService eventService = new StudentEventService();
+        StudentService service = new StudentService(repository, eventService);
+
         MockMvc mvc = MockMvcBuilders
-            .standaloneSetup(new StudentController(new StudentService(repository, new StudentEventService())))
+            .standaloneSetup(new StudentController(service, eventService))
             .setControllerAdvice(new GlobalExceptionHandler())
             .build();
 

@@ -1,54 +1,53 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestProtocol, getRequestHost, getRequestURL, readRawBody, getRequestHeader, isError, setResponseHeaders, setResponseStatus, send, setResponseHeader, appendResponseHeader, getResponseHeader, getRequestHeaders, removeResponseHeader, writeEarlyHints, getQuery as getQuery$1, getRequestWebStream, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readBody, getRequestIP, toWebRequest } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
-import { escapeHtml } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/@vue/shared/dist/shared.cjs.js';
-import viteNodeEntry_mjs from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
-import { viteNodeFetch } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
-import { stringify, uneval } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/devalue/src/index.js';
-import { parseURL, withQuery, getQuery, withoutBase, joinURL, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/ufo/dist/index.mjs';
-import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import destr, { destr as destr$1 } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/destr/dist/index.mjs';
-import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unhead/dist/server.mjs';
-import { createHooks } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/hookable/dist/index.mjs';
-import { createFetch, Headers as Headers$1 } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/ofetch/dist/node.mjs';
-import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/node-mock-http/dist/index.mjs';
-import { createStorage, prefixStorage } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unstorage/drivers/fs.mjs';
-import { digest } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/ohash/dist/index.mjs';
-import { klona } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/klona/dist/index.mjs';
-import defu, { defuFn, defu as defu$1 } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/defu/dist/defu.mjs';
-import { snakeCase } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/scule/dist/index.mjs';
-import { getContext } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/nitropack/node_modules/unctx/dist/index.mjs';
-import { toRouteMatcher, createRouter } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/radix3/dist/index.mjs';
-import { readFile } from 'node:fs/promises';
-import consola, { consola as consola$1 } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/consola/dist/index.mjs';
-import { ErrorParser } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/youch-core/build/index.js';
-import { Youch } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/youch/build/index.js';
-import { SourceMapConsumer } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/source-map/source-map.js';
-import { defineDiagnostics, createConsoleReporter } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/nostics/dist/index.mjs';
-import { ansiFormatter } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/nostics/dist/formatters/ansi.mjs';
-import { AsyncLocalStorage } from 'node:async_hooks';
-import { getContext as getContext$1 } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unctx/dist/index.mjs';
-import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/errx/dist/index.mjs';
-import { isRef, toValue, isVNode } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/vue/index.mjs';
-import _fMDE7WwLJmUHXZQTBQR06DDD2IIy4QTHpMOPbasYwyk from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/@nuxt/cli/runtime/dev-close-sockets.mjs';
-import dc from 'node:diagnostics_channel';
-import process$1 from 'node:process';
-import { formatWithOptions } from 'node:util';
-import _Z4Vm0BJMJeyU_KFYzGBgSOBoZ4JOQn4jYmko_KtDwU from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/ssr-sourcemap.mjs';
-import _LB91z6Ht2T49ncvhFWMKIA26eT4mdBc7tIFl06yLKKs from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/vite-node-warmup.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestProtocol, getRequestHost, getRequestURL, readRawBody, getRequestHeader, isError, setResponseHeaders, setResponseStatus, send, setResponseHeader, appendResponseHeader, getResponseHeader, getRequestHeaders, removeResponseHeader, writeEarlyHints, getQuery as getQuery$1, getRequestWebStream, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readBody, getRequestIP, toWebRequest } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/h3/dist/index.mjs';
+import { escapeHtml } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/@vue/shared/dist/shared.cjs.js';
+import viteNodeEntry_mjs from 'file:///C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
+import { viteNodeFetch } from 'file:///C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
+import { stringify, uneval } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/devalue/src/index.js';
+import { parseURL, withQuery, getQuery, withoutBase, joinURL, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/ufo/dist/index.mjs';
+import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import destr, { destr as destr$1 } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/destr/dist/index.mjs';
+import { createHead as createHead$1, propsToString, renderSSRHead } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unhead/dist/server.mjs';
 import { existsSync, readFileSync, promises } from 'node:fs';
+import process$1 from 'node:process';
+import { klona } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/klona/dist/index.mjs';
+import defu, { defuFn, defu as defu$1 } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/defu/dist/defu.mjs';
+import { snakeCase } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/scule/dist/index.mjs';
+import { createHooks } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/hookable/dist/index.mjs';
+import { createFetch, Headers as Headers$1 } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/ofetch/dist/node.mjs';
+import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/node-mock-http/dist/index.mjs';
+import { createStorage, prefixStorage } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unstorage/drivers/fs.mjs';
+import { digest } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/ohash/dist/index.mjs';
+import { toRouteMatcher, createRouter } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/radix3/dist/index.mjs';
+import { readFile } from 'node:fs/promises';
+import consola, { consola as consola$1 } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/consola/dist/index.mjs';
+import { ErrorParser } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/youch-core/build/index.js';
+import { Youch } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/youch/build/index.js';
+import { SourceMapConsumer } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/source-map/source-map.js';
+import { defineDiagnostics, createConsoleReporter } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/nostics/dist/index.mjs';
+import { ansiFormatter } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/nostics/dist/formatters/ansi.mjs';
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { getContext } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unctx/dist/index.mjs';
+import { captureRawStackTrace, parseRawStackTrace } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/errx/dist/index.mjs';
+import { isRef, toValue, isVNode } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/vue/index.mjs';
+import _3SMnetHTQwJcB90FPQcFfmAtALU3gPfVo4lkgJgVo from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/@nuxt/cli/runtime/dev-close-sockets.mjs';
+import dc from 'node:diagnostics_channel';
+import { formatWithOptions } from 'node:util';
+import _Z4Vm0BJMJeyU_KFYzGBgSOBoZ4JOQn4jYmko_KtDwU from 'file:///C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/ssr-sourcemap.mjs';
+import _LB91z6Ht2T49ncvhFWMKIA26eT4mdBc7tIFl06yLKKs from 'file:///C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/@nuxt/vite-builder/dist/vite-node-warmup.mjs';
 import { fileURLToPath } from 'node:url';
-import { dirname as dirname$1, resolve as resolve$1 } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/pathe/dist/index.mjs';
-import { resolveTags, walkResolver } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unhead/dist/utils.mjs';
-import { PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin, SafeInputPlugin } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unhead/dist/plugins.mjs';
-import { renderToString } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/vue/server-renderer/index.mjs';
-import { DeprecationsPlugin } from 'file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/unhead/dist/legacy.mjs';
+import { dirname as dirname$1, resolve as resolve$1 } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/pathe/dist/index.mjs';
+import { resolveTags, walkResolver } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unhead/dist/utils.mjs';
+import { PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin, SafeInputPlugin } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unhead/dist/plugins.mjs';
+import { renderToString } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/vue/server-renderer/index.mjs';
+import { DeprecationsPlugin } from 'file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/unhead/dist/legacy.mjs';
 
-const serverAssets = [{"baseName":"server","dir":"/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/server/assets"}];
+const serverAssets = [{"baseName":"server","dir":"C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/server/assets"}];
 
 const assets$1 = createStorage();
 
@@ -60,11 +59,11 @@ const storage$1 = createStorage({});
 
 storage$1.mount('/assets', assets$1);
 
-storage$1.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/yowlxc/itmo/web-prog/lab5/frontend-vue","ignore":["**/node_modules","**/*.stories.js","**/*.stories.cts","**/*.stories.mts","**/*.stories.ts","**/*.stories.jsx","**/*.stories.tsx","**/*.spec.js","**/*.spec.cts","**/*.spec.mts","**/*.spec.ts","**/*.spec.jsx","**/*.spec.tsx","**/*.test.js","**/*.test.cts","**/*.test.mts","**/*.test.ts","**/*.test.jsx","**/*.test.tsx","**/*.d.cts","**/*.d.mts","**/*.d.ts","**/*.d.vue.cts","**/*.d.vue.mts","**/*.d.vue.ts","**/.pnpm-store","**/.vercel","**/.netlify","**/.wrangler","**/.output","**/.git","**/.cache","**/.data","**/.direnv","/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/vendor","**/node-compile-cache","**/test-results","**/*.sock","/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/.nuxt/analyze","**/.nuxt","**/-*.*"]}));
-storage$1.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/server","ignore":["**/node_modules","**/*.stories.js","**/*.stories.cts","**/*.stories.mts","**/*.stories.ts","**/*.stories.jsx","**/*.stories.tsx","**/*.spec.js","**/*.spec.cts","**/*.spec.mts","**/*.spec.ts","**/*.spec.jsx","**/*.spec.tsx","**/*.test.js","**/*.test.cts","**/*.test.mts","**/*.test.ts","**/*.test.jsx","**/*.test.tsx","**/*.d.cts","**/*.d.mts","**/*.d.ts","**/*.d.vue.cts","**/*.d.vue.mts","**/*.d.vue.ts","**/.pnpm-store","**/.vercel","**/.netlify","**/.wrangler","**/.output","**/.git","**/.cache","**/.data","**/.direnv","**/node-compile-cache","**/test-results","**/*.sock","**/-*.*"]}));
-storage$1.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/.nuxt"}));
-storage$1.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/.nuxt/cache"}));
-storage$1.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"/Users/yowlxc/itmo/web-prog/lab5/frontend-vue/.data/kv"}));
+storage$1.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue","ignore":["**/node_modules","**/*.stories.js","**/*.stories.cts","**/*.stories.mts","**/*.stories.ts","**/*.stories.jsx","**/*.stories.tsx","**/*.spec.js","**/*.spec.cts","**/*.spec.mts","**/*.spec.ts","**/*.spec.jsx","**/*.spec.tsx","**/*.test.js","**/*.test.cts","**/*.test.mts","**/*.test.ts","**/*.test.jsx","**/*.test.tsx","**/*.d.cts","**/*.d.mts","**/*.d.ts","**/*.d.vue.cts","**/*.d.vue.mts","**/*.d.vue.ts","**/.pnpm-store","**/.vercel","**/.netlify","**/.wrangler","**/.output","**/.git","**/.cache","**/.data","**/.direnv","C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/vendor","**/node-compile-cache","**/test-results","**/*.sock","C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/.nuxt/analyze","**/.nuxt","**/-*.*"]}));
+storage$1.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/server","ignore":["**/node_modules","**/*.stories.js","**/*.stories.cts","**/*.stories.mts","**/*.stories.ts","**/*.stories.jsx","**/*.stories.tsx","**/*.spec.js","**/*.spec.cts","**/*.spec.mts","**/*.spec.ts","**/*.spec.jsx","**/*.spec.tsx","**/*.test.js","**/*.test.cts","**/*.test.mts","**/*.test.ts","**/*.test.jsx","**/*.test.tsx","**/*.d.cts","**/*.d.mts","**/*.d.ts","**/*.d.vue.cts","**/*.d.vue.mts","**/*.d.vue.ts","**/.pnpm-store","**/.vercel","**/.netlify","**/.wrangler","**/.output","**/.git","**/.cache","**/.data","**/.direnv","**/node-compile-cache","**/test-results","**/*.sock","**/-*.*"]}));
+storage$1.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/.nuxt"}));
+storage$1.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/.nuxt/cache"}));
+storage$1.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/.data/kv"}));
 
 function useStorage(base = "") {
   return base ? prefixStorage(storage$1, base) : storage$1;
@@ -771,11 +770,6 @@ new Proxy(/* @__PURE__ */ Object.create(null), {
   }
 });
 
-getContext("nitro-app", {
-  asyncContext: false,
-  AsyncLocalStorage: void 0
-});
-
 const MAX_DECODE_PASSES = 8;
 const PERCENT_ESCAPE_RE = /%([\da-f]{2})/gi;
 const HAS_PERCENT_ESCAPE_RE = /%[\da-f]{2}/i;
@@ -1333,7 +1327,7 @@ const renderSSRHeadOptions = {"omitLineBreaks":true};
 
 const NUXT_PRERENDER_NO_SSR_ROUTES = ["/index.html","/200.html","/404.html"];
 const NUXT_NO_SCRIPTS_PATTERNS = [];
-const NUXT_PAGE_PATTERNS = [];
+const NUXT_PAGE_PATTERNS = ["/students/new","/students/:isu","/students/:isu/edit","/home","/login","/profile","/register"];
 const NUXT_SSR_STREAMING = false;
 const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
 const appRootTag = "div";
@@ -1659,7 +1653,7 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _vSL26vGM9EwNvPXZd_hCGa165W39VgiuYDETVTbUvtE = (function(nitro) {
+const _rDzM2r7woV3pmGo9ink448bHLM8Ggj5bTrSyOvUr6Ho = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
@@ -1814,8 +1808,8 @@ const serverDiagnostics = /* #__PURE__ */ defineDiagnostics({
 	}
 });
 
-const rootDir = "/Users/yowlxc/itmo/web-prog/lab5/frontend-vue";
-const srcDir = "/Users/yowlxc/itmo/web-prog/lab5/frontend-vue";
+const rootDir = "C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue";
+const srcDir = "C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/src";
 
 // src/runtime/plugins/dev-server-logs.ts
 const devReducers = {
@@ -1826,7 +1820,7 @@ const devReducers = {
 	URL: (data) => data instanceof URL ? data.toString() : void 0,
 	Symbol: (data) => typeof data === "symbol" ? data.description ?? "" : void 0
 };
-const asyncContext = getContext$1("nuxt-dev", {
+const asyncContext = getContext("nuxt-dev", {
 	asyncContext: true,
 	AsyncLocalStorage
 });
@@ -1915,7 +1909,7 @@ const storage = new AsyncLocalStorage();
 
 let spanChannel;
 
-function _yYSEdPht5P8l3J1TL9XGogsHp7Lu9vkCARzYjWEwUcQ (nitroApp) {
+function _lUbdqCNUBSERmHHvE4tUjiUNszM_LjxyBdch5o7u_8 (nitroApp) {
   try {
     trackRequests(nitroApp);
     reportLogs();
@@ -2215,7 +2209,7 @@ function setErrorChannelForwarding(forward) {
 /** The live error channel, forwarding to the dev server in front when there is one. */
 function useErrorChannel$1() {
 	const store = globalThis;
-	store[CHANNEL_KEY] ||= isForwarding() ? Promise.resolve(createForwardingChannel()) : import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/channel/index.mjs').then(({ createChannel }) => createOwnedChannel(createChannel({ open: true })));
+	store[CHANNEL_KEY] ||= isForwarding() ? Promise.resolve(createForwardingChannel()) : import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/channel/index.mjs').then(({ createChannel }) => createOwnedChannel(createChannel({ open: true })));
 	return store[CHANNEL_KEY];
 }
 /** The `BroadcastChannel` reports travel between threads on, which must not hold the process open. It drops every message where none can be opened. */
@@ -2369,7 +2363,7 @@ function thrownContext(error) {
 * `error.stack`, as frames are mapped by the loaders rather than read off the stack.
 */
 async function createErrorReport$1(error, options) {
-	const [{ createReport, fsLoader }, { nuxtPreset }] = await Promise.all([import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs'), import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/presets/index.mjs')]);
+	const [{ createReport, fsLoader }, { nuxtPreset }] = await Promise.all([import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs'), import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/presets/index.mjs')]);
 	return withoutEchoingCauses(await createReport(error, {
 		cwd: options.cwd,
 		loaders: [...options.loaders ?? [], fsLoader()],
@@ -2382,7 +2376,7 @@ async function createErrorReport$1(error, options) {
 }
 /** Add the error overlay to an already-rendered page. */
 async function withErrorOverlay(html, report, options) {
-	const [{ injectOverlay }, { nuxtTheme }] = await Promise.all([import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs'), import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/presets/index.mjs')]);
+	const [{ injectOverlay }, { nuxtTheme }] = await Promise.all([import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs'), import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/presets/index.mjs')]);
 	return injectOverlay(html, report, {
 		cwd: options.cwd,
 		channel: options.channel,
@@ -2394,7 +2388,7 @@ async function withErrorOverlay(html, report, options) {
 }
 /** Render a standalone error page, for when the app itself cannot render one. */
 async function renderErrorPage(report, options) {
-	const [{ renderPage }, { nuxtTheme }] = await Promise.all([import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs'), import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/presets/index.mjs')]);
+	const [{ renderPage }, { nuxtTheme }] = await Promise.all([import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs'), import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/presets/index.mjs')]);
 	return renderPage(report, {
 		cwd: options.cwd,
 		channel: options.channel,
@@ -2404,7 +2398,7 @@ async function renderErrorPage(report, options) {
 }
 /** Render a report for the terminal. It carries its own icon and colours. */
 async function renderErrorAnsi(report, options) {
-	const { renderAnsi } = await import('file:///Users/yowlxc/itmo/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs');
+	const { renderAnsi } = await import('file://C:/Users/pc/Desktop/all/ITMO/Prog/Web/laba_1/web-prog/lab5/frontend-vue/node_modules/my-bad/dist/index.mjs');
 	return renderAnsi(withoutEchoingCauses(report), { cwd: options.cwd });
 }
 /** Print a report to the terminal, falling back to the raw error when it cannot be rendered. */
@@ -2647,11 +2641,11 @@ function toLogLevel(logObject) {
 }
 
 const plugins = [
-  _vSL26vGM9EwNvPXZd_hCGa165W39VgiuYDETVTbUvtE,
+  _rDzM2r7woV3pmGo9ink448bHLM8Ggj5bTrSyOvUr6Ho,
 route_rules_default,
 dev_server_logs_default,
-_fMDE7WwLJmUHXZQTBQR06DDD2IIy4QTHpMOPbasYwyk,
-_yYSEdPht5P8l3J1TL9XGogsHp7Lu9vkCARzYjWEwUcQ,
+_3SMnetHTQwJcB90FPQcFfmAtALU3gPfVo4lkgJgVo,
+_lUbdqCNUBSERmHHvE4tUjiUNszM_LjxyBdch5o7u_8,
 dev_errors_default,
 _Z4Vm0BJMJeyU_KFYzGBgSOBoZ4JOQn4jYmko_KtDwU,
 _LB91z6Ht2T49ncvhFWMKIA26eT4mdBc7tIFl06yLKKs
@@ -2686,7 +2680,7 @@ function getAsset (id) {
 
 const METHODS = /* @__PURE__ */ new Set(["HEAD", "GET"]);
 const EncodingMap = { gzip: ".gz", br: ".br" };
-const _VTFYKd = eventHandler((event) => {
+const _JI48VH = eventHandler((event) => {
   if (event.method && !METHODS.has(event.method)) {
     return;
   }
@@ -3567,15 +3561,17 @@ async function getIslandContext(event) {
 	};
 }
 
-const _lazy_cwNKjq = () => Promise.resolve().then(function () { return renderer$1; });
-const _lazy_k9I97W = () => Promise.resolve().then(function () { return errorChannel; });
+const _lazy_FpK4an = () => Promise.resolve().then(function () { return _____$1; });
+const _lazy_ZJ5MEZ = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_QXJ8P2 = () => Promise.resolve().then(function () { return errorChannel; });
 
 const handlers = [
-  { route: '', handler: _VTFYKd, lazy: false, middleware: true, method: undefined },
-  { route: '/__nuxt_error', handler: _lazy_cwNKjq, lazy: true, middleware: false, method: undefined },
-  { route: '/__nuxt_dev__/error/**', handler: _lazy_k9I97W, lazy: true, middleware: false, method: undefined },
+  { route: '', handler: _JI48VH, lazy: false, middleware: true, method: undefined },
+  { route: '/api/**', handler: _lazy_FpK4an, lazy: true, middleware: false, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_ZJ5MEZ, lazy: true, middleware: false, method: undefined },
+  { route: '/__nuxt_dev__/error/**', handler: _lazy_QXJ8P2, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: handler$1, lazy: false, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_cwNKjq, lazy: true, middleware: false, method: undefined }
+  { route: '/**', handler: _lazy_ZJ5MEZ, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -3941,6 +3937,19 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: styles,
   inlinedCSS: inlinedCSS
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _____ = defineEventHandler((event) => {
+  const url = getRequestURL(event);
+  return proxyRequest(
+    event,
+    `http://backend:8080${url.pathname}${url.search}`
+  );
+});
+
+const _____$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _____
 }, Symbol.toStringTag, { value: 'Module' }));
 
 // src/app/internal/tracing.ts

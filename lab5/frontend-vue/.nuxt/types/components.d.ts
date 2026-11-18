@@ -14,6 +14,8 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 interface _GlobalComponents {
+  StudentFilters: typeof import("../../src/components/StudentFilters.vue")['default']
+  StudentTable: typeof import("../../src/components/StudentTable.vue")['default']
   /**
    * Displays the welcome screen used by new Nuxt projects.
    *
@@ -92,7 +94,7 @@ interface _GlobalComponents {
    *
    * @see https://nuxt.com/docs/4.x/api/components/nuxt-page
    */
-  NuxtPage: typeof import("../../node_modules/nuxt/dist/pages/runtime/page-placeholder")['default']
+  NuxtPage: typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']
   NoScript: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']
   Link: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']
   Base: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Base']
@@ -108,6 +110,8 @@ interface _GlobalComponents {
    * @see https://nuxt.com/docs/4.x/api/components/nuxt-island
    */
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
+  LazyStudentFilters: LazyComponent<typeof import("../../src/components/StudentFilters.vue")['default']>
+  LazyStudentTable: LazyComponent<typeof import("../../src/components/StudentTable.vue")['default']>
   /**
    * Lazy-loaded version of `<NuxtWelcome>`.
    *
@@ -212,7 +216,7 @@ interface _GlobalComponents {
    *
    * @see https://nuxt.com/docs/4.x/api/components/nuxt-page
    */
-  LazyNuxtPage: LazyComponent<typeof import("../../node_modules/nuxt/dist/pages/runtime/page-placeholder")['default']>
+  LazyNuxtPage: LazyComponent<typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']>
   LazyNoScript: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
   LazyLink: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']>
   LazyBase: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Base']>

@@ -1,6 +1,6 @@
 <template>
     <div class="auth-page">
-        <div v-if="errorMessage" class="auth-message" role="alert" aria-live="polite">
+        <div v-if="errorMessage" class="auth-message" role="alert" aria-live="polite" style="color:crimson; ">
             {{ errorMessage }}
         </div>
 

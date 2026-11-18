@@ -14,6 +14,8 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 
+export const StudentFilters: typeof import("../src/components/StudentFilters.vue")['default']
+export const StudentTable: typeof import("../src/components/StudentTable.vue")['default']
 /**
  * Displays the welcome screen used by new Nuxt projects.
  *
@@ -92,7 +94,7 @@ export const NuxtPicture: typeof import("../node_modules/nuxt/dist/app/component
  *
  * @see https://nuxt.com/docs/4.x/api/components/nuxt-page
  */
-export const NuxtPage: typeof import("../node_modules/nuxt/dist/pages/runtime/page-placeholder")['default']
+export const NuxtPage: typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
 export const NoScript: typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
 export const Link: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
 export const Base: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Base']
@@ -108,6 +110,8 @@ export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/compone
  * @see https://nuxt.com/docs/4.x/api/components/nuxt-island
  */
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
+export const LazyStudentFilters: LazyComponent<typeof import("../src/components/StudentFilters.vue")['default']>
+export const LazyStudentTable: LazyComponent<typeof import("../src/components/StudentTable.vue")['default']>
 /**
  * Lazy-loaded version of `<NuxtWelcome>`.
  *
@@ -212,7 +216,7 @@ export const LazyNuxtPicture: LazyComponent<typeof import("../node_modules/nuxt/
  *
  * @see https://nuxt.com/docs/4.x/api/components/nuxt-page
  */
-export const LazyNuxtPage: LazyComponent<typeof import("../node_modules/nuxt/dist/pages/runtime/page-placeholder")['default']>
+export const LazyNuxtPage: LazyComponent<typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']>
 export const LazyNoScript: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
 export const LazyLink: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']>
 export const LazyBase: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Base']>

@@ -32,16 +32,16 @@
         "../node_modules/@nuxt/schema"
       ],
       "~": [
-        ".."
+        "../src"
       ],
       "~/*": [
-        "../*"
+        "../src/*"
       ],
       "@": [
-        ".."
+        "../src"
       ],
       "@/*": [
-        "../*"
+        "../src/*"
       ],
       "~~": [
         ".."
@@ -110,7 +110,7 @@
         "../node_modules/crossws"
       ],
       "#build/server-routes": [
-        "./types/shared-server-routes"
+        "./types/shared-server-routes.d.ts"
       ],
       "#build": [
         "."

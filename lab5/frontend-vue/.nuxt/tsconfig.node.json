@@ -112,11 +112,12 @@
     "../node_modules",
     "../../../node_modules",
     "../node_modules/nuxt/node_modules",
-    "../../../../node_modules/@pinia/nuxt/node_modules",
+    "../node_modules/@pinia/nuxt/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist",
     "../.data",
+    "../src/**/*",
     "../modules/*/runtime/**/*",
     "../test/nuxt/**/*",
     "../tests/nuxt/**/*",
@@ -126,8 +127,6 @@
     "../modules/*/runtime/server/**/*",
     "../layers/*/server/**/*",
     "../layers/*/modules/*/runtime/server/**/*",
-    "../../../../node_modules/runtime",
-    "../../../../node_modules/dist/runtime",
     "../node_modules/runtime",
     "../node_modules/dist/runtime"
   ]

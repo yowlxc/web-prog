@@ -32,16 +32,16 @@
         "../node_modules/@nuxt/schema"
       ],
       "~": [
-        ".."
+        "../src"
       ],
       "~/*": [
-        "../*"
+        "../src/*"
       ],
       "@": [
-        ".."
+        "../src"
       ],
       "@/*": [
-        "../*"
+        "../src/*"
       ],
       "~~": [
         ".."
@@ -95,7 +95,7 @@
         "./types/app-manifest"
       ],
       "#components": [
-        "./components.d.ts"
+        "./components"
       ],
       "@nuxt/nitro-server/request-types": [
         "../node_modules/@nuxt/nitro-server/dist/request-types.d.mts"
@@ -155,7 +155,7 @@
   },
   "include": [
     "./nuxt.d.ts",
-    "../**/*",
+    "../src/**/*",
     "../modules/*/runtime/**/*",
     "../test/nuxt/**/*",
     "../tests/nuxt/**/*",
@@ -166,7 +166,7 @@
     "../layers/*/shared/**/*.d.ts",
     "../*.d.ts",
     "../layers/*/*.d.ts",
-    "../**/*.vue",
+    "../src/**/*.vue",
     "../modules/*/runtime/**/*.vue",
     "../test/nuxt/**/*.vue",
     "../tests/nuxt/**/*.vue",
@@ -174,8 +174,12 @@
     "../layers/*/modules/*/runtime/**/*.vue"
   ],
   "exclude": [
+    "../node_modules",
     "../../../node_modules",
-    "../../../../node_modules/@pinia/nuxt/node_modules",
+    "../node_modules/nuxt/node_modules",
+    "../node_modules/@pinia/nuxt/node_modules",
+    "../node_modules/@nuxt/devtools/node_modules",
+    "../node_modules/@nuxt/telemetry/node_modules",
     "../dist",
     "../.data",
     "../server/**/*",
@@ -213,26 +217,6 @@
     "../layers/*/modules/*/*.tsx",
     "../layers/*/modules/*/*.jsx",
     "../layers/*/modules/*/*.vue",
-    "../../../../node_modules/runtime/server",
-    "../../../../node_modules/dist/runtime/server",
-    "../../../../node_modules/*.mjs",
-    "../../../../node_modules/*.js",
-    "../../../../node_modules/*.cjs",
-    "../../../../node_modules/*.mts",
-    "../../../../node_modules/*.ts",
-    "../../../../node_modules/*.cts",
-    "../../../../node_modules/*.tsx",
-    "../../../../node_modules/*.jsx",
-    "../../../../node_modules/*.vue",
-    "../../../../node_modules/dist/*.mjs",
-    "../../../../node_modules/dist/*.js",
-    "../../../../node_modules/dist/*.cjs",
-    "../../../../node_modules/dist/*.mts",
-    "../../../../node_modules/dist/*.ts",
-    "../../../../node_modules/dist/*.cts",
-    "../../../../node_modules/dist/*.tsx",
-    "../../../../node_modules/dist/*.jsx",
-    "../../../../node_modules/dist/*.vue",
     "../node_modules/runtime/server",
     "../node_modules/dist/runtime/server",
     "../node_modules/*.mjs",
@@ -255,5 +239,10 @@
     "../node_modules/dist/*.vue",
     "dev",
     "../server"
-  ]
+  ],
+  "vueCompilerOptions": {
+    "plugins": [
+      "vue-router/volar/sfc-route-blocks"
+    ]
+  }
 }

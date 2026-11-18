@@ -20,7 +20,7 @@ const emit = defineEmits(['delete', 'edit', 'details'])
             <tbody>
                 <tr v-if="students.length === 0">
                     <td colspan="4" style="text-align: center; padding: 20px;">
-                        Студенты не найдены.
+                        Студентов пока нет.
                     </td>
                 </tr>
                 

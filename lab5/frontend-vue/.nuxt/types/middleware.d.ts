@@ -1,11 +1,7 @@
-declare module '@nuxt/schema' {
-  interface RouteRuleConfigExtensions {
-    appMiddleware?: string | string[] | Record<string, boolean>
+import type { NavigationGuard } from 'vue-router'
+export type MiddlewareKey = never
+declare module 'nuxt/app' {
+  interface PageMeta {
+    middleware?: MiddlewareKey | NavigationGuard | Array<MiddlewareKey | NavigationGuard>
   }
 }
-declare module 'nuxt/schema' {
-  interface RouteRuleConfigExtensions {
-    appMiddleware?: string | string[] | Record<string, boolean>
-  }
-}
-export {}

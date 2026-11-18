@@ -1,5 +1,11 @@
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
+  if (import.meta.server) return
+
   const authStore = useAuthStore()
+
+  if (!authStore.isAuthenticated) {
+    await authStore.restoreSession()
+  }
 
   const publicPages = ['/login', '/register']
 

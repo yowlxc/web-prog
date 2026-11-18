@@ -31,10 +31,13 @@ class StudentServicePagingTest {
 
     @Test
     void rejectsInvalidPageAndSortField() {
-        StudentService service = new StudentService(repository, new StudentEventService());
+        StudentRepository repository = mock(StudentRepository.class);
+        StudentService service =
+            new StudentService(repository, new StudentEventService());
 
         assertThrows(BadRequestException.class,
                 () -> service.getAllStudents("isu", "asc", -1, 20));
+
         assertThrows(BadRequestException.class,
                 () -> service.getAllStudents("unknown", "asc", 0, 20));
     }
