@@ -34,7 +34,12 @@ const emit = defineEmits(['delete', 'edit', 'details'])
                                 Подробнее
                             </button>
                             <template v-if="isAdmin">
-                                <button type="button" @click="emit('edit', student.isu)">
+                                <button type="button" @click="() => {
+                                    console.log('Объект студента:', student)
+                                    console.log('Передаваемый ИСУ:', student.isu)
+                                    emit('edit', student.isu)
+                                }"
+                                >
                                     Редактировать
                                 </button>
                                 <button type="button" @click="emit('delete', student.isu)">

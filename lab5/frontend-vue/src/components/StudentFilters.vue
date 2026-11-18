@@ -47,6 +47,8 @@
             </div>
         </div>
 
+        <button type="button" class="reset-button" @click="onFilterReset"> Сбросить фильтры </button>
+
         <p v-if="filterError" class="auth-message">{{ filterError }}</p>
     </aside>
 </template>
@@ -55,7 +57,7 @@
 import { fromEvent, merge } from 'rxjs'
 import { debounceTime, map } from 'rxjs/operators'
 
-const emit = defineEmits(['liveSearch'])
+const emit = defineEmits(['reset', 'liveSearch'])
 
 const filters = reactive({
     fio: '',
@@ -89,6 +91,17 @@ function getActiveFilters() {
         if (filters[key] !== '' && filters[key] !== null) result[key] = filters[key]
     }
     return result
+}
+
+function onFilterReset() {
+    Object.keys(filters).forEach(key => {
+        filters[key] = ''
+    })
+
+    filterError.value = ''
+
+    emit('reset')
+    emit('liveSearch', {})
 }
 
 onMounted(() => {

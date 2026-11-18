@@ -20,15 +20,29 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null
     }
 
+    let restorePromise = null
+
     async function restoreSession() {
-        try {
-            const data = await refreshToken()
-            accessToken.value = data.accessToken
-            user.value = data.user
-        } catch (e) {
-            accessToken.value = null
-            user.value = null
+        if (restorePromise) {
+            return restorePromise
         }
+
+        restorePromise = (async () => {
+            try {
+                const data = await refreshToken()
+                accessToken.value = data.accessToken
+                user.value = data.user
+                return true
+            } catch (e) {
+                accessToken.value = null
+                user.value = null
+                return false
+            } finally {
+                restorePromise = null
+            }
+        })()
+
+        return restorePromise
     }
 
     return { user, accessToken, isAuthenticated, isAdmin, login, logout, restoreSession }

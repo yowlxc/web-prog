@@ -19,6 +19,9 @@ const student = reactive({
     notes: ''
 })
 
+console.log('Параметры маршрута:', route.params)
+console.log('ИСУ:', route.params.isu)
+
 onMounted(async () => {
     if (!isEditMode) return
 
@@ -42,7 +45,7 @@ async function handleSubmit() {
         const saved = isEditMode
             ? await updateStudent(route.params.isu, student)
             : await createStudent(student)
-        navigateTo(`/students/${saved.isu}`)
+        navigateTo(`/students/${saved.isu}/dosie`)
     } catch (error) {
         errorMessage.value = error.message
     } finally {
