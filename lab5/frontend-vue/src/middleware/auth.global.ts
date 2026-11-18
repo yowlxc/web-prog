@@ -7,19 +7,33 @@ export default defineNuxtRouteMiddleware(async (to) => {
     await authStore.restoreSession()
   }
 
-  const publicPages = ['/login', '/register']
+    const publicPages = ['/login', '/register']
 
-  if (to.path === '/') {
-    return navigateTo(
-      authStore.isAuthenticated ? '/home' : '/login'
-    )
-  }
+    // восстанавливаем сессию только в браузере
+    if (import.meta.client && !authStore.isAuthenticated) {
+        await authStore.restoreSession()
+    }
 
-  if (!authStore.isAuthenticated && !publicPages.includes(to.path)) {
-    return navigateTo('/login')
-  }
+    if (to.path === '/') {
+        if (import.meta.server) {
+            return
+        }
 
-  if (authStore.isAuthenticated && publicPages.includes(to.path)) {
-    return navigateTo('/home')
-  }
+        return navigateTo(
+            authStore.isAuthenticated ? '/home' : '/login'
+        )
+    }
+
+    // на сервере не перенаправляем, состояние авторизации будет проверено в браузере
+    if (import.meta.server) {
+        return
+    }
+
+    if (!authStore.isAuthenticated && !publicPages.includes(to.path)) {
+        return navigateTo('/login')
+    }
+
+    if (authStore.isAuthenticated && publicPages.includes(to.path)) {
+        return navigateTo('/home')
+    }
 })

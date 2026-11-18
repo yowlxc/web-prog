@@ -12,6 +12,7 @@
         <div class="students-content">
             
             <StudentFilters 
+                @reset="onFilterReset"
                 @liveSearch="onLiveSearch"
             />
 
@@ -146,10 +147,13 @@ function nextPage() { currentPage.value++; loadData() }
 function prevPage() { if (currentPage.value > 0) { currentPage.value--; loadData() } }
 
 function handleDetails(isu) {
-    navigateTo(`/students/${isu}`)
+    navigateTo(`/students/${isu}/dosie`)
 }
 function handleEdit(isu) {
-    navigateTo(`/students/${isu}/edit`)
+    console.log('ИСУ получен в handleEdit:', isu)
+    const path = `/students/${isu}/edit`
+    console.log('Переход по адресу:', path)
+    navigateTo(path)
 }
 
 async function handleDelete(isu) {
