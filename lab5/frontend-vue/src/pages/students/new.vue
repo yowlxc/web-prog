@@ -42,7 +42,7 @@ async function handleSubmit() {
         const saved = isEditMode
             ? await updateStudent(route.params.isu, student)
             : await createStudent(student)
-        navigateTo(`/students/${saved.isu}`)
+        navigateTo(`/students/${saved.isu}/dosie`)
     } catch (error) {
         errorMessage.value = error.message
     } finally {
