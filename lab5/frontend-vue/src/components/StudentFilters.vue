@@ -4,7 +4,7 @@
 
         <div class="filter-item">
             <label for="filter-fio">ФИО</label>
-            <input type="text" id="filter-fio" v-model="filters.fio" ref="fioRef">
+            <input type="text" id="filter-fio" v-model="filters.fio" ref="fioRef" >
         </div>
 
         <div class="filter-item">
@@ -19,7 +19,8 @@
 
         <div class="filter-item">
             <label for="filter-dormitory">Общежитие</label>
-            <input type="number" id="filter-dormitory" v-model="filters.dormNumber" ref="dormRef">
+            <input type="number" id="filter-dormitory" v-model="filters.dormNumber" ref="dormRef" 
+                    min="1" max="100">
         </div>
 
         <div class="filter-item">

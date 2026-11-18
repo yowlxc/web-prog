@@ -104,4 +104,16 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", error.getMessage()));
     }
 
+    @ExceptionHandler({
+        org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,
+        org.springframework.http.converter.HttpMessageNotReadableException.class
+    })
+    public ResponseEntity<Map<String, String>> handleInvalidFormat(
+            Exception error
+    ) {
+        return ResponseEntity.badRequest().body(
+            Map.of("message", "Недопустимое число или дата в параметрах запроса")
+        );
+    }
+
 }

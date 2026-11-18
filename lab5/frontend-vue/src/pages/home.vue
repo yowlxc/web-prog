@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { deleteStudent } from '@/services/api'
+import { deleteStudent, clearStudentsCache } from '@/services/api'
 import { createStudentSearch } from '@/services/studentSearch'
 import { storeToRefs } from 'pinia'
 import { fromEvent } from 'rxjs' 
@@ -119,7 +119,8 @@ onMounted(() => {
         eventSource = new EventSource('/api/students/stream')
         eventSource.onerror = () => eventSource.close() //защита от спама
         sseSubscription = fromEvent(eventSource, 'update').subscribe(() => {
-            console.log('Сервер сообщил об изменениях. Тихо обновляем таблицу...')
+            console.log('Сервер сообщил об изменениях. Обновляем данные')
+            clearStudentsCache()
             loadData(true) 
         })
     }
@@ -163,6 +164,7 @@ async function handleDelete(isu) {
     deletingIsu.value = isu
     try {
         await deleteStudent(isu)
+        loadData()
     } catch (error) {
         errorMessage.value = error.message
     } finally {

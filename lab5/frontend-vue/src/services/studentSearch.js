@@ -11,7 +11,7 @@ export function createStudentSearch(onLoading, onResult, onError) {
                 const controller = new AbortController()
                 onLoading()
 
-                getStudents(change.params, controller.signal)
+                getStudents(change.params)
                     .then(students => {
                         subscriber.next({ students })
                         subscriber.complete()

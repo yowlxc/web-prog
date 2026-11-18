@@ -80,13 +80,16 @@ export async function logoutUser() {
     } catch (e) {
         console.warn("Сервер не ответил при выходе", e);
     }
+    finally {
+        clearStudentsCache()
+    }
 }
 
 export async function refreshToken() {
     return request("/api/auth/refresh", { method: "POST" });
 }
 
-export async function getStudents(params = {}, token = null) {
+export async function fetchStudents(params = {}, token = null) {
     const filterKeys = ["fio", "group", "isu", "dormNumber", "isForeign", "roomMin", "roomMax", "dateFrom", "dateTo"];
     const filters = Object.fromEntries(
         filterKeys.filter(key => params[key] !== undefined && params[key] !== null && params[key] !== "").map(key => [key, params[key]])
@@ -106,7 +109,74 @@ export async function getStudents(params = {}, token = null) {
     return request(`/api/students?${getParams}`, { headers });
 }
 
+const studentsCache = new Map()
+
+/* это просто для отладки */
+if (import.meta.client) {
+    window.studentsCache = studentsCache
+}
+
+let cacheVersion = 0
+
+export function clearStudentsCache() {
+    studentsCache.clear()
+    cacheVersion++
+}
+
+export async function getStudents(params = {}) {
+    if (import.meta.server) {
+        return fetchStudents(params)
+    }
+
+    const authStore = useAuthStore()
+    const key = JSON.stringify([params])
+
+    const cached = studentsCache.get(key)
+
+    if (cached && Date.now() - cached.time < 60_000) {
+        return cached.data
+    }
+
+    const version = cacheVersion
+    const data = await fetchStudents(params)
+
+    // Не возвращаем в кеш результат запроса,
+    // начатого до последнего изменения студентов.
+    if (version === cacheVersion) {
+        studentsCache.set(key, {
+            data,
+            time: Date.now()
+        })
+    }
+
+    return data
+}
+
 export function getStudent(isu) { return request(`/api/students/${isu}`) }
-export function createStudent(student) { return request('/api/students', { method: 'POST', body: JSON.stringify(student) }) }
-export function updateStudent(isu, student) { return request(`/api/students/${isu}`, { method: 'PATCH', body: JSON.stringify(student) }) }
-export function deleteStudent(isu) { return request(`/api/students/${isu}`, { method: 'DELETE' }) }
+export async function createStudent(student) {
+    const result = await request('/api/students', {
+        method: 'POST',
+        body: JSON.stringify(student)
+    })
+
+    clearStudentsCache()
+    return result
+}
+
+export async function updateStudent(isu, student) {
+    const result = await request(`/api/students/${isu}`, {
+        method: 'PATCH',
+        body: JSON.stringify(student)
+    })
+
+    clearStudentsCache()
+    return result
+}
+
+export async function deleteStudent(isu) {
+    await request(`/api/students/${isu}`, {
+        method: 'DELETE'
+    })
+
+    clearStudentsCache()
+}
