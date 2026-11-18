@@ -18,6 +18,8 @@ docker compose up --build
 [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
 ```
 
+На Mac: openssl rand -base64 32
+
 Не меняйте секрет при каждом запуске: ранее выданные access token тогда перестанут работать. `WEB_PORT` задаёт порт сайта, по умолчанию `8081`. Переменные `ADMIN_EMAIL`, `ADMIN_NAME` и `ADMIN_PASSWORD` создают одного администратора при первом запуске с пустой базой. Если пользователь с такой почтой или именем уже есть, его роль автоматически не меняется. Образец пароля в `.env.example` замените перед использованием.
 
 Nginx отдаёт собранный frontend и направляет `/api` в контейнер backend. Файл базы хранится в Docker-томе `students-data`, поэтому `docker compose down` не удаляет данные. Локальная база из `backend-java/data` в этот том не копируется.

@@ -1,31 +1,20 @@
 <script setup>
 defineProps({
-    students: {
-        type: Array,
-        required: true
-    },
-    isAdmin: {
-        type: Boolean,
-        default: false
-    },
-    deletingIsu: {
-        type: Number,
-        default: null
-    }
+    students: { type: Array, required: true },
+    isAdmin: { type: Boolean, default: false }
 })
-
 const emit = defineEmits(['delete', 'edit', 'details'])
 </script>
 
 <template>
-    <div class="students-table">
+    <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
                     <th>ИСУ</th>
                     <th>ФИО</th>
                     <th>Группа</th>
-                    <th>Действия</th>
+                    <th class="actions-col">Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,24 +23,21 @@ const emit = defineEmits(['delete', 'edit', 'details'])
                         Студенты не найдены.
                     </td>
                 </tr>
-
                 <tr v-for="student in students" :key="student.isu">
                     <td class="isu_tbl">{{ student.isu }}</td>
                     <td class="fio_tbl">{{ student.fio }}</td>
                     <td>{{ student.group }}</td>
                     <td class="actions-col">
                         <div class="btn-group">
-                            <button class="btn-details" @click="emit('details', student.isu)">
+                            <button type="button" @click="emit('details', student.isu)">
                                 Подробнее
                             </button>
-
                             <template v-if="isAdmin">
-                                <button class="btn-edit" @click="emit('edit', student.isu)">
+                                <button type="button" @click="emit('edit', student.isu)">
                                     Редактировать
                                 </button>
-                                <button class="btn-delete" :disabled="deletingIsu !== null"
-                                        @click="emit('delete', student.isu)">
-                                    {{ deletingIsu === student.isu ? 'Удаление...' : 'Удалить' }}
+                                <button type="button" @click="emit('delete', student.isu)">
+                                    Удалить
                                 </button>
                             </template>
                         </div>
@@ -63,4 +49,8 @@ const emit = defineEmits(['delete', 'edit', 'details'])
 </template>
 
 <style scoped>
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
 </style>

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
-
 import java.text.Collator;
 import java.util.Locale;
 import java.time.LocalDate;
@@ -18,9 +17,11 @@ import java.time.LocalDate;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final StudentEventService eventService;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, StudentEventService eventService) {
         this.studentRepository = studentRepository;
+        this.eventService = eventService;
     }
 
     public List<Student> getAllStudents(
@@ -80,16 +81,11 @@ public class StudentService {
         return studentRepository.findAll().stream()
                 .filter(s -> roomMin == null || s.getRoomNumber() >= roomMin)
                 .filter(s -> roomMax == null || s.getRoomNumber() <= roomMax)
-                .filter(s -> group == null || s.getGroup().equals(group))
-                .filter(s -> fio == null || s.getFio().toLowerCase(Locale.ROOT)
-                        .contains(fio.toLowerCase(Locale.ROOT)))
-                .filter(s -> isu == null || s.getIsu().equals(isu))
-                .filter(s -> dormNumber == null || s.getDormNumber().equals(dormNumber))
+                .filter(s -> group == null || s.getGroup().toLowerCase().contains(group.toLowerCase()))
+                .filter(s -> fio == null || s.getFio().toLowerCase().contains(fio.toLowerCase()))
+                .filter(s -> isu == null || String.valueOf(s.getIsu()).contains(String.valueOf(isu)))
+                .filter(s -> dormNumber == null || String.valueOf(s.getDormNumber()).contains(String.valueOf(dormNumber)))
                 .filter(s -> isForeign == null || s.getIsForeign().equals(isForeign))
-                .filter(s -> dateFrom == null || !s.getDateInDorm().isBefore(dateFrom))
-                .filter(s -> dateTo == null || !s.getDateInDorm().isAfter(dateTo))
-                .filter(s -> notes == null || s.getNotes().toLowerCase(Locale.ROOT)
-                        .contains(notes.toLowerCase(Locale.ROOT)))
                 .sorted(comparator)
                 .skip((long) page * size)
                 .limit(size)
@@ -104,7 +100,7 @@ public class StudentService {
         if (studentRepository.existsById(student.getIsu())) {
             throw new DuplicateIsuException(String.valueOf(student.getIsu()));
         }
-
+        eventService.broadcast();
         return studentRepository.save(student);
     }
 
@@ -134,7 +130,7 @@ public class StudentService {
         if (updatedStudent.getNotes() != null) {
             existing.setNotes(updatedStudent.getNotes());
         }
-
+        eventService.broadcast();
         return studentRepository.save(existing);
     }
 
@@ -144,7 +140,7 @@ public class StudentService {
                     "Студент не найден: " + isu
             );
         }
-
+        eventService.broadcast();
         studentRepository.deleteById(isu);
     }
 }

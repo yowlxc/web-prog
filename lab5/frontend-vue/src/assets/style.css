@@ -1,0 +1,365 @@
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(235, 235, 235);
+    color: #333;
+    padding: 1.25em;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+h1, h2 {
+    color: rgb(18, 29, 50);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+/* ===== ОБЩИЕ КНОПКИ ===== */
+button {
+    padding: 8px 16px;
+    background-color: #0066ff;
+    color: #f8f8f8;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid #0049b6;
+    margin: 0.5em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #247bff;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===== СТРАНИЦЫ АВТОРИЗАЦИИ ===== */
+.auth-page {
+    max-width: 480px;
+    margin: 5vh auto;
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #cacaca;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.auth-page h2 {
+    margin-bottom: 25px;
+    margin-top: 0;
+}
+
+.auth-page .auth-field {
+    text-align: left; 
+    margin-bottom: 15px;
+    padding: 0 15px; 
+}
+
+.auth-page label {
+    margin-bottom: 5px;
+    display: block;
+    text-align: left; 
+}
+
+.auth-page input {
+    max-width: 100%; 
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Кнопки */
+.auth-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    padding: 0 15px;
+}
+
+.auth-actions button {
+    flex: 1; 
+    margin: 0;
+    padding: 10px 15px; 
+    font-size: 0.95em; 
+    white-space: nowrap; 
+}
+
+/* ===== СЕТКА ГЛАВНОЙ СТРАНИЦЫ ===== */
+.students-content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.filters {
+    flex: 0 0 260px; 
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #cacaca;
+}
+
+.students-table {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ===== ТАБЛИЦА ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+th, td {
+    padding: 0.75em 1em; 
+    border: 1px solid #b4b4b4;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+th {
+    background-color: #e7e7e7;
+    color: #414141;
+}
+
+td {
+    background-color: #f8f9fa;
+    color: #414141;
+}
+
+tr:hover td {
+    background-color: #bbbbbb;
+}
+
+.fio_tbl {
+    max-width: 13em;
+    min-width: 8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.isu_tbl {
+    width: fit-content;
+}
+
+.actions-col {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* Серые кнопки внутри таблицы */
+.btn-group button {
+    background-color: #cacaca;
+    color: #4a4a4a;
+    border: 2px solid #858585;
+    margin: 0;
+    padding: 4px 8px;
+    font-size: 0.9em;
+}
+
+.btn-group button:hover {
+    background-color: #ffffff;
+    color: #474747;
+}
+
+/* ===== ФОРМЫ, ИНПУТЫ, ФИЛЬТРЫ ===== */
+input, select, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.4em 0.6em; 
+    border: 1px solid #cacaca;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95em;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 2px;
+    display: block;
+    font-size: 0.9em;
+}
+
+.filter-item {
+    margin-bottom: 10px; 
+}
+
+.room-range {
+    display: flex;
+    gap: 8px;
+}
+
+.room-range input {
+    width: 50%;
+}
+
+.filters h2 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    margin-top: 0;
+    text-align: left;
+}
+
+.filters button {
+    display: block;
+    width: 100%;
+    margin: 10px 0 0 0;
+}
+
+.filters button + button {
+    margin-top: 8px;
+}
+
+/* ===== СОРТИРОВКА И ПАГИНАЦИЯ ===== */
+.list-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cacaca;
+}
+
+.list-controls select {
+    width: auto;
+}
+
+.pagination {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.pagination button {
+    margin: 0;
+}
+
+/* ===== ШАПКА ПРОФИЛЯ ===== */
+.session-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* ===== КНОПКА ДОБАВЛЕНИЯ СТУДЕНТА ===== */
+.btn-add {
+    display: flex;
+    justify-content: flex-end; 
+    margin-bottom: 15px; 
+    padding-left: 280px; 
+}
+
+.btn-add button {
+    margin: 0; 
+}
+
+
+#reg-screen {
+    max-width: 450px;
+    margin: 5vh auto;
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #cacaca;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.students-content {
+    margin-top: 0;
+}
+
+.list-controls {
+    margin-top: 0;
+    padding: 8px 15px;
+}
+
+.filters {
+    margin-top: 0;
+}
+
+.session-bar {
+    padding: 8px 15px; 
+    margin-bottom: 15px; 
+    height: auto; 
+}
+
+.session-bar button,
+.btn-add button {
+    padding: 6px 12px; 
+    font-size: 0.9em;  
+    margin: 0;      
+    height: 36px;      
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form {
+    max-width: 600px;
+    min-width: 320px;
+    margin: 20px auto;
+    background-color: #f8f8f8;
+    padding: 25px 30px;
+    border-radius: 12px;
+    border: 1px solid #cacaca;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    container-type: normal;
+}
+
+form input, 
+form textarea, 
+form select {
+    max-width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+}
+
+form label {
+    font-size: 0.9em;
+    margin-bottom: 4px;
+}
+
+form input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+}
+
+form .form-no-rus {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+form button {
+    margin: 10px 10px 0 0;
+    padding: 8px 20px;
+    font-size: 0.95em;
+}

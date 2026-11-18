@@ -39,6 +39,10 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                
+                // ===== ВАЖНО: Разрешаем SSE-стрим БЕЗ токена =====
+                .requestMatchers(HttpMethod.GET, "/api/students/stream").permitAll()
+                
                 .requestMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .requestMatchers(HttpMethod.POST,
@@ -46,6 +50,8 @@ public class SecurityConfig {
                     "/api/auth/refresh",
                     "/api/auth/logout"
                 ).permitAll()
+                
+                // Остальные запросы к студентам требуют роли
                 .requestMatchers(
                     HttpMethod.GET,
                     "/api/students",
@@ -58,7 +64,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/api/students/**")
                     .hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/students/**")
-                .hasRole("ADMIN")
+                    .hasRole("ADMIN")
                 .anyRequest().denyAll()
             )
             .oauth2ResourceServer(oauth2 -> oauth2
@@ -67,7 +73,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -86,7 +91,8 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://127.0.0.1:5500",
-                "http://localhost:5500"
+                "http://localhost:5500",
+                "http://localhost:8081" 
         ));
 
         configuration.setAllowedMethods(List.of(

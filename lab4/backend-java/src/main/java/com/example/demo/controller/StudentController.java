@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import jakarta.validation.Valid;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
+import com.example.demo.service.StudentEventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,11 @@ import java.time.LocalDate;
 public class StudentController {
 
     private final StudentService studentService;
+    private final StudentEventService studentEventService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, StudentEventService studentEventService) {
         this.studentService = studentService;
+        this.studentEventService = studentEventService;
     }
 
     @GetMapping
@@ -104,5 +107,10 @@ public class StudentController {
             @PathVariable Integer isu) {
         studentService.deleteStudent(isu);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter stream() {
+        return studentEventService.subscribe();
     }
 }

@@ -1,0 +1,116 @@
+package com.example.demo.controller;
+
+import jakarta.validation.Valid;
+import com.example.demo.model.Student;
+import com.example.demo.service.StudentService;
+import com.example.demo.service.StudentEventService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.example.demo.dto.StudentFilterRequest;
+
+import java.util.List; 
+import java.time.LocalDate;
+
+@RestController
+@RequestMapping("/api/students")
+public class StudentController {
+
+    private final StudentService studentService;
+    private final StudentEventService studentEventService;
+
+    public StudentController(StudentService studentService, StudentEventService studentEventService) {
+        this.studentService = studentService;
+        this.studentEventService = studentEventService;
+    }
+
+    @GetMapping
+    public List<Student> getAllStudents(
+            @RequestParam(required = false) Integer roomMin,
+            @RequestParam(required = false) Integer roomMax,
+            @RequestParam(required = false) String group,
+            @RequestParam(required = false) Integer isu,
+            @RequestParam(required = false) String fio,
+            @RequestParam(required = false) Integer dormNumber,
+            @RequestParam(required = false) Boolean isForeign,
+            @RequestParam(required = false) LocalDate dateFrom,
+            @RequestParam(required = false) LocalDate dateTo,
+            @RequestParam(required = false) String notes,
+            @RequestParam(defaultValue = "isu") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+
+        if (roomMin == null && roomMax == null && group == null
+                && fio == null && isu == null && dormNumber == null && isForeign == null
+                && dateFrom == null && dateTo == null && notes == null) {
+            return studentService.getAllStudents(sortBy, sortDir, page, size);
+        }
+
+        return studentService.filterStudents(
+                roomMin, roomMax, group, fio, isu, dormNumber, isForeign,
+                dateFrom, dateTo, notes,
+                sortBy, sortDir, page, size);
+    }
+
+    @PostMapping("/query")
+    public List<Student> queryStudents(
+            @RequestBody StudentFilterRequest filter,
+            @RequestParam(defaultValue = "isu") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "8") Integer size) {
+
+        return studentService.filterStudents(
+                filter.roomMin(),
+                filter.roomMax(),
+                filter.group(),
+                filter.fio(),
+                filter.isu(),
+                filter.dormNumber(),
+                filter.isForeign(),
+                filter.dateFrom(),
+                filter.dateTo(),
+                filter.notes(),
+                sortBy,
+                sortDir,
+                page,
+                size
+        );
+    }
+
+    @GetMapping("/{isu}")
+    public ResponseEntity<Student> getStudentByIsu(
+            @PathVariable Integer isu) {
+        return studentService.getStudentByIsu(isu)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Student> createStudent(
+            @Valid @RequestBody Student student) {
+        Student created = studentService.createStudent(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PatchMapping("/{isu}")
+    public ResponseEntity<Student> updateStudent(
+            @PathVariable Integer isu,
+            @RequestBody Student student) {
+        return ResponseEntity.ok(
+                studentService.updateStudent(isu, student));
+    }
+
+    @DeleteMapping("/{isu}")
+    public ResponseEntity<Void> deleteStudent(
+            @PathVariable Integer isu) {
+        studentService.deleteStudent(isu);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter stream() {
+        return studentEventService.subscribe();
+    }
+}
