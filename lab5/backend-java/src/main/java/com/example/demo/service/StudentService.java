@@ -47,8 +47,8 @@ public class StudentService {
             Integer page,
             Integer size) {
 
-        if (page < 0 || size < 1 || size > 100) {
-            throw new BadRequestException("page должен быть >= 0, size — от 1 до 100");
+        if (page < 0 || size < 1 || size > 1000) {
+            throw new BadRequestException("page должен быть >= 0, size — от 1 до 1000");
         }
         if (!sortDir.equalsIgnoreCase("asc") && !sortDir.equalsIgnoreCase("desc")) {
             throw new BadRequestException("sortDir должен быть asc или desc");

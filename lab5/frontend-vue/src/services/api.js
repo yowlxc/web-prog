@@ -92,7 +92,7 @@ export async function getStudents(params = {}, token = null) {
         filterKeys.filter(key => params[key] !== undefined && params[key] !== null && params[key] !== "").map(key => [key, params[key]])
     );
     const filterCount = Object.keys(filters).length;
-    const queryParams = { page: params.page ?? 0, size: params.size ?? 8, sortBy: params.sortBy ?? "isu", sortDir: params.sortDir ?? "asc" };
+    const queryParams = { page: params.page ?? 0, size: params.size ?? 1000, sortBy: params.sortBy ?? "isu", sortDir: params.sortDir ?? "asc" };
 
     const headers = {};
     if (token) headers["Authorization"] = `Bearer ${token}`;

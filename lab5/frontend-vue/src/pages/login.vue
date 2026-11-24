@@ -1,8 +1,6 @@
 <template>
     <div class="auth-page">
-        <div v-if="errorMessage" class="auth-message" role="alert" aria-live="polite">
-            {{ errorMessage }}
-        </div>
+        <ErrorMessage :error-message="error" />
 
         <h2>Вход в систему</h2>
 

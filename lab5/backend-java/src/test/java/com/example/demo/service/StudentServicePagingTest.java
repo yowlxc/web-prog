@@ -55,7 +55,8 @@ class StudentServicePagingTest {
         List<Student> result = new StudentService(repository, new StudentEventService()).filterStudents(
                 null, null, null, "иван", null, null, false,
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), "КОМНАТА",
-                "isu", "asc", 0, 8);
+                "isu", "asc", 0, 1000
+            );
 
         assertEquals(List.of(first), result);
     }

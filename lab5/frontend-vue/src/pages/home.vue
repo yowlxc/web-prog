@@ -1,11 +1,11 @@
 <template>
     <div class="home-page">
-        <div class="session-bar" v-if="user">
+        <div class="session-bar" v-if="isMounted && user">
             <span> Вы вошли как: <strong>{{ user.name }}</strong></span>
             <button @click="navigateTo('/profile')">Профиль</button>
         </div>
 
-        <div class="btn-add" v-if="isAdmin">
+       <div class="btn-add" v-if="isMounted && isAdmin">
             <button @click="navigateTo('/students/new')">+ Добавить студента</button>
         </div>
 
@@ -32,11 +32,52 @@
                     </select>
                 </div>
 
-                <div v-if="isLoading" style="text-align: center; padding: 20px;">Загрузка...</div>
-                <div v-else-if="errorMessage" class="auth-message">{{ errorMessage }}</div>
+                <div
+                    v-if="isLoading"
+                    class="table-wrapper"
+                    aria-label="Загрузка студентов"
+                    aria-busy="true"
+                >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ИСУ</th>
+                                <th>ФИО</th>
+                                <th>Группа</th>
+                                <th class="actions-col">Действия</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="row in 8" :key="row" aria-hidden="true">
+                                <td class="isu_tbl">
+                                    <span class="skeleton-cell"></span>
+                                </td>
+                                <td class="fio_tbl">
+                                    <span class="skeleton-cell"></span>
+                                </td>
+                                <td>
+                                    <span class="skeleton-cell"></span>
+                                </td>
+                                <td class="actions-col">
+                                    <div class="btn-group">
+                                        <span
+                                            v-for="button in (isAdmin ? 3 : 1)"
+                                            :key="button"
+                                            class="skeleton-cell skeleton-button"
+                                        ></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-if="errorMessage && !isLoading">
+                    <ErrorMessage :error-message="errorMessage" />
+                </div>
 
                 <StudentTable 
-                    v-else
+                    v-if="!isLoading && !errorMessage"
                     :students="students"
                     :is-admin="isAdmin"
                     :deleting-isu="deletingIsu"
@@ -48,7 +89,7 @@
                 <div class="pagination">
                     <button @click="prevPage" :disabled="currentPage === 0 || isLoading">Назад</button>
                     <span>Страница {{ currentPage + 1 }}</span>
-                    <button @click="nextPage" :disabled="students.length < 8 || isLoading">Далее</button>
+                    <button @click="nextPage" :disabled="students.length < 3000 || isLoading">Далее</button>
                 </div>
             </div>
         </div>
@@ -61,6 +102,7 @@ import { createStudentSearch } from '@/services/studentSearch'
 import { storeToRefs } from 'pinia'
 import { fromEvent } from 'rxjs' 
 
+const isMounted = ref(false)
 const authStore = useAuthStore()
 const { user, isAdmin } = storeToRefs(authStore)
 
@@ -103,17 +145,30 @@ function loadData(live = false) {
     }
     search.search({
         page: currentPage.value,
-        size: 8,
+        size: 1000,
         sortBy: sortBy.value,
         sortDir: sortDir.value,
         ...activeFilters.value
     }, live)
 }
 
+function onFilterReset() {
+    activeFilters.value = {}
+    currentPage.value = 0
+    loadData() 
+}
+
 let sseSubscription = null
 let eventSource = null
 
 onMounted(() => {
+    isMounted.value = true
+
+    const errorState = useState<string>('adminError', () => '')
+    if (errorState.value) {
+        errorMessage.value = errorState.value 
+        errorState.value = '' 
+    }
     loadData()
     if (process.client) {
         eventSource = new EventSource('/api/students/stream')

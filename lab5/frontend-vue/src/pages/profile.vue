@@ -50,36 +50,4 @@ async function handleLogout() {
 </script>
 
 <style scoped>
-.profile-card {
-    background: #f8f8f8;
-    border: 2px solid #ababab;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.profile-info p {
-    font-size: 1.1em;
-    margin: 10px 0;
-    text-transform: none;
-}
-
-.role-admin {
-    color: #28c700;
-    font-weight: bold;
-}
-
-.role-user {
-    color: #7e96ff;
-    font-weight: bold;
-}
-
-.btn-logout {
-    background-color: #555;
-    border-color: #333;
-}
-
-.btn-logout:hover {
-    background-color: #707070;
-}
 </style>

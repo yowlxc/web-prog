@@ -39,7 +39,7 @@ public class StudentController {
             @RequestParam(defaultValue = "isu") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "20") Integer size) {
+            @RequestParam(defaultValue = "1000") Integer size) {
 
         if (roomMin == null && roomMax == null && group == null
                 && fio == null && isu == null && dormNumber == null && isForeign == null
@@ -59,7 +59,7 @@ public class StudentController {
             @RequestParam(defaultValue = "isu") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "8") Integer size) {
+            @RequestParam(defaultValue = "1000") Integer size) {
 
         return studentService.filterStudents(
                 filter.roomMin(),
