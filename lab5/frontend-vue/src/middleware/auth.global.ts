@@ -1,11 +1,14 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (import.meta.server) return
+    if (to.path === '/') {
+        return navigateTo('/home', { replace: true })
+    }
+    if (import.meta.server) return
 
-  const authStore = useAuthStore()
+    const authStore = useAuthStore()
 
-  if (!authStore.isAuthenticated) {
-    await authStore.restoreSession()
-  }
+    if (!authStore.isAuthenticated) {
+       await authStore.restoreSession()
+    }
 
     const publicPages = ['/login', '/register']
 
@@ -34,6 +37,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     if (authStore.isAuthenticated && publicPages.includes(to.path)) {
-        return navigateTo('/home')
-    }
+        const nuxtApp = useNuxtApp()
+
+        return navigateTo('/home', {
+            replace: true,
+            external: nuxtApp.isHydrating
+        })
+}
 })
