@@ -164,7 +164,7 @@ let eventSource = null
 onMounted(() => {
     isMounted.value = true
 
-    const errorState = useState<string>('adminError', () => '')
+    const errorState = useState('adminError', () => '')
     if (errorState.value) {
         errorMessage.value = errorState.value 
         errorState.value = '' 
