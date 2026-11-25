@@ -1,11 +1,3 @@
-<script setup>
-defineProps({
-    students: { type: Array, required: true },
-    isAdmin: { type: Boolean, default: false }
-})
-const emit = defineEmits(['delete', 'edit', 'details'])
-</script>
-
 <template>
     <div class="table-wrapper">
         <table>
@@ -54,9 +46,13 @@ const emit = defineEmits(['delete', 'edit', 'details'])
     </div>
 </template>
 
+<script setup>
+defineProps({
+    students: { type: Array, required: true },
+    isAdmin: { type: Boolean, default: false }
+})
+const emit = defineEmits(['delete', 'edit', 'details'])
+</script>
+
 <style scoped>
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-}
 </style>

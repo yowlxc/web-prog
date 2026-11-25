@@ -1,7 +1,7 @@
 <template>
     <div id="reg-screen">
-        <div v-if="errorMessage" class="auth-message" role="alert" aria-live="polite">
-            {{ errorMessage }}
+        <div v-if="errorMessage">
+            <ErrorMessage :error-message="errorMessage" />
         </div>
         <h2>Регистрация</h2>
 

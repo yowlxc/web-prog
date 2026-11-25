@@ -4,6 +4,7 @@ export default defineEventHandler((event) => {
 
   return proxyRequest(
     event,
+    //`http://localhost:8080${url.pathname}${url.search}`
     `http://backend:8080${url.pathname}${url.search}`
   )
 })
