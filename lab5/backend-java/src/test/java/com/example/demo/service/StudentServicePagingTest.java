@@ -31,6 +31,7 @@ class StudentServicePagingTest {
 
     @Test
     void rejectsInvalidPageAndSortField() {
+        StudentRepository repository = mock(StudentRepository.class);
         StudentService service = new StudentService(repository, new StudentEventService());
 
         assertThrows(BadRequestException.class,
