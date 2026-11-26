@@ -1,8 +1,11 @@
 <template>
-  <StudentForm :student-id="route.params.id" />
+  <ClientOnly>
+    <StudentForm />
+  </ClientOnly>
 </template>
 
 <script setup>
 import StudentForm from '~/components/StudentForm.vue'
-const route = useRoute()
+
+definePageMeta({ middleware: 'admin' })
 </script>
